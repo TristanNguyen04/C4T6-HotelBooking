@@ -7,7 +7,7 @@ A full-stack hotel booking application with React client and Express server.
 To run both client and server simultaneously:
 
 ```bash
-npm run dev
+npm start
 ```
 
 This will start:
