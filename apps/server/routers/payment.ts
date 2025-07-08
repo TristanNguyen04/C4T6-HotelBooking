@@ -10,32 +10,27 @@ const stripe = new Stripe(
         typescript: true
     });
 
+
 router.post("/paymentintent", async (req: Request, res: Response) => {
   try {
+    // dynamically adding from post request from confirmation page to the checkout page
+    const {items} = req.body;
+    const line_items = items.map((item:any) => ({
+        price_data: {
+            currency: item.currency,
+            product_data: {
+                name: item.name,
+                images: [item.image],
+            },
+            unit_amount: item.price,
+        },
+        quantity: item.quantity
+    }));
     const session = await stripe.checkout.sessions.create({
       success_url: 'http://localhost:3000', // this should be routed to a confirmation page/ homepage
       cancel_url: 'http://localhost:3000', // routed to homepage or the page before or something
       mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {name: 'Hotel Booking - 2 Day 2 Night', images:["https://www.orient-express.com/wp-content/uploads/2024/12/JUNIOR-SUITE_209_-Bedroom-scaled.jpg"]},
-            unit_amount: 10000},
-          quantity: 1,
-        },
-        {
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: "Hotel B - Standard Room",
-          images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUgw1QcpVM_ETgHLuSxL9GMVLXULvNq4ePDg&s']
-        },
-        unit_amount: 9000,
-      },
-      quantity: 2
-    },
-      ],
+      line_items,
     });
 
     res.json({ url: session.url });
