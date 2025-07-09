@@ -18,7 +18,7 @@ function Payment() {
       }
     ]
 
-    const response = await fetch("http://localhost:3000/paymentintent", {
+    const response = await fetch("http://localhost:3000/payment/checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
