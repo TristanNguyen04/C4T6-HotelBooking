@@ -7,6 +7,8 @@ import cors from "cors";
 import paymentRoutes from "./routes/paymentRoutes";
 import destinationRoutes from "./routes/destinationRoutes";
 import hotelRoutes from "./routes/hotelRoutes";
+import authRoutes from "./routes/authRoutes";
+import bookingRoutes from "./routes/bookingRoutes";
 
 const app: Application = express();
 const PORT: number = 3000;
@@ -25,8 +27,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello, Express with TypeScript!');
 });
 app.use("/payment", paymentRoutes);
-app.use("/api", destinationRoutes);
-app.use("/api", hotelRoutes);
+app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

@@ -7,7 +7,6 @@ import { Destination } from "../models/Destination";
 const destinationsFile = path.join(__dirname, '../../data/destinations.json');
 const destinations: Destination[] = JSON.parse(fs.readFileSync(destinationsFile, 'utf-8'));
 
-// Configure Fuse.js options for optimal search
 const fuseOptions = {
     keys: ['term', 'state'],
     threshold: 0.3, 
