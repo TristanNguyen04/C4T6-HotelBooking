@@ -1,15 +1,14 @@
 import React from "react";
-import Header from "../components/header";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen w-screen bg-[#f8f9fa] text-gray-800 font-sans overflow-x-hidden">
 
-      {/* HomePage Background Container*/}
-      <main className="max-w-screen-xl mx-auto px-6 sm:px-0">
-        {/* Hero Section */}
+      {/* HomePage Container*/}
+      <main className="px-6 sm:px-12">
+        {/* bg Section */}
         <section
-          className="relative h-[75vh] bg-cover bg-center flex flex-col justify-center items-center text-white"
+          className="relative h-[50vh] bg-cover bg-center flex flex-col justify-center items-center text-white"
           style={{ backgroundImage: `url('/src/assets/homepagebg.png')` }}
         >
           <div className="bg-black bg-opacity-40 p-8 rounded-lg text-center max-w-2xl">

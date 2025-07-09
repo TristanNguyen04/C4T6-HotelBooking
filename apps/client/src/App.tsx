@@ -1,24 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Payment from './pages/PaymentTest';
-<<<<<<< HEAD
-//import HomePage from './pages/HomePage';
-//import HotelDetailsPage from './pages/HotelDetailsPage';
-import SearchResultsPage from './pages/SearchResultsPage';
-=======
 import HomePage from './pages/HomePage';
-import Header from "./components/Header";
->>>>>>> 2297ee9215f734f6a62fb4dafcd032abcad469b0
+import SearchResultsPage from './pages/SearchResultsPage';
+import Header from './components/Header';
 import './styles/index.css';
-
-
 
 function App() {
   return (
     <Router>
-      <Header/>
+      <Header />
       <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/payment" element={<Payment />} />
-        <Route path="/" element={<SearchResultsPage />} />
       </Routes>
     </Router>
   );
