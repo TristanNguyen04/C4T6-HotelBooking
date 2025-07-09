@@ -4,5 +4,5 @@ export interface Destination{
     lat: number;
     lng: number;
     state?: string;
-    type: 'city' | 'airport';
+    type: 'city' | 'hotel' | 'airport';
 }

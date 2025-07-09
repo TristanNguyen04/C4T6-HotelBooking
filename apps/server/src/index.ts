@@ -6,6 +6,7 @@ import cors from "cors";
 
 import paymentRoutes from "./routes/paymentRoutes";
 import destinationRoutes from "./routes/destinationRoutes";
+import hotelRoutes from "./routes/hotelRoutes";
 
 const app: Application = express();
 const PORT: number = 3000;
@@ -25,6 +26,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 app.use("/payment", paymentRoutes);
 app.use("/api", destinationRoutes);
+app.use("/api", hotelRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
