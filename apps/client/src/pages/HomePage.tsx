@@ -1,14 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
+    
     <div className="min-h-screen w-screen bg-[#f8f9fa] text-gray-800 font-sans overflow-x-hidden">
-
       {/* HomePage Container*/}
-      <main className="px-6 sm:px-12">
-        {/* bg Section */}
+      <main className="px-6 sm:px-0">
         <section
-          className="relative h-[50vh] bg-cover bg-center flex flex-col justify-center items-center text-white"
+          className="relative h-[62vh] bg-cover bg-center flex flex-col justify-center items-center text-white"
           style={{ backgroundImage: `url('/src/assets/homepagebg.png')` }}
         >
           <div className="bg-black bg-opacity-40 p-8 rounded-lg text-center max-w-2xl">
@@ -35,11 +36,20 @@ export default function HomePage() {
               className="border border-gray-300 p-3 rounded w-full md:w-1/4 text-sm text-black"
               placeholder="Guests"
             />
-            <button className="bg-red-500 text-white px-6 py-3 rounded-md w-full md:w-auto text-sm font-medium">
+            <button 
+              onClick={() => navigate("/search")}
+              className="bg-red-500 text-white px-6 py-3 rounded-md w-full md:w-auto text-sm font-medium">
               Search
             </button>
           </div>
         </section>
+
+      </main>
+
+      {/* HomePage Contents*/}
+      <main className="px-6 sm:px-12">
+
+        
 
         {/* Why Book With Us */}
         <section className="mt-40 text-center">

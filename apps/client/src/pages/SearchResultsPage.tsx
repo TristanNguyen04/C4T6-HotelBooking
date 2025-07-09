@@ -1,22 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchResultsPage() {
     return (
     <div className="min-h-screen w-screen bg-[#f8f9fa] text-gray-800 font-sans overflow-x-hidden">
-      {/* Header (Full Width) */}
-        <header className="bg-white w-full shadow-sm py-4 px-6 sm:px-12 flex justify-between items-center">
-            <div className="text-2xl font-bold text-blue-800">Ascenda</div>
-                <nav className="hidden md:flex gap-6 text-sm text-gray-600">
-                <a href="#">Destinations</a>
-                <a href="#">Deals</a>
-                <a href="#">About Us</a>
-                <a href="#">Contact</a>
-                </nav>
-            <div className="flex gap-2">
-                <button className="text-sm text-gray-600">Button</button>
-                <button className="bg-red-500 text-white px-4 py-1 rounded text-sm">Button</button>
-            </div>
-        </header>
     <main className="px-6 sm:px-12 py-8 flex gap-8">
   {/* Sidebar Filters */}
     <aside className="w-64 hidden lg:block">
