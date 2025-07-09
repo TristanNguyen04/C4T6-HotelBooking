@@ -9,7 +9,7 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const { hotelId, hotelName, checkin, checkout, guests, price, currency } = req.body;
+    const { hotelId, hotelName, checkin, checkout, guests, price, currency , sessionId} = req.body;
 
     const booking = await prisma.booking.create({
         data: {
@@ -20,7 +20,8 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
             checkout: new Date(checkout),
             guests,
             price,
-            currency
+            currency,
+            stripeSessionId: sessionId // added to check for dup bookings during checkout
         }
     })
 

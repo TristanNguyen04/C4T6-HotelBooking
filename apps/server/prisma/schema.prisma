@@ -36,4 +36,5 @@ model Booking {
   price Float
   currency String
   createdAt DateTime @default(now())
+  stripeSessionId String
 }
