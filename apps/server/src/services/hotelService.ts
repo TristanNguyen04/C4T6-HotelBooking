@@ -14,15 +14,12 @@ export const fetchHotelPrices = async (params: Record<string, any>) => {
 
 export const fetchHotelDetails = async (id: string) => {
     const res = await axios.get(`${BASE_URL}/hotels/${id}`);
-    console.log(res.data);
     return res.data;
 }
 
 export const fetchHotelRoomPrices = async (id: string, params: Record<string, any>) => {
     try {
-        console.log(`${BASE_URL}/hotels/${id}/price`, { params });
         const res = await axios.get(`${BASE_URL}/hotels/${id}/price`, { params });
-        console.log(res.data != null ? res.data : 'null');
         return res.data;
     } catch (error) {
         console.error('Error fetching hotel room prices:', error);
