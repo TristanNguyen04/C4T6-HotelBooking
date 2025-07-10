@@ -8,8 +8,8 @@ const prisma = new PrismaClient();
 export const createCheckoutSession = async(req:Request, res:Response) => {
     try {
         // dynamically adding from post request from confirmation page to the checkout page
-        const {items, userId, booking} = req.body;
-        if(!userId || !booking){
+        const {items, userId} = req.body;
+        if(!userId || !Array.isArray(items) || items.length === 0){
             return res.status(400).json({error: "Missing Booking / Userid"});
         }
 
@@ -49,6 +49,8 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
         res.status(500).json({ error: "Failed to create session" });
     }
 };
+
+
 
 export const handlePaymentSuccess = async (req: Request, res: Response) => {
     // retrieve session id
@@ -116,7 +118,6 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
         res.status(201).json({ message: "Booking created successfully" }); // signal success
 
   } catch (error) {
-    console.error("Error retrieving Stripe session:", error);
     res.status(500).json({ error: "Failed to verify payment" });
   }
 };
