@@ -1,11 +1,14 @@
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { searchHotels } from "../api/hotels";
 import type { Hotel, SortBy, SortOrder } from "../types/hotel";
 import Spinner from '../components/Spinner/Spinner';
 import { getPriceHistogram } from "../utils/histogram";
+import SearchBar from "../components/SearchBar/SearchBar";
 
 export default function SearchResultsPage(){
+    const navigate = useNavigate();
     const [params] = useSearchParams();
     const [hotels, setHotels] = useState<any[]>([]);
     const [displayedHotels, setDisplayedHotels] = useState<Hotel[]>([]);
@@ -97,6 +100,22 @@ export default function SearchResultsPage(){
             )}
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
+
+            <SearchBar
+                onSubmit={({ destination, checkin, checkout, guests }) => {
+                    navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`);
+                }}
+
+                initialValues={{
+                    destination: {
+                        uid: params.get('destination_id') || '',
+                        term: params.get('term') || ''
+                    },
+                    checkin: params.get('checkin') || '',
+                    checkout: params.get('checkout') || '',
+                    guests: params.get('guests') || '2'
+                }}
+            />
 
             {!loading && hotels.length > 0 && (
                 <>
@@ -215,9 +234,11 @@ export default function SearchResultsPage(){
                 </>
             )}
 
-            {!loading && displayedHotels.length === 0 ? (
+            {!loading && displayedHotels.length === 0 && (
                 <p>No hotels match your criteria.</p>
-            ) : (
+            )}
+
+            {!loading && displayedHotels.length > 0 && (
                 <ul>
                     {displayedHotels.map(h => (
                         <li key={h.id} style={{ marginBottom: "1rem" }}>
@@ -230,10 +251,6 @@ export default function SearchResultsPage(){
                     ))}
                 </ul>
             )}
-
-            {/* {!loading && displayedHotels.length > 0 && (
-                
-            )} */}
         </div>
     );
 }
