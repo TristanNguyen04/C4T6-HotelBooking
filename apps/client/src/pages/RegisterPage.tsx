@@ -6,7 +6,6 @@ export default function RegisterPage(){
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [submitted, setSubmitted] = useState(false);
