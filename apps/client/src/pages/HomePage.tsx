@@ -108,7 +108,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                                    {/* Row: Rooms */}
+                  {/* Row: Rooms */}
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-700">Rooms</span>
                     <div className="flex items-center gap-2">
@@ -134,7 +134,8 @@ export default function HomePage() {
                   <div className="text-right">
                     <button
                       onClick={() => setGuestDropdownOpen(false)}
-                      className="text-blue-500 text-sm font-medium hover:underline"
+                      className="text-sm font-bold"
+                      style={{ color: '#FF6B6B', background: 'none', border: 'none' }}
                     >
                       Apply
                     </button>
@@ -145,7 +146,9 @@ export default function HomePage() {
 
             <button
               onClick={() => navigate("/search")}
-              className="bg-red-500 text-white px-6 py-3 rounded-md w-full md:w-auto text-sm font-medium">
+              className="text-white px-6 py-3 rounded-md w-full md:w-auto text-sm font-medium"
+              style={{ backgroundColor: '#FF6B6B' }}
+            >
               Search
             </button>
           </div>
