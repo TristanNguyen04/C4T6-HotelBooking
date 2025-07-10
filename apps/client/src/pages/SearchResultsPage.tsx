@@ -6,6 +6,7 @@ import type { Hotel, SortBy, SortOrder } from "../types/hotel";
 import Spinner from '../components/Spinner/Spinner';
 import { getPriceHistogram } from "../utils/histogram";
 import SearchBar from "../components/SearchBar/SearchBar";
+import HotelCard from "../components/HotelCard/HotelCard";
 
 export default function SearchResultsPage(){
     const navigate = useNavigate();
@@ -241,13 +242,7 @@ export default function SearchResultsPage(){
             {!loading && displayedHotels.length > 0 && (
                 <ul>
                     {displayedHotels.map(h => (
-                        <li key={h.id} style={{ marginBottom: "1rem" }}>
-                            <h4>{h.name}</h4>
-                            <p>{h.address}</p>
-                            <p>Price: {h.currency} {h.price ?? "N/A"}</p>
-                            <p>Stars: {h.rating ?? "N/A"}</p>
-                            <p>Distance: {h.distance ? (h.distance / 1000).toFixed(1) + " km" : "N/A"}</p>
-                        </li>
+                        <HotelCard key={h.id} hotel={h}/>
                     ))}
                 </ul>
             )}
