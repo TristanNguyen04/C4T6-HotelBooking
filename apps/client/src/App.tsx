@@ -5,6 +5,7 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import Header from './components/Header';
 import './styles/index.css';
 
+import PaymentSuccess from './pages/PaymentSuccessTest';
 function App() {
   return (
     <Router>
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/paymentSuccess" element={<PaymentSuccess />} />
       </Routes>
     </Router>
   );
