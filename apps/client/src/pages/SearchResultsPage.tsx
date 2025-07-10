@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { searchHotels } from "../api/hotels";
+import Spinner from '../components/Spinner/Spinner';
 
 export default function SearchResultsPage(){
     const [params] = useSearchParams();
@@ -33,20 +34,28 @@ export default function SearchResultsPage(){
     return (
         <div>
             <h2>Hotel Results</h2>
-            {loading && <p>Loading hotels...</p>}
+            {loading && (
+                <>
+                    <Spinner />
+                    <p style={{ textAlign: 'center'}}>Fetching hotel results...</p>
+                </>
+            )}
+
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             {!loading && hotels.length === 0 && <p>No hotels found.</p>}
             
-            <ul>
-                {hotels.map(h => (
-                    <li key={h.id}>
-                        <h4>{h.name}</h4>
-                        <p>{h.address}</p>
-                        <p>{h.currency} {h.price ?? "N/A"}</p>
-                    </li>
-                ))}
-            </ul>
+            {!loading && hotels.length > 0 && (
+                <ul>
+                    {hotels.map(h => (
+                        <li key={h.id}>
+                            <h4>{h.name}</h4>
+                            <p>{h.address}</p>
+                            <p>{h.currency} {h.price ?? "N/A"}</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
