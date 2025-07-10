@@ -49,8 +49,6 @@ export default function HomePage() {
       {/* HomePage Contents*/}
       <main className="px-6 sm:px-12">
 
-        
-
         {/* Why Book With Us */}
         <section className="mt-40 text-center">
           <h2 className="text-2xl font-bold mb-8">Why Book With Us</h2>
