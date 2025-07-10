@@ -1,52 +1,54 @@
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { searchHotels } from "../api/hotels";
 import type { Hotel, SortBy, SortOrder } from "../types/hotel";
 import Spinner from '../components/Spinner/Spinner';
 import { getPriceHistogram } from "../utils/histogram";
 import SearchBar from "../components/SearchBar/SearchBar";
 import HotelCard from "../components/HotelCard/HotelCard";
+import { usePollingFetch } from "../hooks/usePollingFetch";
 
 export default function SearchResultsPage(){
     const navigate = useNavigate();
+
     const [params] = useSearchParams();
-    const [hotels, setHotels] = useState<any[]>([]);
+    // const [hotels, setHotels] = useState<any[]>([]);
     const [displayedHotels, setDisplayedHotels] = useState<Hotel[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    // const [loading, setLoading] = useState(true);
+    // const [hasSearched, setHasSearched] = useState(false);
+    // const [error, setError] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState<SortBy>("searchRank");
     const [sortOrder, setSortOrder] = useState<''|'asc'|'desc'>('asc');
-    const [histogram, setHistogram] = useState<{bins: number[], min: Number, max: number} | null>(null);
+    const [histogram, setHistogram] = useState<{bins: number[], min: number, max: number} | null>(null);
 
     const [priceMin, setPriceMin] = useState<number>(0);
     const [priceMax, setPriceMax] = useState<number>(Infinity);
     const [minStars, setMinStars] = useState<number | ''>('');
 
-    useEffect(() => {
-        const destination_id = params.get('destination_id');
-        const checkin = params.get('checkin');
-        const checkout = params.get('checkout');
-        const guests = params.get('guests');
+    const destination_id = params.get('destination_id') || ''; 
+    const checkin = params.get('checkin') || '';
+    const checkout = params.get('checkout') || '';
+    const guests = params.get('guests') || '';
 
-        if(destination_id && checkin && checkout && guests){
-            setLoading(true);
-            setError(null);
-            searchHotels( {destination_id, checkin, checkout, guests} )
-                .then(res => {
-                    setHotels(res.data);
-                    setLoading(false);
-                })
-                .catch(() => {
-                    setHotels([])
-                    setError("Failed to load hotels.");
-                    setLoading(false);
-                });
+    const shouldFetch = destination_id && checkin && checkout && guests;
+
+    const fetchHotels = useCallback(
+        () => searchHotels({ destination_id, checkin, checkout, guests }).then(res => res.data),
+        [destination_id, checkin, checkout, guests]
+    );
+
+    const { data: hotels, loading, error } = usePollingFetch<Hotel[]>(
+        fetchHotels,
+        {
+            maxRetries: 5,
+            interval: 3000,
+            skip: !shouldFetch
         }
-    }, [params])
+    )
 
     useEffect(() => {
-        if(hotels.length > 0){
+        if(hotels && hotels.length > 0){
             const hist = getPriceHistogram(hotels);
             setHistogram(hist);
 
@@ -56,7 +58,7 @@ export default function SearchResultsPage(){
     }, [hotels]);
 
     useEffect(() => {
-        const filtered = hotels.filter((hotel) => {
+        const filtered = (hotels ?? []).filter((hotel) => {
             const price = hotel.price ?? Infinity;
             const rating = hotel.rating ?? 0;
 
@@ -118,7 +120,7 @@ export default function SearchResultsPage(){
                 }}
             />
 
-            {!loading && hotels.length > 0 && (
+            {!loading && hotels && hotels.length > 0 && (
                 <>
                     {histogram && (
                         <div style={{ width: '100%', marginBottom: '1rem' }}>
@@ -235,17 +237,25 @@ export default function SearchResultsPage(){
                 </>
             )}
 
-            {!loading && displayedHotels.length === 0 && (
+            {!loading && hotels && displayedHotels.length === 0 && (
                 <p>No hotels match your criteria.</p>
             )}
 
             {!loading && displayedHotels.length > 0 && (
                 <ul>
                     {displayedHotels.map(h => (
-                        <HotelCard key={h.id} hotel={h}/>
+                        <HotelCard
+                            key={h.id}
+                            hotel={h}
+                            destination_id={params.get('destination_id') || ''}
+                            checkin={params.get('checkin') || ''}
+                            checkout={params.get('checkout') || ''}
+                            guests={params.get('guests') || '2'}
+                        />
                     ))}
                 </ul>
             )}
+
         </div>
     );
 }

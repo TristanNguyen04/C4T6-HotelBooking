@@ -1,9 +1,10 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import EmailVerificationPage from './pages/EmailVerificationPage';
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import HotelDetailsPage from './pages/HotelDetailsPage';
 
 function App(){
   return (
@@ -13,6 +14,7 @@ function App(){
       <Route path='/register' element={<RegisterPage/>}/>
       <Route path='/verify-email' element={<EmailVerificationPage/>}/>
       <Route path='/search' element={<SearchResultsPage/>}/>
+      <Route path='/hotels/:id/details' element={<HotelDetailsPage/>}/>
     </Routes>
   );
 }
