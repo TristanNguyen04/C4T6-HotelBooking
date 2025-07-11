@@ -3,7 +3,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import EmailVerificationPage from './pages/EmailVerificationPage';
 import HomePage from './pages/HomePage';
-import SearchResultsPage from './pages/SearchResultsPage';
+import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
 
 function App(){

@@ -38,11 +38,11 @@ export default function HotelCard({
     const [imgSrc, setImgSrc] = useState(
         hotel.image_details
             ? `${hotel.image_details.prefix}${hotel.image_details.count}${hotel.image_details.suffix}`
-            : '../../../public/fallback.webp'
+            : 'fallback.webp'
     )
 
     const handleImgError = () => {
-        setImgSrc('../../../public/fallback.webp');
+        setImgSrc('fallback.webp');
     }
     
 
