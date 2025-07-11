@@ -6,7 +6,13 @@ export default function Header() {
 
   return (
     <header className="bg-white w-full shadow-sm py-4 px-6 sm:px-12 flex justify-between items-center">
-      <div className="text-2xl font-bold" style={{ color: '#FF6B6B' }}>Ascenda</div>
+      <div
+        className="text-2xl font-bold cursor-pointer"
+        style={{ color: '#FF6B6B' }}
+        onClick={() => navigate("/")}
+      >
+        Ascenda
+      </div>
       
       <nav className="hidden md:flex gap-6 text-sm text-gray-600">
         <a href="#">Destinations</a>
