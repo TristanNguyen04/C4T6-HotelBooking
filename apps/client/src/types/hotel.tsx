@@ -7,6 +7,14 @@ export type Hotel = {
     distance: number;
     rating: number;
     searchRank: number;
+    amenities: {
+      [key: string]: boolean | undefined;
+    };
+    image_details: {
+      suffix: string;
+      count: number;
+      prefix: string;
+    }
 };
 
 export type SortBy = "price" | "distance" | "rating" | "searchRank";
