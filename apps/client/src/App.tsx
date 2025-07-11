@@ -6,6 +6,7 @@ import HotelDetailsPage from './pages/HotelDetailsPage';
 import Register from './pages/Register';
 import Header from './components/Header';
 import './styles/index.css';
+import SignIn from './pages/SignInPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<SignIn />} />
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/hotel/:hotelId" element={<HotelDetailsPage />} />
         <Route path="/payment" element={<Payment />} />
