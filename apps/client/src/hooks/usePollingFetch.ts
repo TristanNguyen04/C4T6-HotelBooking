@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 interface UsePollingFetchOptions {
   maxRetries?: number;
   interval?: number;
-  skip?: boolean; // optional: to delay initial call
+  skip?: boolean; // to delay the first call not satisfy condition(s)
 }
 
 interface UsePollingFetchResult<T> {

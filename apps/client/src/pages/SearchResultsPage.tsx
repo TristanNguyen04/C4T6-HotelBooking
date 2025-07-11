@@ -2,29 +2,37 @@ import { useSearchParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from "react";
 import { searchHotels } from "../api/hotels";
-import type { Hotel, SortBy, SortOrder } from "../types/hotel";
+import type { SortOption, Hotel } from "../types/hotel";
 import Spinner from '../components/Spinner/Spinner';
 import { getPriceHistogram } from "../utils/histogram";
 import SearchBar from "../components/SearchBar/SearchBar";
 import HotelCard from "../components/HotelCard/HotelCard";
 import { usePollingFetch } from "../hooks/usePollingFetch";
+import { useHotelFilter } from "../hooks/useHotelFilter";
+import { useHotelSort } from "../hooks/useHotelSort";
 
 export default function SearchResultsPage(){
     const navigate = useNavigate();
 
     const [params] = useSearchParams();
-    // const [hotels, setHotels] = useState<any[]>([]);
     const [displayedHotels, setDisplayedHotels] = useState<Hotel[]>([]);
+
+    // const [hotels, setHotels] = useState<any[]>([]);
     // const [loading, setLoading] = useState(true);
     // const [hasSearched, setHasSearched] = useState(false);
     // const [error, setError] = useState<string | null>(null);
-    const [sortBy, setSortBy] = useState<SortBy>("searchRank");
-    const [sortOrder, setSortOrder] = useState<''|'asc'|'desc'>('asc');
+    // const [sortBy, setSortBy] = useState<SortBy>("searchRank");
+    // const [sortOrder, setSortOrder] = useState<''|'asc'|'desc'>('asc');
+
+    const [sortOption, setSortOption] = useState<SortOption>("Relevance (Default)");
+
     const [histogram, setHistogram] = useState<{bins: number[], min: number, max: number} | null>(null);
 
     const [priceMin, setPriceMin] = useState<number>(0);
     const [priceMax, setPriceMax] = useState<number>(Infinity);
     const [minStars, setMinStars] = useState<number | ''>('');
+
+    const [visibleCount, setVisibleCount] = useState(10);
 
     const destination_id = params.get('destination_id') || ''; 
     const checkin = params.get('checkin') || '';
@@ -57,40 +65,27 @@ export default function SearchResultsPage(){
         }
     }, [hotels]);
 
+    const filteredHotels = useHotelFilter(
+        {
+            hotels: hotels ?? [],
+            priceMin,
+            priceMax,
+            minStars
+        }
+    );
+
+    const sortedHotels = useHotelSort(
+        filteredHotels,
+        sortOption
+    );
+
     useEffect(() => {
-        const filtered = (hotels ?? []).filter((hotel) => {
-            const price = hotel.price ?? Infinity;
-            const rating = hotel.rating ?? 0;
+        setDisplayedHotels(sortedHotels);
+    }, [sortedHotels])
 
-            const withinMin = priceMin === 0 || price >= priceMin;
-            const withinMax = priceMax === Infinity || price <= priceMax;
-            const meetsStars = minStars === '' || rating >= minStars;
-
-            return withinMin && withinMax && meetsStars;
-        });
-
-        const sorted = [...filtered].sort((a, b) => {
-            const getValue = (hotel: Hotel): number => {
-                switch(sortBy){
-                    case "price":
-                        return hotel.price ?? Infinity;
-                    case "distance":
-                        return hotel.distance ?? Infinity;
-                    case "rating":
-                        return hotel.rating ?? Infinity;
-                    case "searchRank":
-                        return hotel.searchRank ?? Infinity;
-                };
-            }
-
-            const aVal = getValue(a);
-            const bVal = getValue(b);
-
-            return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
-        });
-
-        setDisplayedHotels(sorted);
-    }, [hotels, sortBy, sortOrder, priceMin, priceMax, minStars]);
+    useEffect(() => {
+        setVisibleCount(10);
+    }, [displayedHotels]);
 
     return (
         <div>
@@ -177,27 +172,19 @@ export default function SearchResultsPage(){
                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: "1rem" }}>
                         <div>
                             <label>
-                                Sort by:&nbsp;
+                                Sort:&nbsp;
                                 <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as SortBy)}
+                                    value={sortOption}
+                                    onChange={(e) => setSortOption(e.target.value as SortOption)}
                                 >
-                                    <option value="price">Price</option>
-                                    <option value="distance">Distance</option>
-                                    <option value="rating">Hotel Stars</option>
-                                    <option value="searchRank">Relevance (Default)</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                Order:&nbsp;
-                                <select
-                                    value={sortOrder}
-                                    onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-                                >
-                                    <option value="asc">Asc ↑</option>
-                                    <option value="desc">Desc ↓</option>
+
+                                    <option value="Price (Low to High)">Price (Low to High)</option>
+                                    <option value="Price (High to Low)">Price (High to Low)</option>
+                                    <option value="Distance (Close to Far)">Distance (Close to Far)</option>
+                                    <option value="Distance (Far to Close)">Distance (Far to Close)</option>
+                                    <option value="Star Rating (Low to High)">Star Rating (Low to High)</option>
+                                    <option value="Star Rating (High to Low)">Star Rating (High to Low)</option>
+                                    <option value="Relevance (Default)">Relevance (Default)</option>
                                 </select>
                             </label>
                         </div>
@@ -243,7 +230,7 @@ export default function SearchResultsPage(){
 
             {!loading && displayedHotels.length > 0 && (
                 <ul>
-                    {displayedHotels.map(h => (
+                    {displayedHotels.slice(0, visibleCount).map(h => (
                         <HotelCard
                             key={h.id}
                             hotel={h}
@@ -256,6 +243,16 @@ export default function SearchResultsPage(){
                 </ul>
             )}
 
+            {!loading && visibleCount < displayedHotels.length && (
+                <div style={{ textAlign: "center", marginTop: "1rem" }}>
+                    <button 
+                        onClick={() => setVisibleCount((prev) => prev + 10)}
+                        disabled={visibleCount >= displayedHotels.length}
+                    >
+                        {visibleCount + 10 >= displayedHotels.length ? 'All Hotels Loaded' : 'Load More'}
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
