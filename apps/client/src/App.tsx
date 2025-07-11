@@ -3,6 +3,7 @@ import Payment from './pages/PaymentTest';
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
+import Register from './pages/Register';
 import Header from './components/Header';
 import './styles/index.css';
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/hotel/:hotelId" element={<HotelDetailsPage />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/register"element={<Register />} />
       </Routes>
     </Router>
   );
