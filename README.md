@@ -52,5 +52,3 @@ C4T6-HotelBooking/
 ├── package.json    # Root package.json with concurrent scripts
 └── README.md
 ```
-
-// test
