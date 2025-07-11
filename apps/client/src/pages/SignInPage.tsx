@@ -4,8 +4,8 @@ import signInImage from "../assets/signin.png";
 
 export default function SignIn() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="flex max-w-5xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-gray-50 flex justify-center py-12">
+            <div className="flex max-w-6xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Left: Form section */}
                 <div className="w-full md:w-1/2 p-8 md:p-10">
                     <h2 className="text-2xl font-bold text-gray-800 mb-1">Welcome Back!</h2>
