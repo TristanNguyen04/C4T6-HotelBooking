@@ -28,14 +28,14 @@ function Payment() {
       }
     ]
     const userId = "currentUserId123";
-    const booking = {};
 
+    // send post request to the backend
     const response = await fetch("http://localhost:3000/payment/checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ items: hotel_cart, userId, booking }),
+      body: JSON.stringify({ items: hotel_cart, userId }),
     });
 
     const data = await response.json();

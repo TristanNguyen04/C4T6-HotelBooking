@@ -1,14 +1,14 @@
 import { Router,Request,Response } from "express";
 import stripe from "../utils/stripeClient";
 import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { createBookingRecord } from '../services/bookingService';
+import prisma from '../utils/prismaClient';
 
 export const createCheckoutSession = async(req:Request, res:Response) => {
     try {
         // dynamically adding from post request from confirmation page to the checkout page
-        const {items, userId, booking} = req.body;
-        if(!userId || !booking){
+        const {items, userId} = req.body;
+        if(!userId || !Array.isArray(items) || items.length === 0){
             return res.status(400).json({error: "Missing Booking / Userid"});
         }
 
@@ -48,6 +48,8 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
         res.status(500).json({ error: "Failed to create session" });
     }
 };
+
+
 
 export const handlePaymentSuccess = async (req: Request, res: Response) => {
     // retrieve session id
@@ -94,31 +96,27 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
                 },
             });
             }
-    // create booking using metadata passed
-    const bookings = JSON.parse(bookingsJSON);
-    const createdBookings = [];
-    for (const booking of bookings) {
-        await prisma.booking.create({
-            data: {
-            userId,
-            hotelId: booking.hotelId,
-            hotelName: booking.hotelName,
-            checkin: new Date(booking.checkin),
-            checkout: new Date(booking.checkout),
-            guests: booking.guests.toString(),
-            price: booking.price,
-            currency: booking.currency,
-            stripeSessionId: sessionId, // used to check for duplicated entries using session id
-            },
-        });
-        createdBookings.push(booking);
-        console.log(booking)
-    }
-    
-    res.status(201).json({ message: "Booking created successfully", bookings: createdBookings });
+        // create booking using metadata passed
+        const bookingsMade = JSON.parse(bookingsJSON);
+        const createdBookings = [];
+        for (const booking of bookingsMade) {
+            await prisma.booking.create({
+                data: {
+                userId,
+                hotelId: booking.hotelId,
+                hotelName: booking.hotelName,
+                checkin: new Date(booking.checkin),
+                checkout: new Date(booking.checkout),
+                guests: booking.guests.toString(),
+                price: booking.price,
+                currency: booking.currency,
+                stripeSessionId: sessionId, // used to check for duplicated entries using session id
+                },
+            });
+        }
+        res.status(201).json({ message: "Booking created successfully" }); // signal success
 
   } catch (error) {
-    console.error("Error retrieving Stripe session:", error);
     res.status(500).json({ error: "Failed to verify payment" });
   }
 };
