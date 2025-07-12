@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { RiHotelLine } from "react-icons/ri";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function HotelDetailsPage() {
@@ -231,6 +232,16 @@ export default function HotelDetailsPage() {
     { name: "Shangri-La Hotel Paris", price: 800, rating: 4.4, image: "/similar3.jpg" }
   ];
 
+  const handleBookingClick = () => {
+    navigate("/bookingconfirmation", {
+      state: {
+        hotelId,
+        hotelName: hotel.name,
+        price: hotel.price,
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen w-screen bg-gray-50 text-gray-800 font-sans overflow-x-hidden">
       {/* Navigation Bar */}
@@ -306,7 +317,10 @@ export default function HotelDetailsPage() {
                   <p className="text-sm text-gray-500 line-through">€{hotel.originalPrice}</p>
                   <p className="text-sm text-green-600">Save €{hotel.originalPrice - hotel.price}</p>
                 </div>
-                <button className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition">
+                <button 
+                  className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+                  onClick={handleBookingClick}>
+
                   Book Now
                 </button>
               </div>

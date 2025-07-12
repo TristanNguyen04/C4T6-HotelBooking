@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import './styles/index.css';
 import SignIn from './pages/SignInPage';
+import BookingConfirmationPage from './pages/BookingConfirmation.tsx';
 
 import PaymentSuccess from './pages/PaymentSuccessTest';
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/hotel/:hotelId" element={<HotelDetailsPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/register"element={<Register />} />
+        <Route path="/bookingconfirmation" element={<BookingConfirmationPage />} />
       </Routes>
       <Footer />
     </Router>
