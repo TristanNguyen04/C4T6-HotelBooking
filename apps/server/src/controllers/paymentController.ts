@@ -2,8 +2,7 @@ import { Router,Request,Response } from "express";
 import stripe from "../utils/stripeClient";
 import { PrismaClient } from '@prisma/client';
 import { createBookingRecord } from '../services/bookingService';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prismaClient';
 
 export const createCheckoutSession = async(req:Request, res:Response) => {
     try {

@@ -2,8 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { AuthRequest, } from '../middleware/auth';
 import { Response } from 'express';
 import { createBookingRecord } from '../services/bookingService';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prismaClient';
 
 export const createBooking = async (req: AuthRequest, res: Response) => {
     if(!req.userId){
