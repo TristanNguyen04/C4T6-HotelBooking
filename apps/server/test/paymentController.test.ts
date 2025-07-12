@@ -3,8 +3,8 @@
 import request from 'supertest';
 import app from '../src/index';
 import stripe from '../src/utils/stripeClient';
-import { PrismaClient } from '@prisma/client';
 import { mock } from 'node:test';
+import prisma from '../src/utils/prismaClient';
 
 // mock the stripe client
 jest.mock('../src/utils/stripeClient',()=>({
@@ -99,19 +99,16 @@ describe('POST /payment/checkout', ()=>{
 });
 
 
-jest.mock('@prisma/client', ()=>{
-    const prisma = {
-        user: {
-            findUnique: jest.fn(),
-            create: jest.fn(),
-        },
-        booking: {
-            findFirst: jest.fn(),
-            create: jest.fn(),
-        }
+jest.mock('../src/utils/prismaClient', ()=>({
+    user: {
+        findUnique: jest.fn(),
+        create: jest.fn(),
+    },
+    booking: {
+        findFirst: jest.fn(),
+        create: jest.fn(),
     }
-    return { PrismaClient: jest.fn(()=> prisma)};
-})
+}))
 
 const metaData = {
     userId: 'testUser123',
@@ -131,15 +128,6 @@ const metaData = {
 describe('POST /payment/success', ()=>{
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // get the mocked prisma instance
-    const prisma = new PrismaClient() as any;
-
-    // Mock Prisma calls your controller uses
-    prisma.user.findUnique.mockResolvedValue(null); // simulate user not found, so create runs
-    prisma.user.create.mockResolvedValue({ id: 'testUser123' });
-    prisma.booking.findFirst.mockResolvedValue(null); // no existing booking
-    prisma.booking.create.mockResolvedValue({}); // booking created successfully
   });
 
     const mockURL = 'https://mockstripe.com/session';
@@ -207,7 +195,6 @@ describe('POST /payment/success', ()=>{
             payment_status: 'paid',
             metadata: metaData
         });
-        const prisma = new PrismaClient();
         
         const mockFindFirst = prisma.booking.findFirst as jest.Mock;
         mockFindFirst.mockResolvedValueOnce({
@@ -235,11 +222,10 @@ describe('POST /payment/success', ()=>{
             payment_status: 'paid',
             metadata: metaData
         });
-        const prisma = new PrismaClient() as any;
         // Booking not found
-        prisma.booking.findFirst.mockResolvedValueOnce(null);
+        (prisma.booking.findFirst as jest.Mock).mockResolvedValueOnce(null);
         // Create new booking
-        prisma.booking.create.mockResolvedValue({ id: 'newBookingId' });
+        (prisma.booking.create as jest.Mock).mockResolvedValue({ id: 'newBookingId' });
         const res = await request(app)
             .post('/payment/success')
             .send({ sessionId: '1234' });

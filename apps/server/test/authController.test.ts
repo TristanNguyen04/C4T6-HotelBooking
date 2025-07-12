@@ -1,9 +1,9 @@
 import request from 'supertest';
 import { sendVerificationEmail } from '../src/utils/sendEmail';
 import app from '../src/index';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import prisma from '../src/utils/prismaClient';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -20,17 +20,14 @@ jest.mock('../src/utils/sendEmail', () => ({
 
 
 // Mock prisma client
-jest.mock('@prisma/client',()=>{
-    const prisma = {
-        user: {
-            findUnique: jest.fn(),
-            create: jest.fn(),
-            findFirst: jest.fn(),
-            update: jest.fn()
-        }
-    };
-    return { PrismaClient: jest.fn(()=> prisma)};
-});
+jest.mock('../src/utils/prismaClient',()=>({
+    user: {
+        findUnique: jest.fn(),
+        create: jest.fn(),
+        findFirst: jest.fn(),
+        update: jest.fn()
+    }
+}));
 
 const testData = {
     email: 'test123@gmail.com',
@@ -53,7 +50,6 @@ describe('POST /auth/register', ()=>{
     beforeEach(()=>{
         jest.clearAllMocks();
     });
-    const prisma = new PrismaClient() as any;
 
     // Test 1
     test('Register Successful', async () => {
@@ -107,7 +103,6 @@ describe('GET verifyEmail', ()=>{
     beforeEach(()=>{
         jest.clearAllMocks();
     })
-    const prisma = new PrismaClient() as any;
 
     // Test 1
     test('Token Receieved', async ()=>{
@@ -159,8 +154,6 @@ describe('POST /auth/login', ()=>{
         jest.clearAllMocks();
     });
     
-    const prisma = new PrismaClient() as any;
-
     // Test 1
     test('Login Successful', async ()=>{
         const mockUnique = prisma.user.findUnique as jest.Mock;
@@ -234,8 +227,6 @@ describe('POST /auth/resend-verification', ()=>{
         jest.clearAllMocks();
     })
 
-    const prisma = new PrismaClient() as any;
-
     // Test 1
     test('Verification send Successfully', async ()=>{
 
@@ -290,8 +281,6 @@ describe('GET /api/auth/check-verification',()=>{
     beforeEach(()=>{
         jest.clearAllMocks();
     });
-
-    const prisma = new PrismaClient() as any;
 
     // Test 1
     test('Check Verification Successful: Verified',async ()=>{
