@@ -22,7 +22,7 @@ export default function LoginPage(){
             }
             
             doLogin(res.data.user, res.data.token);
-            navigate('/home');
+            navigate('/');
         } catch(err: any){
             setError(err?.response?.data?.error || 'Login failed!');
         }

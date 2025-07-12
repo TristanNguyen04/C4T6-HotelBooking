@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import SearchBar from '../components/SearchBar/SearchBar';
+import SearchBar from '../components/SearchBar';
 import Hero from '../components/Hero';
 
 export default function HomePage() {

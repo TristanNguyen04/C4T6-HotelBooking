@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
-import type { Hotel } from '../../types/hotel';
+import type { Hotel } from '../types/hotel';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

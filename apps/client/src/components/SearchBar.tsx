@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { searchLocations } from '../../api/hotels';
+import { searchLocations } from '../api/hotels';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { parseDate } from '../../utils/date';
+import { parseDate } from '../utils/date';
 import React from 'react';
 
 
