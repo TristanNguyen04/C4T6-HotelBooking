@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const navigate = useNavigate();
+
+  //guest dropdown state
+  const [guestDropdownOpen, setGuestDropdownOpen] = useState(false);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [rooms, setRooms] = useState(1);
+
   return (
-    
     <div className="min-h-screen w-screen bg-[#f8f9fa] text-gray-800 font-sans overflow-x-hidden">
       {/* HomePage Container*/}
       <main className="px-6 sm:px-0">
@@ -23,27 +29,130 @@ export default function HomePage() {
               <span className="bg-white text-gray-800 px-4 py-1 rounded-full">No Booking Fees</span>
             </div>
           </div>
-          <div className="absolute bottom-[-2.5rem] w-11/12 max-w-5xl bg-white p-6 rounded-xl shadow-lg flex flex-wrap md:flex-nowrap gap-4 justify-between items-center">
-            <input
-              className="border border-gray-300 p-3 rounded w-full md:w-1/3 text-sm text-black"
-              placeholder="Where are you going?"
-            />
-            <input
-              className="border border-gray-300 p-3 rounded w-full md:w-1/4 text-sm text-black"
-              placeholder="Add dates"
-            />
-            <input
-              className="border border-gray-300 p-3 rounded w-full md:w-1/4 text-sm text-black"
-              placeholder="Guests"
-            />
-            <button 
+          
+          {/* Search Box */}
+          <div className="absolute bottom-[-2.5rem] w-11/12 max-w-5xl bg-white p-6 rounded-xl shadow-lg flex flex-wrap md:flex-nowrap gap-4 justify-between items-end">
+
+            {/* Destination */}
+            <div className="flex flex-col w-full md:w-1/3">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Destination</label>
+              <input
+                className="border border-gray-300 p-3 rounded text-sm text-black"
+                placeholder="Where are you going?"
+              />
+            </div>
+
+            {/* Dates */}
+            <div className="flex flex-col w-full md:w-1/4">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Dates</label>
+              <input
+                className="border border-gray-300 p-3 rounded text-sm text-black"
+                placeholder="Add dates"
+              />
+            </div>
+
+            {/* Guests */}
+            <div className="relative flex flex-col w-full md:w-1/4">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Guests</label>
+              <button
+                onClick={() => setGuestDropdownOpen(!guestDropdownOpen)}
+                className="border border-gray-300 p-3 rounded text-sm text-left w-full bg-white text-gray-800 font-medium"
+
+              >
+                {`${adults} adults, ${children} children, ${rooms} room${rooms > 1 ? 's' : ''}`}
+              </button>
+
+              {guestDropdownOpen && (
+                <div className="absolute z-10 mt-2 bg-white border border-gray-200 shadow-lg rounded p-4 w-full space-y-4">
+                  {/* Row: Adults */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-700">Adults</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setAdults(Math.max(1, adults - 1))}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+                        disabled={adults <= 1}
+                      >
+                        −
+                      </button>
+                      <span className="text-gray-800">{adults}</span>
+
+                      <button
+                        onClick={() => setAdults(adults + 1)}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Row: Children */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-700">Children</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setChildren(Math.max(0, children - 1))}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+                        disabled={children <= 0}
+                      >
+                        −
+                      </button>
+                      <span className="text-gray-800">{children}</span>
+
+                      <button
+                        onClick={() => setChildren(children + 1)}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Row: Rooms */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-700">Rooms</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setRooms(Math.max(1, rooms - 1))}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+                        disabled={rooms <= 1}
+                      >
+                        −
+                      </button>
+                      <span className="text-gray-800">{rooms}</span>
+
+                      <button
+                        onClick={() => setRooms(rooms + 1)}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Apply button */}
+                  <div className="text-right">
+                    <button
+                      onClick={() => setGuestDropdownOpen(false)}
+                      className="text-sm font-bold"
+                      style={{ color: '#FF6B6B', background: 'none', border: 'none' }}
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
               onClick={() => navigate("/search")}
-              className="bg-red-500 text-white px-6 py-3 rounded-md w-full md:w-auto text-sm font-medium">
+              className="text-white px-6 py-3 rounded-md w-full md:w-auto text-sm font-medium"
+              style={{ backgroundColor: '#FF6B6B' }}
+            >
               Search
             </button>
           </div>
         </section>
-
       </main>
 
       {/* HomePage Contents*/}
