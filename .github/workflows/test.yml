@@ -24,6 +24,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install backend dependencies (sync package-lock file)
+        run: npm install
+        
       - name: Install backend dependencies
         run: npm ci
 
