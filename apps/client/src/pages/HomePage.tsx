@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar/SearchBar';
+import Hero from '../components/Hero';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -11,9 +12,9 @@ export default function HomePage() {
   };
 
   return (
-    <div>
-      <h2>Search Hotels</h2>
+    <>
+      <Hero/>
       <SearchBar onSubmit={handleSearchSubmit} />
-    </div>
+    </>
   );
 }

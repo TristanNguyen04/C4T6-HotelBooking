@@ -3,8 +3,8 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f2f2f2;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f5f5f5;
     box-sizing: border-box;
 }
 
@@ -15,82 +15,195 @@ html, body {
 }
 
 .search-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  border: 2px solid red;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.search-bar-container {
-  width: 100%;
-  padding: 16px 24px;
-  background-color: white;
-  border-bottom: 2px solid #0071c2; /* Booking.com blue */
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border: 2px solid red;
+/* Header with search bar - full width */
+.search-header {
+    background-color: #003580;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
+.search-header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    width: 100%;
+}
+
+/* Main content area - full width */
 .main-content {
-  display: flex;
-  padding: 24px;
-  gap: 24px;
-  background-color: #f2f2f2;
+    width: 100%;
+    padding: 24px;
+    background-color: #f5f5f5;
 }
 
-.filter-bar-container {
-  width: 300px;
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 80px;
-  height: fit-content;
-  align-self: flex-start;
+.content-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    width: 100%;
 }
 
-.hotel-list-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* Filter sidebar */
+.filter-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 120px;
+    height: fit-content;
+    border: 1px solid #e7e7e7;
+}
+
+/* Results section */
+.results-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.results-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.results-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #262626;
 }
 
 .hotel-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
+/* Loading, error, and empty states */
 .loading,
 .error,
 .empty {
-  text-align: center;
-  margin-top: 2rem;
-  color: #555;
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b6b6b;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #e7e7e7;
 }
 
+.loading p {
+    margin-top: 16px;
+    font-size: 16px;
+}
+
+.error {
+    color: #d32f2f;
+    background-color: #ffebee;
+    border-color: #ffcdd2;
+}
+
+.empty {
+    background-color: #f9f9f9;
+}
+
+/* Load more button */
 .load-more-container {
-  text-align: center;
-  margin-top: 1.5rem;
+    text-align: center;
+    margin-top: 32px;
+    padding: 20px;
 }
 
 .load-more-btn {
-  padding: 10px 20px;
-  background-color: #0071c2;
-  border: none;
-  color: white;
-  font-weight: 500;
-  border-radius: 4px;
-  cursor: pointer;
+    background-color: #0071c2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 160px;
 }
 
 .load-more-btn:hover {
-  background-color: #005fa3;
+    background-color: #005999;
+}
+
+.load-more-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .filter-sidebar {
+        width: 100%;
+        position: static;
+        order: 2;
+    }
+    
+    .results-section {
+        order: 1;
+    }
+    
+    .main-content {
+        padding: 16px;
+    }
+    
+    .search-header-content {
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 12px;
+    }
+    
+    .filter-sidebar {
+        padding: 16px;
+    }
+    
+    .results-header h2 {
+        font-size: 20px;
+    }
+}
+
+/* For ultra-wide screens, remove max-width constraint */
+@media (min-width: 1400px) {
+    .content-container {
+        max-width: none;
+        padding: 0 40px;
+    }
+    
+    .search-header-content {
+        max-width: none;
+        padding: 16px 40px;
+    }
 }

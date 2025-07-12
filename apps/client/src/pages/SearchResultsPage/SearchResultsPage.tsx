@@ -84,84 +84,96 @@ export default function SearchResultsPage(){
 
     return (
         <div className="search-page">
-            <div className="search-bar-container">
-                <SearchBar
-                    onSubmit={({ destination, checkin, checkout, guests }) => {
-                        navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`);
-                    }}
+            {/* Header with search bar */}
+            <header className="search-header">
+                <div className="search-header-content">
+                    <SearchBar
+                        onSubmit={({ destination, checkin, checkout, guests }) => {
+                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`);
+                        }}
 
-                    initialValues={{
-                        destination: {
-                            uid: params.get('destination_id') || '',
-                            term: params.get('term') || ''
-                        },
-                        checkin: params.get('checkin') || '',
-                        checkout: params.get('checkout') || '',
-                        guests: params.get('guests') || '2'
-                    }}
-                />
-            </div>
+                        initialValues={{
+                            destination: {
+                                uid: params.get('destination_id') || '',
+                                term: params.get('term') || ''
+                            },
+                            checkin: params.get('checkin') || '',
+                            checkout: params.get('checkout') || '',
+                            guests: params.get('guests') || '2'
+                        }}
+                    />
+                </div>
+            </header>
 
-            <div className="main-content">
-                <aside className="filter-bar-container">
-                    {hotels && hotels.length > 0 && (
-                        <FilterBar
-                            histogram={histogram}
-                            sortOption={sortOption}
-                            setSortOption={setSortOption}
-                            priceMin={priceMin}
-                            setPriceMin={setPriceMin}
-                            priceMax={priceMax}
-                            setPriceMax={setPriceMax}
-                            minStars={minStars}
-                            setMinStars={setMinStars}
-                        />
+            {/* Main content */}
+            <main className="main-content">
+                <div className="content-container">
+                    {/* Filter sidebar */}
+                    <aside className="filter-sidebar">
+                        {hotels && hotels.length > 0 && (
+                            <FilterBar
+                                histogram={histogram}
+                                sortOption={sortOption}
+                                setSortOption={setSortOption}
+                                priceMin={priceMin}
+                                setPriceMin={setPriceMin}
+                                priceMax={priceMax}
+                                setPriceMax={setPriceMax}
+                                minStars={minStars}
+                                setMinStars={setMinStars}
+                            />
+                        )}
+                    </aside>
 
-                    )}
-                </aside>
+                    {/* Hotel results */}
+                    <section className="results-section">
+                        {loading && (
+                            <div className="loading">
+                                <Spinner />
+                                <p>Fetching hotel results...</p>
+                            </div>
+                        )}
 
-                <section className="hotel-list-container">
-                    {loading && (
-                        <div className="loading">
-                            <Spinner />
-                            <p>Fetching hotel results...</p>
-                        </div>
-                    )}
+                        {error && <p className="error">{error}</p>}
+                        
+                        {!loading && hotels && displayedHotels.length === 0 && (
+                            <p className="empty">No hotels match your criteria.</p>
+                        )}
 
-                    {error && <p className="error">{error}</p>}
-                    
-                    {!loading && hotels && displayedHotels.length === 0 && (
-                        <p className="empty">No hotels match your criteria.</p>
-                    )}
+                        {!loading && displayedHotels.length > 0 && (
+                            <>
+                                <div className="results-header">
+                                    <h2>Found {displayedHotels.length} hotels</h2>
+                                </div>
+                                <ul className="hotel-list">
+                                    {displayedHotels.slice(0, visibleCount).map(h => (
+                                        <HotelCard
+                                            key={h.id}
+                                            hotel={h}
+                                            destination_id={params.get('destination_id') || ''}
+                                            checkin={params.get('checkin') || ''}
+                                            checkout={params.get('checkout') || ''}
+                                            guests={params.get('guests') || '2'}
+                                        />
+                                    ))}
+                                </ul>
 
-                    {!loading && displayedHotels.length > 0 && (
-                        <ul className="hotel-list">
-                            {displayedHotels.slice(0, visibleCount).map(h => (
-                                <HotelCard
-                                    key={h.id}
-                                    hotel={h}
-                                    destination_id={params.get('destination_id') || ''}
-                                    checkin={params.get('checkin') || ''}
-                                    checkout={params.get('checkout') || ''}
-                                    guests={params.get('guests') || '2'}
-                                />
-                            ))}
-                        </ul>
-                    )}
-
-                    {!loading && visibleCount < displayedHotels.length && (
-                        <div className="load-more-container">
-                            <button 
-                                className="load-more-btn"
-                                onClick={() => setVisibleCount((prev) => prev + 10)}
-                                disabled={visibleCount >= displayedHotels.length}
-                            >
-                                {visibleCount + 10 >= displayedHotels.length ? 'All Hotels Loaded' : 'Load More'}
-                            </button>
-                        </div>
-                    )}
-                </section>
-            </div>
+                                {visibleCount < displayedHotels.length && (
+                                    <div className="load-more-container">
+                                        <button 
+                                            className="load-more-btn"
+                                            onClick={() => setVisibleCount((prev) => prev + 10)}
+                                            disabled={visibleCount >= displayedHotels.length}
+                                        >
+                                            {visibleCount + 10 >= displayedHotels.length ? 'Show all hotels' : 'Load more hotels'}
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </section>
+                </div>
+            </main>
         </div>
     );
 }
