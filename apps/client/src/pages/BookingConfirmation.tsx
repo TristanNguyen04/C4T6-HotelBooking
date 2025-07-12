@@ -23,17 +23,17 @@ export default function BookingConfirmation() {
     return (
         <div className="min-h-screen bg-white flex flex-col">
 
-        {/* Main Content */}
+        {/*main*/}
         <main className="flex-1 flex justify-center items-start px-4 py-5 sm:px-8 md:px-16 lg:px-40 md:py-5">
             <div className="w-full max-w-4xl flex flex-col space-y-4 sm:space-y-5 py-2 sm:py-5">
-            {/* Page Title */}
+            {/*title*/}
             <div className="px-4 py-3 sm:py-5">
                 <h1 className="text-2xl sm:text-[28px] font-bold text-stayease-text-primary leading-tight sm:leading-[35px]">
                 Confirm and pay
                 </h1>
             </div>
 
-            {/* Your Trip Section */}
+            {/*trip section*/}
             <div className="space-y-2">
                 <div className="px-4 py-2">
                 <h2 className="text-lg font-bold text-stayease-text-primary">
@@ -53,11 +53,11 @@ export default function BookingConfirmation() {
                 </div>
             </div>
 
-            {/* Your Price Section */}
+            {/*price*/}
             <div className="space-y-4">
 
                 <div className="px-4 space-y-2">
-                {/* 4 nights */}
+                {/*# of nights*/}
                 <div className="flex justify-between items-start py-2">
                     <div className="text-sm text-stayease-text-secondary font-normal leading-[21px]">
                         4 nights
@@ -67,7 +67,7 @@ export default function BookingConfirmation() {
                     </div>
                 </div>
 
-                {/* Taxes */}
+                {/*taxes*/}
                 <div className="flex justify-between items-start py-2">
                     <div className="text-sm text-stayease-text-secondary font-normal leading-[21px]">
                         Taxes
@@ -77,7 +77,7 @@ export default function BookingConfirmation() {
                     </div>
                 </div>
 
-                {/* Total */}
+                {/*total payable*/}
                 <div className="flex justify-between items-start py-2">
                     <div className="text-sm text-stayease-text-secondary font-normal leading-[21px]">
                         Total
@@ -88,7 +88,7 @@ export default function BookingConfirmation() {
                 </div>
                 </div>
 
-                {/* Confirm and Pay Button */}
+                {/*confirmation button*/}
                 <div className="px-4 py-3">
                     <button className="w-full h-12 bg-[#1A8FE5] text-white text-base font-bold leading-6 rounded-xl hover:bg-blue-600 transition-colors"
                     onClick={() => {alert("Test: booking confirmed!");}}>
