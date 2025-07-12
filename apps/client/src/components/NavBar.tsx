@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { assets } from '../assets/assets';
 
 const NavBar = () => {
@@ -10,7 +10,8 @@ const NavBar = () => {
         { name: 'Contact', path: '/' },
     ];
 
-    const ref = React.useRef(null)
+    const location = useLocation();
+    const isHomePage = location.pathname === '/';
 
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -35,10 +36,6 @@ const NavBar = () => {
                         Comfort wherever you go
                     </span>
                 </div>
-
-
-                {/* <div className={`h-9 ${isScrolled && "invert opacity-80"}`}>StayEase</div> */}
-                {/* <img src={"https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoWhite.svg"} alt="logo" className={`h-9 ${isScrolled && "invert opacity-80"}`} /> */}
             </Link>
 
             {/* Desktop Nav */}
@@ -63,9 +60,11 @@ const NavBar = () => {
 
             {/* Mobile Menu Button */}
             <div className="flex items-center gap-3 md:hidden">
-                <img 
-                onClick={() => setIsMenuOpen(!isMenuOpen)} 
-                src={assets.menuIcon} alt="menu" className={`${isScrolled && 'invert'} h-4`} />
+                    <svg onClick={() => setIsMenuOpen(!isMenuOpen)} className={`h-6 w-6 cursor-pointer ${isScrolled ? "invert" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <line x1="4" y1="6" x2="20" y2="6" />
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <line x1="4" y1="18" x2="20" y2="18" />
+                    </svg>
             </div>
 
             {/* Mobile Menu */}
@@ -80,8 +79,8 @@ const NavBar = () => {
                     </a>
                 ))}
 
-                <button className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500">
-                    Login
+                <button className="bg-[#FF6B6B] text-white px-8 py-2.5 rounded-full transition-all duration-500">
+                    Sign In
                 </button>
             </div>
         </nav>

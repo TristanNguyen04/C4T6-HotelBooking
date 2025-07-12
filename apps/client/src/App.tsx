@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 function App(){
   return (
@@ -14,14 +15,15 @@ function App(){
         <div className='min-h-[70vh]'>
           <Routes>
             <Route path='/' element={<HomePage/>}/>
+            <Route path='/search' element={<SearchResultsPage/>}/>
           </Routes>
         </div>
+        <Footer/>
     </div>
     // <Routes>
     //   <Route path='/login' element={<LoginPage/>}/>
     //   <Route path='/register' element={<RegisterPage/>}/>
     //   <Route path='/verify-email' element={<EmailVerificationPage/>}/>
-    //   <Route path='/search' element={<SearchResultsPage/>}/>
     //   <Route path='/hotels/:id/details' element={<HotelDetailsPage/>}/>
     // </Routes>
   );

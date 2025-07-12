@@ -28,7 +28,7 @@ html, body {
     background-color: #003580;
     color: white;
     position: sticky;
-    top: 0;
+    top: 80px;
     z-index: 1000;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -66,7 +66,7 @@ html, body {
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     position: sticky;
-    top: 120px;
+    top: 200px;
     height: fit-content;
     border: 1px solid #e7e7e7;
 }
