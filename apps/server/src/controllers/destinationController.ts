@@ -12,7 +12,7 @@ const fuseOptions = {
     threshold: 0.3, 
     includeScore: true,
     includeMatches: true, 
-    minMatchCharLength: 2, 
+    minMatchCharLength: 1, 
     shouldSort: true,
     findAllMatches: false,
     location: 0,
