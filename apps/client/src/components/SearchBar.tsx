@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { searchLocations } from '../api/hotels';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { parseDate } from '../utils/date';
+import { parseDate, convertDateFormat } from '../utils/date';
 import React from 'react';
 
 
@@ -38,20 +38,6 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
 
-    const CustomInput = React.forwardRef<HTMLInputElement, React.HTMLProps<HTMLInputElement>>(
-        ({ value, onClick, onChange, placeholder }, ref) => (
-            <input
-            ref={ref}
-            value={value}
-            onClick={onClick}
-            onChange={onChange}
-            placeholder={placeholder}
-            className="w-full h-12 rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                        focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-            />
-        )
-    );
-
     useEffect(() => {
         if (term.length < 1) {
             setSuggestions([]);
@@ -79,12 +65,12 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
 
         onSubmit({
             destination: selected,
-            checkin: checkin!.toISOString().split('T')[0], // YYYY-MM-DD
-            checkout: checkout!.toISOString().split('T')[0], // YYYY-MM-DD
+            checkin: convertDateFormat(checkin!.toLocaleDateString()), // dd/MM/yyyy
+            checkout: convertDateFormat(checkout!.toLocaleDateString()), // dd/MM/yyyy
             guests,
         });
     };
-
+    
     return (
         <form
             onSubmit={handleSubmit} 
@@ -148,9 +134,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                     selected={checkin}
                     onChange={(date: Date | null) => setCheckin(date)}
                     placeholderText='Select check-in date'
-                    // className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                    // focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-                    customInput={<CustomInput/>}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
+                    focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
                     dateFormat="dd/MM/yyyy"
                     id="checkin"
                     minDate={new Date()}
@@ -169,10 +154,9 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                     selected={checkout}
                     onChange={(date: Date | null) => setCheckout(date)}
                     placeholderText='Select check-out date'
-                    // className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                    // focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
+                    focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
                     dateFormat="dd/MM/yyyy"
-                    customInput={<CustomInput/>}
                     id="checkOut"
                     minDate={checkin || undefined}
                 />
