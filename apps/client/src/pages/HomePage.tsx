@@ -1,27 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import SearchBar from '../components/SearchBar';
-import Hero from '../components/Hero';
-
 export default function HomePage() {
-  const navigate = useNavigate();
-
-  const handleSearchSubmit = ({ destination, checkin, checkout, guests }: {
-    destination: { uid: string; term: string };
-    checkin: string;
-    checkout: string;
-    guests: string;
-  }) => {
-    navigate(
-      `/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
-    );
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Hero>
-        <SearchBar onSubmit={handleSearchSubmit} />
-      </Hero>
-      
       <main className="max-w-6xl mx-auto px-4">
         <section className="mt-40 text-center">
           <h2 className="text-2xl font-bold mb-8">Why Book With Us</h2>

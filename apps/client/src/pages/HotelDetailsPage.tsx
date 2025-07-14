@@ -1,6 +1,6 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Spinner from '../components/Spinner/Spinner';
+import Spinner from '../components/Spinner';
 import { searchHotelDetails } from '../api/hotels';
 
 export default function HotelDetailsPage(){
@@ -36,13 +36,13 @@ export default function HotelDetailsPage(){
     }, [id, destination_id, checkin, checkout, guests]);
 
     if(loading) return (
-        <div style={{ textAlign: 'center' }}>
+        <div className="flex flex-col items-center justify-center h-screen">
             <Spinner/>
-            <p>Loading hotel details...</p>
+            <p className="mt-4">Loading hotel details...</p>
         </div>
     );
 
-    if(error) return <p style={{ color: 'red' }}>{error}</p>;
+    if(error) return <p className="text-red-500">{error}</p>;
 
     if(!hotel) return null;
 

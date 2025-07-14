@@ -1,13 +1,9 @@
-import { useState, useEffect, useReducer, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { searchLocations } from '../api/hotels';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { parseDate, convertDateFormat } from '../utils/date';
 import React from 'react';
-import * as fecha from 'fecha';
-// @ts-ignore
-import HotelDatepicker from 'hotel-datepicker';
-import 'hotel-datepicker/dist/css/hotel-datepicker.css';
 
 
 interface Location {
