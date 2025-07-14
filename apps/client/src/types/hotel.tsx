@@ -14,7 +14,14 @@ export type Hotel = {
       suffix: string;
       count: number;
       prefix: string;
-    }
+    };
+    categories: {
+      overall?: {
+          name: string;
+          score: number;
+          popularity: number;
+      };
+    };
 };
 
 export type SortBy = "price" | "distance" | "rating" | "searchRank";

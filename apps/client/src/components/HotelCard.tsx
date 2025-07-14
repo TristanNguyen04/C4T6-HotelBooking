@@ -3,6 +3,9 @@ import { Tooltip } from 'react-tooltip';
 import type { Hotel } from '../types/hotel';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { assets } from '../assets/assets';
+import { renderStars } from '../utils/stars';
+import { formatAmenityName } from '../utils/amenity';
 
 interface HotelCardProps {
     hotel: Hotel;
@@ -12,42 +15,33 @@ interface HotelCardProps {
     guests: string;
 }
 
-
-const formatAmenityName = (key: string): string => {
-  return key
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, str => str.toUpperCase());
-};
-
 export default function HotelCard({ 
     hotel,
     destination_id,
     checkin,
     checkout,
     guests
-}: HotelCardProps){
+}: HotelCardProps) {
     const navigate = useNavigate();
 
-    
     const handleViewDetails = () => {
         navigate(
             `/hotels/${hotel.id}/details?destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
-        )
+        );
     };
 
     const [imgSrc, setImgSrc] = useState(
         hotel.image_details
             ? `${hotel.image_details.prefix}${hotel.image_details.count}${hotel.image_details.suffix}`
-            : 'fallback.webp'
-    )
+            : assets.hotelNotFound
+    );
 
     const handleImgError = () => {
-        setImgSrc('fallback.webp');
-    }
-    
+        setImgSrc(assets.hotelNotFound);
+    };
 
     const amenityKeys = Object.entries(hotel.amenities || {})
-        .filter(([_, value]) => value === true)
+        .filter(([, value]) => value === true)
         .map(([key]) => key);
 
     const previewAmenities = amenityKeys.slice(0, 3);
@@ -55,101 +49,111 @@ export default function HotelCard({
 
     const tooltipContent = amenityKeys
         .map(formatAmenityName)
-        .join(', ');
+        .join(' • ');
         
     return (
-        <div className="space-y-6">
-            <div className="flex bg-white rounded-md shadow-sm overflow-hidden hover:shadow-md transition cursor-pointer">
-                <div className="w-40 sm:w-56 bg-purple-100 flex-shrink-0 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200">
+            <div className="flex flex-col sm:flex-row">
+                <div className="w-full h-48 sm:w-64 sm:h-72 bg-gray-100 flex-shrink-0">
                     <img 
                         src={imgSrc} 
                         alt={hotel.name}
-                        onError={handleImgError}                        
-                        style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '6px', marginBottom: '0.5rem' }}
+                        onError={handleImgError}
+                        className="w-full h-full object-cover"
                     />
                 </div>
-            </div>
 
-            <div className="p-4 flex-1 flex-col justify-between gap-2">
-                <div className="flex justify-between items-start">
-                    <h3 className="text-lg font-bold">{hotel.name}</h3>
-                    <p className="text-sm text-gray-500">{hotel.address}</p>
-                    <div className='flex gap-2 mt-1 flex-wrap text-xs'>
-                        {amenityKeys.length > 0 && (
-                            <>
-                                <p
-                                    data-tooltip-id={`tooltip-${hotel.id}`}
-                                    data-tooltip-content={tooltipContent}
-                                    style={{ cursor: 'help' }}
-                                    >
-                                    Amenities:&nbsp;
-                                    {previewAmenities.map((key, idx) => (
-                                        <span key={key}>
-                                        {formatAmenityName(key)}{idx < previewAmenities.length - 1 ? ', ' : ''}
-                                        </span>
-                                    ))}
-                                    {extraAmenityCount > 0 && (
-                                        <span style={{ color: '#888' }}>
-                                        &nbsp;+{extraAmenityCount}
-                                        </span>
-                                    )}
+                <div className="flex-1 p-4 flex flex-col justify-between">
+                    <div className="space-y-2">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                            <div className="flex-1">
+                                {hotel.rating && (
+                                    <div className="flex items-center gap-1 mb-2">
+                                        {renderStars(hotel.rating)}
+                                        <span className="text-sm text-gray-600 ml-1">({hotel.rating})</span>
+                                    </div>
+                                )}
+                                <h3 className="text-xl font-semibold text-gray-900 mb-1">{hotel.name}</h3>
+                                <p className="text-sm text-gray-600 flex items-center">
+                                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                    </svg>
+                                    {hotel.address}
                                 </p>
-                                <Tooltip id={`tooltip-${hotel.id}`} place="top" /> 
-                            </>
+                            </div>
+                            {hotel.categories?.overall?.score && (
+                                <div className="flex-shrink-0">
+                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                        Guest Rating: {hotel.categories.overall.score}/100
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        {hotel.distance && (
+                            <p className="text-sm text-gray-500">
+                                {(hotel.distance / 1000).toFixed(1)} km from center
+                            </p>
+                        )}
+
+                        {amenityKeys.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                                {previewAmenities.map((key) => (
+                                    <span 
+                                        key={key}
+                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                    >
+                                        {formatAmenityName(key)}
+                                    </span>
+                                ))}
+                                {extraAmenityCount > 0 && (
+                                    <span 
+                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 cursor-help"
+                                        data-tooltip-id={`tooltip-${hotel.id}`}
+                                        data-tooltip-content={tooltipContent}
+                                    >
+                                        +{extraAmenityCount} more
+                                    </span>
+                                )}
+                                <Tooltip 
+                                    id={`tooltip-${hotel.id}`} 
+                                    place="bottom" 
+                                    style={{
+                                        backgroundColor: '#1f2937',
+                                        color: '#ffffff',
+                                        borderRadius: '8px',
+                                        padding: '12px 16px',
+                                        fontSize: '14px',
+                                        fontWeight: '500',
+                                        maxWidth: '300px',
+                                        textAlign: 'center',
+                                        lineHeight: '1.4',
+                                        wordWrap: 'break-word',
+                                        zIndex: 1000,
+                                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                                    }}
+                                    opacity={1}
+                                />
+                            </div>
                         )}
                     </div>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
                         <div className="text-right">
-                            <p className="text-lg font-bold text-gray-800">SGD {hotel.price}</p>
-                            {/* <p className="text-xs font-gray-500 line-through"></p> */}
-                            <button
-                                className='mt-1 bg-red-500 text-white text-xs px-3 py-1 rounded hover:bg-red-600 transition'
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleViewDetails();
-                                }}>
-                                View Details
-                            </button>
+                            <p className="text-2xl font-bold text-gray-900">
+                                {hotel.currency} {hotel.price}
+                            </p>
+                            <p className="text-sm text-gray-500">per night</p>
                         </div>
+                        <button
+                            onClick={handleViewDetails}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        >
+                            View Details
+                        </button>
                     </div>
                 </div>
             </div>
-
-            {/* <li style={{ marginBottom: '1rem', border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
-                
-                <h4>{hotel.name}</h4>
-                <p>{hotel.address}</p>
-                <p>Price: {hotel.currency} {hotel.price ?? 'N/A'}</p>
-                <p>Stars: {hotel.rating ?? 'N/A'}</p>
-                <p>Distance: {hotel.distance ? (hotel.distance / 1000).toFixed(1) + " km" : 'N/A'}</p>
-
-                {amenityKeys.length > 0 && (
-                    <>
-                        <p
-                            data-tooltip-id={`tooltip-${hotel.id}`}
-                            data-tooltip-content={tooltipContent}
-                            style={{ cursor: 'help' }}
-                            >
-                            Amenities:&nbsp;
-                            {previewAmenities.map((key, idx) => (
-                                <span key={key}>
-                                {formatAmenityName(key)}{idx < previewAmenities.length - 1 ? ', ' : ''}
-                                </span>
-                            ))}
-                            {extraAmenityCount > 0 && (
-                                <span style={{ color: '#888' }}>
-                                &nbsp;+{extraAmenityCount}
-                                </span>
-                            )}
-                        </p>
-
-                        <Tooltip id={`tooltip-${hotel.id}`} place="top" />
-                    </>
-                )}
-
-                <button onClick={handleViewDetails}>View Details</button>
-            </li> */}
         </div>
-    )
+    );
 }
