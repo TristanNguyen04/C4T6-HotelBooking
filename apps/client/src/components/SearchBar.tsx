@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { searchLocations } from '../api/hotels';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { parseDate, convertDateFormat } from '../utils/date';
+import DateRangePicker, { type DateRange } from './DateRangePicker';
 import React from 'react';
-
 
 interface Location {
     uid: string;
     term: string;
+    type?: string;
 }
 
 interface SearchBarProps {
@@ -26,14 +25,19 @@ interface SearchBarProps {
     }
 }
 
-export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
+export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [term, setTerm] = useState(initialValues?.destination?.term || '');
     const [suggestions, setSuggestions] = useState<Location[]>([]);
     const [selected, setSelected] = useState<Location | null>(initialValues?.destination || null);
-    const [checkin, setCheckin] = useState<Date | null>(parseDate(initialValues?.checkin));
-    const [checkout, setCheckout] = useState<Date | null>(parseDate(initialValues?.checkout));
+    
+    const [dateRange, setDateRange] = useState<DateRange>({
+        startDate: parseDate(initialValues?.checkin),
+        endDate: parseDate(initialValues?.checkout)
+    });
+    
     const [guests, setGuests] = useState(initialValues?.guests || '2');
     const [showOccupancy, setShowOccupancy] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const [rooms, setRooms] = useState(1);
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
@@ -61,12 +65,12 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if(!selected || !checkin || !checkout) return;
+        if(!selected || !dateRange.startDate || !dateRange.endDate) return;
 
         onSubmit({
             destination: selected,
-            checkin: convertDateFormat(checkin!.toLocaleDateString()), // dd/MM/yyyy
-            checkout: convertDateFormat(checkout!.toLocaleDateString()), // dd/MM/yyyy
+            checkin: convertDateFormat(dateRange.startDate.toLocaleDateString()), // dd/MM/yyyy
+            checkout: convertDateFormat(dateRange.endDate.toLocaleDateString()), // dd/MM/yyyy
             guests,
         });
     };
@@ -77,12 +81,11 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
             className='bg-white text-gray-800 shadow-2xl rounded-xl px-4 py-6 md:px-6 md:py-4 
             flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-4 w-full max-w-none'>
             
-            {/* Destination Field */}
             <div className="flex-1 min-w-0">
                 <div className='flex items-center gap-2 mb-2'>
-                    <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.8 13.8a7 7 0 1 1-11.6 0c0-1.9.7-3.7 1.9-5.2L12 2l4.9 6.6c1.2 1.5 1.9 3.3 1.9 5.2Z"/>
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
                     </svg>
                     <label htmlFor="destinationInput" className="text-sm font-medium text-gray-700">Destination</label>
                 </div>
@@ -103,7 +106,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                         required />
 
                     {suggestions.length > 0 && !selected && (
-                        <ul className="absolute z-30 left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-auto">
+                        <ul className="absolute z-30 left-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-auto min-w-full w-max max-w-2xl">
                             {suggestions.map(dest => (
                                 <li
                                     key={dest.uid}
@@ -112,9 +115,52 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                                         setTerm(dest.term);
                                         setSuggestions([]);
                                     }}
-                                    className="px-4 py-3 cursor-pointer hover:bg-blue-50 transition-colors text-sm"
+                                    className="px-4 py-3 cursor-pointer hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0 group whitespace-nowrap"
                                 >
-                                    {dest.term}
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div className="flex items-center gap-3 flex-1">
+                                            <div className="flex-shrink-0">
+                                                {dest.type === 'city' && (
+                                                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                                    </svg>
+                                                )}
+                                                {dest.type === 'hotel' && (
+                                                    <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 21v-4a2 2 0 012-2h2a2 2 0 012 2v4"/>
+                                                    </svg>
+                                                )}
+                                                {dest.type === 'airport' && (
+                                                    <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                                    </svg>
+                                                )}
+                                                {(!dest.type || !['city', 'hotel', 'airport'].includes(dest.type)) && (
+                                                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                    </svg>
+                                                )}
+                                            </div>
+                                            <div className="text-sm font-medium text-gray-900 group-hover:text-blue-700 transition-colors">
+                                                {dest.term}
+                                            </div>
+                                        </div>
+                                        <div className="flex-shrink-0 ml-2">
+                                            {dest.type && (
+                                                <span className={`
+                                                    inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize
+                                                    ${dest.type === 'city' ? 'bg-blue-100 text-blue-800' : 
+                                                      dest.type === 'hotel' ? 'bg-green-100 text-green-800' : 
+                                                      dest.type === 'airport' ? 'bg-purple-100 text-purple-800' : 
+                                                      'bg-gray-100 text-gray-800'}
+                                                `}>
+                                                    {dest.type}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
@@ -122,50 +168,21 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                 </div>
             </div>
 
-            {/* Check-in Field */}
-            <div className="flex-1 min-w-">
-                <div className='flex items-center gap-2 mb-2'>
-                    <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
-                    </svg>
-                    <label htmlFor="checkIn" className="text-sm font-medium text-gray-700">Check in</label>
-                </div>
-                <DatePicker
-                    selected={checkin}
-                    onChange={(date: Date | null) => setCheckin(date)}
-                    placeholderText='Select check-in date'
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                    focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-                    wrapperClassName='w-full'
-                    dateFormat="dd/MM/yyyy"
-                    id="checkin"
-                    minDate={new Date()}
-                    maxDate={checkout || undefined}
-                />
-            </div>
-
-            {/* Check-out Field */}
             <div className="flex-1 min-w-0">
                 <div className='flex items-center gap-2 mb-2'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
                     </svg>
-                    <label htmlFor="checkOut" className="text-sm font-medium text-gray-700">Check out</label>
+                    <label className="text-sm font-medium text-gray-700">Stay Period</label>
                 </div>
-                <DatePicker
-                    selected={checkout}
-                    onChange={(date: Date | null) => setCheckout(date)}
-                    placeholderText='Select check-out date'
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                    focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-                    wrapperClassName='w-full'
-                    dateFormat="dd/MM/yyyy"
-                    id="checkOut"
-                    minDate={checkin || new Date()}
+                <DateRangePicker
+                    dateRange={dateRange}
+                    onChange={setDateRange}
+                    isOpen={showDatePicker}
+                    onToggle={() => setShowDatePicker(prev => !prev)}
                 />
             </div>
 
-            {/* Guests Field */}
             <div className="relative flex-1 min-w-0">
                 <div className='flex items-center gap-2 mb-2'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -223,7 +240,6 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                 )}
             </div>
 
-            {/* Search Button */}
             <button 
                 type="submit"
                 className='flex items-center justify-center gap-2 rounded-lg bg-[#FF6B6B] hover:bg-[#e56060] 

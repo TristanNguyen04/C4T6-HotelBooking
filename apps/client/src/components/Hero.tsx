@@ -12,7 +12,7 @@ const Hero = ({children}: {children?: React.ReactNode}) => {
             Unforgettable experiences await. Find the ideal accommodation for your next adventure.
           </p>
 
-          <div className="hidden md:flex mt-12 gap-4">
+          <div className="hidden md:flex mt-12 gap-4 md:mb-4 lg:mb-0">
             <span className="flex items-center gap-2 pl-3 pr-20 py-3.5 bg-white/10 text-white rounded-full backdrop-blur-md font-extralight">
               <span className="text-yellow-400 text-lg">✓</span>
               <span className="text-l leading-tight max-w-[120px] whitespace-normal">
@@ -36,7 +36,6 @@ const Hero = ({children}: {children?: React.ReactNode}) => {
           </div>
       </div>
 
-      {/* Improved SearchBar wrapper with responsive positioning */}
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full px-4 z-10">
         <div className="max-w-7xl mx-auto">
           {children}

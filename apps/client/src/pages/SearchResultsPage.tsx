@@ -25,6 +25,8 @@ export default function SearchResultsPage(){
     const [priceMin, setPriceMin] = useState<number>(0);
     const [priceMax, setPriceMax] = useState<number>(Infinity);
     const [selectedStarRatings, setSelectedStarRatings] = useState<number[]>([]);
+    const [selectedGuestRatings, setSelectedGuestRatings] = useState<string[]>([]);
+    const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
     const [visibleCount, setVisibleCount] = useState(10);
 
@@ -64,7 +66,9 @@ export default function SearchResultsPage(){
             hotels: hotels ?? [],
             priceMin,
             priceMax,
-            selectedStarRatings
+            selectedStarRatings,
+            selectedGuestRatings,
+            selectedAmenities
         }
     );
 
@@ -108,9 +112,10 @@ export default function SearchResultsPage(){
             <main className="w-full p-6 bg-gray-100 md:mt-5 md:p-4 sm:p-3 pt-24 md:pt-20">
                 <div className="max-w-screen-xl mx-auto flex gap-6 items-start w-full flex-col md:flex-row md:gap-4 xl:max-w-none xl:px-10">
 
-                    <aside className="w-full md:w-80 md:flex-shrink-0 bg-white rounded-lg p-5 shadow-sm sticky md:top-48 h-fit border border-gray-200 order-2 md:order-1 md:p-4">
+                <aside className="w-full md:w-80 md:flex-shrink-0 bg-white rounded-lg p-5 shadow-sm sticky md:top-48 md:max-h-[calc(100vh-12rem)] md:overflow-y-auto border border-gray-200 order-2 md:order-1 md:p-4">
                         {hotels && hotels.length > 0 && (
                             <FilterBar
+                                hotels={hotels}
                                 histogram={histogram}
                                 priceMin={priceMin}
                                 setPriceMin={setPriceMin}
@@ -118,6 +123,10 @@ export default function SearchResultsPage(){
                                 setPriceMax={setPriceMax}
                                 selectedStarRatings={selectedStarRatings}
                                 setSelectedStarRatings={setSelectedStarRatings}
+                                selectedGuestRatings={selectedGuestRatings}
+                                setSelectedGuestRatings={setSelectedGuestRatings}
+                                selectedAmenities={selectedAmenities}
+                                setSelectedAmenities={setSelectedAmenities}
                             />
                         )}
                     </aside>
@@ -172,10 +181,12 @@ export default function SearchResultsPage(){
                                                 <option value="Relevance (Default)">Relevance</option>
                                                 <option value="Price (Low to High)">Price (Low to High)</option>
                                                 <option value="Price (High to Low)">Price (High to Low)</option>
-                                                <option value="Star Rating (High to Low)">Star Rating (High to Low)</option>
                                                 <option value="Star Rating (Low to High)">Star Rating (Low to High)</option>
+                                                <option value="Star Rating (High to Low)">Star Rating (High to Low)</option>
                                                 <option value="Distance (Close to Far)">Distance (Close to Far)</option>
                                                 <option value="Distance (Far to Close)">Distance (Far to Close)</option>
+                                                <option value="Guest Rating (Low to High)">Guest Rating (Low to High)</option>
+                                                <option value="Guest Rating (High to Low)">Guest Rating (High to Low)</option>
                                             </select>
                                         </div>
                                     </div>

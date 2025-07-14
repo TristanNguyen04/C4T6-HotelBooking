@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { assets } from '../assets/assets';
 import { renderStars } from '../utils/stars';
 import { formatAmenityName } from '../utils/amenity';
+import { getGuestRatingDisplay } from '../utils/guestRating';
 
 interface HotelCardProps {
     hotel: Hotel;
@@ -81,13 +82,22 @@ export default function HotelCard({
                                     {hotel.address}
                                 </p>
                             </div>
-                            {hotel.categories?.overall?.score && (
-                                <div className="flex-shrink-0">
-                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                                        Guest Rating: {hotel.categories.overall.score}/100
-                                    </span>
-                                </div>
-                            )}
+                            {hotel.categories.overall?.score && hotel.categories.overall.score >= 60 && (() => {
+                                const ratingDisplay = getGuestRatingDisplay(hotel.categories.overall.score);
+                                return ratingDisplay ? (
+                                    <div className="flex-shrink-0">
+                                        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ${ratingDisplay.bgColor} ${ratingDisplay.textColor} ${ratingDisplay.borderColor} border`}>
+                                            <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18l-1.45-1.32C5.4 14.36 2 11.28 2 7.5 2 5.42 3.42 4 5.5 4c1.74 0 3.41.81 4.5 2.09C11.59 4.81 13.26 4 15 4 17.58 4 19 5.42 19 7.5c0 3.78-3.4 6.86-6.55 9.18L10 18z" clipRule="evenodd" />
+                                            </svg>
+                                            {ratingDisplay.text}
+                                            <span className="ml-1.5 text-xs opacity-75">
+                                                {hotel.categories.overall.score}/100
+                                            </span>
+                                        </span>
+                                    </div>
+                                ) : null;
+                            })()}
                         </div>
 
                         {hotel.distance && (

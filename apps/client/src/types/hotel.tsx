@@ -35,6 +35,8 @@ export type SortOption =
   | "Distance (Far to Close)"
   | "Star Rating (Low to High)"
   | "Star Rating (High to Low)"
+  | "Guest Rating (Low to High)"
+  | "Guest Rating (High to Low)"
   | "Relevance (Default)";
 
 export interface HotelSearchParams {

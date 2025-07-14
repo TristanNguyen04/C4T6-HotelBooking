@@ -1,5 +1,4 @@
 export const formatAmenityName = (key: string): string => {
-    // Handle specific common cases first
     const specialCases: { [key: string]: string } = {
         'tVInRoom': 'TV in Room',
         'freeWifi': 'Free WiFi',
