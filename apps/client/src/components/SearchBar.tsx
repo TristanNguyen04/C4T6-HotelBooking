@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer, useRef } from 'react';
 import { searchLocations } from '../api/hotels';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { parseDate, convertDateFormat } from '../utils/date';
 import React from 'react';
+import * as fecha from 'fecha';
+// @ts-ignore
+import HotelDatepicker from 'hotel-datepicker';
+import 'hotel-datepicker/dist/css/hotel-datepicker.css';
 
 
 interface Location {
@@ -70,7 +74,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
             guests,
         });
     };
-    
+
     return (
         <form
             onSubmit={handleSubmit} 
@@ -123,7 +127,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
             </div>
 
             {/* Check-in Field */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-">
                 <div className='flex items-center gap-2 mb-2'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
@@ -136,9 +140,11 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                     placeholderText='Select check-in date'
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
                     focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                    wrapperClassName='w-full'
                     dateFormat="dd/MM/yyyy"
                     id="checkin"
                     minDate={new Date()}
+                    maxDate={checkout || undefined}
                 />
             </div>
 
@@ -156,9 +162,10 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps){
                     placeholderText='Select check-out date'
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
                     focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                    wrapperClassName='w-full'
                     dateFormat="dd/MM/yyyy"
                     id="checkOut"
-                    minDate={checkin || undefined}
+                    minDate={checkin || new Date()}
                 />
             </div>
 
