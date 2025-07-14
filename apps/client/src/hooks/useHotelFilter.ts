@@ -54,7 +54,9 @@ const getHotelCountForAmenity = (hotels: Hotel[], amenityKey: string): number =>
 const getAllAmenities = (hotels: Hotel[]): string[] => {
   const amenitySet = new Set<string>();
   hotels.forEach(hotel => {
-    Object.keys(hotel.amenities ?? {}).forEach(key => amenitySet.add(key));
+    Object.keys(hotel.amenities ?? {})
+      .filter(key => key.trim() !== '')
+      .forEach(key => amenitySet.add(key));
   });
   return Array.from(amenitySet).sort();
 };

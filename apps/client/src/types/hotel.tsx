@@ -7,7 +7,7 @@ export type Hotel = {
     distance: number;
     rating: number;
     searchRank: number;
-    amenities: {
+    amenities?: {
       [key: string]: boolean | undefined;
     };
     image_details: {

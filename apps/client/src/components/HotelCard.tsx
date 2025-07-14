@@ -41,9 +41,12 @@ export default function HotelCard({
         setImgSrc(assets.hotelNotFound);
     };
 
+    console.log(hotel.amenities);
+    
     const amenityKeys = Object.entries(hotel.amenities || {})
         .filter(([, value]) => value === true)
         .map(([key]) => key);
+
 
     const previewAmenities = amenityKeys.slice(0, 3);
     const extraAmenityCount = amenityKeys.length - previewAmenities.length;
