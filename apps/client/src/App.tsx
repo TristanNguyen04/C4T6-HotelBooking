@@ -6,10 +6,10 @@ import HotelDetailsPage from './pages/HotelDetailsPage';
 import Register from './pages/Register';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import './styles/index.css';
 import SignIn from './pages/SignInPage';
-
 import PaymentSuccess from './pages/PaymentSuccessTest';
+
+import GoogleMap from './pages/GoogleMap';
 function App() {
   return (
     <Router>
@@ -21,6 +21,7 @@ function App() {
         <Route path="/hotel/:hotelId" element={<HotelDetailsPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/register"element={<Register />} />
+        <Route path="/googlemap"element={<GoogleMap/>}/>
       </Routes>
       <Footer />
     </Router>

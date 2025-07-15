@@ -216,7 +216,7 @@ describe('GET /api/hotels/:id/details',()=>{
 
     });
     
-    // Test 1
+    // Test 5
     test('Axios Error', async()=>{
         const error = {
             response: { status: 422 },
