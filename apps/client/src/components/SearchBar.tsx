@@ -16,12 +16,18 @@ interface SearchBarProps {
         checkin: string;
         checkout: string;
         guests: string
+        rooms: number
+        adults: number
+        children: number
     }) => void;
     initialValues?: {
         destination?: Location;
         checkin?: string;
         checkout?: string;
         guests?: string;
+        rooms?: number
+        adults?: number
+        children?: number
     }
 }
 
@@ -38,9 +44,9 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [guests, setGuests] = useState(initialValues?.guests || '2');
     const [showOccupancy, setShowOccupancy] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [rooms, setRooms] = useState(1);
-    const [adults, setAdults] = useState(2);
-    const [children, setChildren] = useState(0);
+    const [rooms, setRooms] = useState(initialValues?.rooms || 1);
+    const [adults, setAdults] = useState(initialValues?.adults || 2);
+    const [children, setChildren] = useState(initialValues?.children || 0);
 
     useEffect(() => {
         if (term.length < 1) {
@@ -81,6 +87,9 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
             checkin: convertDateFormat(dateRange.startDate.toLocaleDateString()), // dd/MM/yyyy
             checkout: convertDateFormat(dateRange.endDate.toLocaleDateString()), // dd/MM/yyyy
             guests,
+            rooms,
+            adults,
+            children
         });
     };
 

@@ -12,16 +12,19 @@ import { useNavigate } from 'react-router-dom';
 function App(){
   const navigate = useNavigate();
 
-  // Handle search submit for hero SearchBar
-  const handleSearchSubmit = ({ destination, checkin, checkout, guests }: {
+  // Handle SearchBar at Home Page
+  const handleSearchSubmit = ({ destination, checkin, checkout, guests, rooms, adults, children }: {
     destination: { uid: string; term: string };
     checkin: string;
     checkout: string;
     guests: string;
+    rooms: number;
+    adults: number;
+    children: number
   }) => {
     navigate(
-      `/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
-    );
+      `/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}
+    `);
   };
 
   return (

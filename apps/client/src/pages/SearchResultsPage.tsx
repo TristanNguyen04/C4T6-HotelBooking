@@ -35,12 +35,14 @@ export default function SearchResultsPage(){
     const checkout = params.get('checkout') || '';
     const guests = params.get('guests') || '';
     const rooms = guests.split('|').length;
+    const adults = parseInt(params.get('adults') || '');
+    const children = parseInt(params.get('children') || '');
 
     const shouldFetch = destination_id && checkin && checkout && guests;
 
     const fetchHotels = useCallback(
         () => searchHotels({ destination_id, checkin, checkout, guests }).then(res => res.data),
-        [destination_id, checkin, checkout, guests]
+        [destination_id, checkin, checkout, guests, rooms, children, adults]
     );
 
     const { data: hotels, loading, error } = usePollingFetch<Hotel[]>(
@@ -95,17 +97,16 @@ export default function SearchResultsPage(){
             <header className="bg-[#003580] text-white sticky top-20 z-[1000] shadow-lg w-full">
                 <div className="max-w-screen-xl mx-auto px-6 py-4 w-full">
                     <SearchBar
-                        onSubmit={({ destination, checkin, checkout, guests }) => {
-                            
+                        onSubmit={({ destination, checkin, checkout, guests, rooms, adults, children }) => {
                             setHistogram(null);
-                            setPriceMin(0);
-                            setPriceMax(Infinity);
-                            setSelectedStarRatings([]);
-                            setSelectedGuestRatings([]);
-                            setSelectedAmenities([]);
-                            setVisibleCount(10);
+                            // setPriceMin(0);
+                            // setPriceMax(Infinity);
+                            // setSelectedStarRatings([]);
+                            // setSelectedGuestRatings([]);
+                            // setSelectedAmenities([]);
+                            // setVisibleCount(10);
                             
-                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`);
+                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);
                         }}
 
                         initialValues={{
@@ -115,7 +116,10 @@ export default function SearchResultsPage(){
                             },
                             checkin: params.get('checkin') || '',
                             checkout: params.get('checkout') || '',
-                            guests: params.get('guests') || '2'
+                            guests: params.get('guests') || '2',
+                            rooms: rooms,
+                            adults: adults,
+                            children: children
                         }}
                     />
                 </div>
@@ -176,7 +180,7 @@ export default function SearchResultsPage(){
                         {!loading && displayedHotels.length > 0 && (
                             <>
                                 <div className="mb-5 pb-4 border-b border-gray-200">
-                                    <div className="flex justify-between items-center flex-wrap gap-4 flex-col md:flex-row md:gap-3 items-start md:items-center">
+                                    <div className="flex justify-between flex-wrap gap-4 flex-col md:flex-row md:gap-3 items-start md:items-center">
                                         <h2 className="m-0 text-2xl font-medium text-gray-800 md:text-xl">
                                             Found {displayedHotels.length} hotels
                                         </h2>
