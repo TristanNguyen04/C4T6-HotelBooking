@@ -1,3 +1,5 @@
+// Might not be used as of now
+
 import type { Hotel } from "../types/hotel";
 
 export interface Histogram {
