@@ -11,6 +11,7 @@ import { usePollingFetch } from "../hooks/usePollingFetch";
 import { useHotelFilter } from "../hooks/useHotelFilter";
 import { useHotelSort } from "../hooks/useHotelSort";
 import FilterBar from "../components/FilterBar";
+import FilterBarSkeleton from "../components/FilterBarSkeleton";
 
 export default function SearchResultsPage(){
     const navigate = useNavigate();
@@ -40,10 +41,11 @@ export default function SearchResultsPage(){
 
     const shouldFetch = destination_id && checkin && checkout && guests;
 
-    const fetchHotels = useCallback(
-        () => searchHotels({ destination_id, checkin, checkout, guests }).then(res => res.data),
-        [destination_id, checkin, checkout, guests, rooms, children, adults]
-    );
+    // Fix: Create a more stable fetchHotels function
+    const fetchHotels = useCallback(() => {
+        if (!shouldFetch) return Promise.resolve([]);
+        return searchHotels({ destination_id, checkin, checkout, guests }).then(res => res.data);
+    }, [destination_id, checkin, checkout, guests, shouldFetch]);
 
     const { data: hotels, loading, error } = usePollingFetch<Hotel[]>(
         fetchHotels,
@@ -93,7 +95,6 @@ export default function SearchResultsPage(){
 
     return (
         <div className="min-h-screen bg-gray-100 w-screen m-0 p-0 box-border">
-
             <header className="bg-[#003580] text-white sticky top-20 z-[1000] shadow-lg w-full">
                 <div className="max-w-screen-xl mx-auto px-6 py-4 w-full">
                     <SearchBar
@@ -128,8 +129,10 @@ export default function SearchResultsPage(){
 
             <main className="w-full p-6 bg-gray-100 md:mt-5 md:p-4 sm:p-3 pt-24 md:pt-20">
                 <div className="max-w-screen-xl mx-auto flex gap-6 items-start w-full flex-col md:flex-row md:gap-4 xl:max-w-none xl:px-10">
-
                     <aside className="w-full md:w-80 md:flex-shrink-0 bg-white rounded-lg p-5 shadow-sm sticky md:top-48 md:max-h-[calc(100vh-12rem)] md:overflow-y-auto border border-gray-200 order-2 md:order-1 md:p-4">
+                        {loading && (
+                            <FilterBarSkeleton />
+                        )}
                         {hotels && hotels.length > 0 && (
                             <FilterBar
                                 hotels={hotels}
