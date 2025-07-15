@@ -1,0 +1,658 @@
+{
+  "id": "0oF4",
+  "imageCount": 0,
+  "latitude": 1.307685,
+  "longitude": 103.829996,
+  "name": "Pan Pacific Orchard",
+  "address": "10 Claymore Road",
+  "address1": "10 Claymore Road",
+  "rating": 5,
+  "trustyou": {
+    "id": null,
+    "score": {
+      "overall": null,
+      "kaligo_overall": 0,
+      "solo": null,
+      "couple": null,
+      "family": null,
+      "business": null
+    }
+  },
+  "categories": {
+
+  },
+  "amenities_ratings": [],
+  "description": "Pamper yourself with onsite massages, body treatments, and facials. You're sure to appreciate the recreational amenities, which include 2 outdoor swimming pools and a fitness center. This hotel also features complimentary wireless internet access, concierge services, and wedding services.\n\nEnjoy a satisfying meal at Mosella serving guests of Pan Pacific Orchard. Relax with a refreshing drink from the poolside bar or one of the 2 bars/lounges. Buffet breakfasts are available daily from 7:00 AM to 10:30 AM for a fee.\n\nFeatured amenities include express check-out, dry cleaning/laundry services, and a 24-hour front desk. Planning an event in Singapore? This hotel has 6458 square feet (600 square meters) of space consisting of conference space and 3 meeting rooms. Free self parking is available onsite.\n\nMake yourself at home in one of the 343 air-conditioned rooms featuring minibars and espresso makers. Complimentary wireless internet access is available to keep you connected. Bathrooms have designer toiletries and hair dryers. Conveniences include phones, as well as safes and complimentary bottled water.\n\nDistances are displayed to the nearest 0.1 mile and kilometer. \u003Cbr /\u003E \u003Cp\u003EOrchard Tower - 0.1 km / 0.1 mi \u003Cbr /\u003E ION Orchard - 0.6 km / 0.3 mi \u003Cbr /\u003E Lucky Plaza - 0.8 km / 0.5 mi \u003Cbr /\u003E The Paragon - 0.9 km / 0.6 mi \u003Cbr /\u003E Takashimaya Shopping Centre - 1 km / 0.6 mi \u003Cbr /\u003E Mount Elizabeth Medical Center - 1.1 km / 0.7 mi \u003Cbr /\u003E Gleneagles Hospital - 1.4 km / 0.8 mi \u003Cbr /\u003E Orchard Road - 1.4 km / 0.8 mi \u003Cbr /\u003E Orchard Central - 1.4 km / 0.9 mi \u003Cbr /\u003E Singapore Botanic Gardens - 1.5 km / 0.9 mi \u003Cbr /\u003E National Orchid Garden - 2.2 km / 1.4 mi \u003Cbr /\u003E Robertson Quay - 2.3 km / 1.5 mi \u003Cbr /\u003E Fort Canning Park - 2.4 km / 1.5 mi \u003Cbr /\u003E National Museum of Singapore - 2.8 km / 1.7 mi \u003Cbr /\u003E Singapore Art Museum - 2.8 km / 1.8 mi \u003Cbr /\u003E \u003C/p\u003E\u003Cp\u003EThe nearest airports are:\u003Cbr /\u003ESeletar Airport (XSP) - 16.5 km / 10.3 mi\u003Cbr /\u003E Singapore Changi Airport (SIN) - 24.3 km / 15.1 mi\u003Cbr /\u003E Senai International Airport (JHB) - 71.4 km / 44.3 mi\u003Cbr /\u003E \u003C/p\u003E\u003Cp\u003EThe preferred airport for Pan Pacific Orchard is Singapore Changi Airport (SIN). \u003C/p\u003E\n\nIn the heart of Singapore, Pan Pacific Orchard is within a 5-minute drive of ION Orchard and Orchard Road.  This luxury hotel is 1.4 mi (2.2 km) from Singapore Botanic Gardens and 3 mi (4.8 km) from Marina Bay Street Circuit.\n\nIn Singapore (Orchard)",
+  "amenities": {
+    "dryCleaning": true,
+    "continentalBreakfast": true,
+    "fitnessFacility": true,
+    "meetingRooms": true,
+    "nonSmokingRooms": true
+  },
+  "original_metadata": {
+    "name": null,
+    "city": "Singapore",
+    "state": null,
+    "country": "SG"
+  },
+  "image_details": {
+    "suffix": ".jpg",
+    "count": 0,
+    "prefix": "https://d2ey9sqrvkqdfs.cloudfront.net/0oF4/"
+  },
+  "number_of_images": 0,
+  "default_image_index": 1,
+  "imgix_url": "https://kaligo-web-old.imgix.net",
+  "cloudflare_image_url": "https://www.kaligo-staging.xyz/images/new",
+  "rank": 1660,
+  "rooms": [
+    {
+      "key": "ca14d4de-3fe4-59c2-9e29-ee30778ecd17",
+      "roomDescription": "Garden Terrace Suite",
+      "roomNormalizedDescription": "Garden Terrace Suite",
+      "type": "321722930",
+      "free_cancellation": true,
+      "long_description": "\u003Cp\u003E\u003Cstrong\u003E1 King Bed\u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E721-sq-foot soundproofed room, balcony with city and garden views \u003C/p\u003E\u003Cbr/\u003E\u003Cp\u003E\u003Cb\u003EClub Level\u003C/b\u003E - Club Lounge access, light refreshments, internet access in the lounge, and separate check-in location\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ELayout\u003C/b\u003E - Separate sitting area\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EInternet\u003C/b\u003E - Free WiFi \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEntertainment\u003C/b\u003E - 65-inch Smart TV with digital channels\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EFood & Drink\u003C/b\u003E - Espresso maker, minibar (fees may apply), and free bottled water\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ESleep\u003C/b\u003E - Hypo-allergenic bedding, a pillow menu, turndown service, and bed sheets \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EBathroom\u003C/b\u003E - Private bathroom, deep soaking bathtub, and separate shower with a rainfall showerhead\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EPractical\u003C/b\u003E - Iron/ironing board, safe, and phone; rollaway/extra beds and free cribs/infant beds available on request\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EComfort\u003C/b\u003E - Air conditioning and daily housekeeping\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EAccessibility\u003C/b\u003E - Tile flooring in room\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEco-friendly\u003C/b\u003E - Energy-saving switches and LED light bulbs\u003C/p\u003E\u003Cp\u003ENon-Smoking\u003C/p\u003E",
+      "roomAdditionalInfo": {
+        "breakfastInfo": "hotel_detail_breakfast_included",
+        "displayFields": {
+          "special_check_in_instructions": "Front desk staff will greet guests on arrival at the property.",
+          "check_in_instructions": "\u003Cul\u003E  \u003Cli\u003EExtra-person charges may apply and vary depending on property policy\u003C/li\u003E\u003Cli\u003EGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges\u003C/li\u003E\u003Cli\u003ESpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed\u003C/li\u003E\u003Cli\u003EThis property accepts credit cards, debit cards, and cash\u003C/li\u003E\u003Cli\u003EThis property reserves the right to pre-authorize the guest's credit card prior to arrival.\u003C/li\u003E\u003Cli\u003EThis property uses solar energy, plus a grey water recycling system\u003C/li\u003E\u003Cli\u003ESafety features at this property include a fire extinguisher, a smoke detector, a security system, and a first aid kit\u003C/li\u003E\u003Cli\u003EThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room\u003C/li\u003E  \u003C/ul\u003E",
+          "know_before_you_go": "\u003Cul\u003E  \u003Cli\u003EPool access available from 7:30 AM to 9:00 PM.\u003C/li\u003E\u003Cli\u003EReservations are required for massage services and spa treatments. Reservations can be made by contacting the hotel prior to arrival, using the contact information on the booking confirmation. \u003C/li\u003E \u003Cli\u003EOne child 12 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. \u003C/li\u003E\u003Cli\u003EParking height restrictions apply. \u003C/li\u003E \u003C/ul\u003E",
+          "fees_optional": "\u003Cul\u003E \u003Cli\u003EFee for buffet breakfast: approximately SGD 48 for adults and SGD 24 for children\u003C/li\u003E\u003Cli\u003EEarly check-in is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ELate check-out is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ERollaway bed fee: SGD 150 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EThe above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. \u003C/p\u003E",
+          "fees_mandatory": "\u003Cp\u003EYou'll be asked to pay the following charges at the property. Fees may include applicable taxes:\u003C/p\u003E \u003Cul\u003E\u003Cli\u003EDeposit: SGD 100.00 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EWe have included all charges provided to us by the property. \u003C/p\u003E",
+          "kaligo_service_fee": 302.03,
+          "hotel_fees": [],
+          "surcharges": [
+            {
+              "type": "TaxAndServiceFee",
+              "amount": 537.42
+            }
+          ]
+        }
+      },
+      "description": "Garden Terrace Suite",
+      "images": [
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_z.jpg",
+          "hero_image": true
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/4b534d95_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/4b534d95_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_z.jpg",
+          "hero_image": false
+        }
+      ],
+      "amenities": [
+        "Soap",
+        "Designer toiletries",
+        "Air conditioning",
+        "Smart TV",
+        "Daily housekeeping",
+        "Non-Smoking",
+        "Wireless internet access",
+        "Slippers",
+        "Separate bathtub and shower",
+        "Hypo-allergenic bedding available",
+        "Espresso maker",
+        "Separate sitting area",
+        "Tile flooring in room",
+        "Private bathroom",
+        "Digital TV service",
+        "Towels provided",
+        "Free bottled water",
+        "High pile carpet in room",
+        "Free WiFi",
+        "LED light bulbs",
+        "Deep soaking bathtub",
+        "Toilet paper",
+        "Rainfall showerhead",
+        "Wardrobe or closet",
+        "Iron/ironing board",
+        "Shampoo",
+        "Minibar",
+        "Energy-saving switches",
+        "Bedsheets provided",
+        "Toothbrush and toothpaste available",
+        "Pillow menu",
+        "Toilet with electronic bidet",
+        "Free cribs/infant beds",
+        "Bathrobes",
+        "Soundproofed rooms",
+        "Balcony",
+        "Hair dryer",
+        "Turndown service",
+        "Club level room",
+        "Phone",
+        "In-room safe",
+        "Rollaway/extra beds (surcharge)",
+        "Free toiletries"
+      ],
+      "price_type": "single",
+      "max_cash_payment": 2130.67,
+      "coverted_max_cash_payment": 2782.61,
+      "points": 69550,
+      "bonuses": 0,
+      "bonus_programs": [],
+      "bonus_tiers": [],
+      "lowest_price": 2130.67,
+      "price": 2782.61,
+      "converted_price": 2782.61,
+      "lowest_converted_price": 2782.61,
+      "chargeableRate": 2130.67,
+      "market_rates": [
+        {
+          "supplier": "expedia",
+          "rate": 2388.162512736
+        }
+      ],
+      "base_rate": 1593.25,
+      "base_rate_in_currency": 2080.75,
+      "included_taxes_and_fees_total": 537.42,
+      "included_taxes_and_fees_total_in_currency": 701.85,
+      "excluded_taxes_and_fees_currency": "USD",
+      "excluded_taxes_and_fees_total": 0,
+      "excluded_taxes_and_fees_total_in_currency": 0,
+      "included_taxes_and_fees": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 537.42,
+          "currency": "USD"
+        }
+      ],
+      "included_taxes_and_fees_in_currency": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 701.85,
+          "currency": "SGD"
+        }
+      ]
+    },
+    {
+      "key": "4bfc36a8-62bc-552e-b6fd-3be6df7f5d2e",
+      "roomDescription": "Cloud Terrace Suite",
+      "roomNormalizedDescription": "Cloud Terrace Suite",
+      "type": "321722931",
+      "free_cancellation": true,
+      "long_description": "\u003Cp\u003E\u003Cstrong\u003E1 King Bed\u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E721-sq-foot soundproofed room, balcony with city and garden views \u003C/p\u003E\u003Cbr/\u003E\u003Cp\u003E\u003Cb\u003EClub Level\u003C/b\u003E - Club Lounge access, light refreshments, internet access in the lounge, and separate check-in location\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ELayout\u003C/b\u003E - Separate sitting area\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EInternet\u003C/b\u003E - Free WiFi \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEntertainment\u003C/b\u003E - 65-inch Smart TV with digital channels\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EFood & Drink\u003C/b\u003E - Espresso maker, minibar (fees may apply), and free bottled water\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ESleep\u003C/b\u003E - Hypo-allergenic bedding, a pillow menu, turndown service, and bed sheets \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EBathroom\u003C/b\u003E - Private bathroom, deep soaking bathtub, and separate shower with a rainfall showerhead\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EPractical\u003C/b\u003E - Iron/ironing board, safe, and phone; rollaway/extra beds and free cribs/infant beds available on request\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EComfort\u003C/b\u003E - Air conditioning and daily housekeeping\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EAccessibility\u003C/b\u003E - Tile flooring in room\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEco-friendly\u003C/b\u003E - Energy-saving switches and LED light bulbs\u003C/p\u003E\u003Cp\u003ENon-Smoking\u003C/p\u003E",
+      "roomAdditionalInfo": {
+        "breakfastInfo": "hotel_detail_breakfast_included",
+        "displayFields": {
+          "special_check_in_instructions": "Front desk staff will greet guests on arrival at the property.",
+          "check_in_instructions": "\u003Cul\u003E  \u003Cli\u003EExtra-person charges may apply and vary depending on property policy\u003C/li\u003E\u003Cli\u003EGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges\u003C/li\u003E\u003Cli\u003ESpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed\u003C/li\u003E\u003Cli\u003EThis property accepts credit cards, debit cards, and cash\u003C/li\u003E\u003Cli\u003EThis property reserves the right to pre-authorize the guest's credit card prior to arrival.\u003C/li\u003E\u003Cli\u003EThis property uses solar energy, plus a grey water recycling system\u003C/li\u003E\u003Cli\u003ESafety features at this property include a fire extinguisher, a smoke detector, a security system, and a first aid kit\u003C/li\u003E\u003Cli\u003EThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room\u003C/li\u003E  \u003C/ul\u003E",
+          "know_before_you_go": "\u003Cul\u003E  \u003Cli\u003EPool access available from 7:30 AM to 9:00 PM.\u003C/li\u003E\u003Cli\u003EReservations are required for massage services and spa treatments. Reservations can be made by contacting the hotel prior to arrival, using the contact information on the booking confirmation. \u003C/li\u003E \u003Cli\u003EOne child 12 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. \u003C/li\u003E\u003Cli\u003EParking height restrictions apply. \u003C/li\u003E \u003C/ul\u003E",
+          "fees_optional": "\u003Cul\u003E \u003Cli\u003EFee for buffet breakfast: approximately SGD 48 for adults and SGD 24 for children\u003C/li\u003E\u003Cli\u003EEarly check-in is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ELate check-out is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ERollaway bed fee: SGD 150 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EThe above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. \u003C/p\u003E",
+          "fees_mandatory": "\u003Cp\u003EYou'll be asked to pay the following charges at the property. Fees may include applicable taxes:\u003C/p\u003E \u003Cul\u003E\u003Cli\u003EDeposit: SGD 100.00 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EWe have included all charges provided to us by the property. \u003C/p\u003E",
+          "kaligo_service_fee": 307.59,
+          "hotel_fees": [],
+          "surcharges": [
+            {
+              "type": "TaxAndServiceFee",
+              "amount": 543
+            }
+          ]
+        }
+      },
+      "description": "Cloud Terrace Suite",
+      "images": [
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_z.jpg",
+          "hero_image": true
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/6ee4e13c_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/6ee4e13c_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/84f8487e_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/84f8487e_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_z.jpg",
+          "hero_image": false
+        }
+      ],
+      "amenities": [
+        "Soap",
+        "Designer toiletries",
+        "Air conditioning",
+        "Smart TV",
+        "Daily housekeeping",
+        "Non-Smoking",
+        "Wireless internet access",
+        "Slippers",
+        "Separate bathtub and shower",
+        "Hypo-allergenic bedding available",
+        "Espresso maker",
+        "Separate sitting area",
+        "Tile flooring in room",
+        "Private bathroom",
+        "Digital TV service",
+        "Towels provided",
+        "Free bottled water",
+        "High pile carpet in room",
+        "Free WiFi",
+        "LED light bulbs",
+        "Deep soaking bathtub",
+        "Toilet paper",
+        "Rainfall showerhead",
+        "Wardrobe or closet",
+        "Iron/ironing board",
+        "Shampoo",
+        "Minibar",
+        "Energy-saving switches",
+        "Bedsheets provided",
+        "Toothbrush and toothpaste available",
+        "Pillow menu",
+        "Toilet with electronic bidet",
+        "Free cribs/infant beds",
+        "Bathrobes",
+        "Soundproofed rooms",
+        "Balcony",
+        "Hair dryer",
+        "Turndown service",
+        "Club level room",
+        "Phone",
+        "In-room safe",
+        "Rollaway/extra beds (surcharge)",
+        "Free toiletries"
+      ],
+      "price_type": "single",
+      "max_cash_payment": 2169.89,
+      "coverted_max_cash_payment": 2833.83,
+      "points": 70825,
+      "bonuses": 0,
+      "bonus_programs": [],
+      "bonus_tiers": [],
+      "lowest_price": 2169.89,
+      "price": 2833.83,
+      "converted_price": 2833.83,
+      "lowest_converted_price": 2833.83,
+      "chargeableRate": 2169.89,
+      "market_rates": [],
+      "base_rate": 1626.89,
+      "base_rate_in_currency": 2124.68,
+      "included_taxes_and_fees_total": 543,
+      "included_taxes_and_fees_total_in_currency": 709.14,
+      "excluded_taxes_and_fees_currency": "USD",
+      "excluded_taxes_and_fees_total": 0,
+      "excluded_taxes_and_fees_total_in_currency": 0,
+      "included_taxes_and_fees": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 543,
+          "currency": "USD"
+        }
+      ],
+      "included_taxes_and_fees_in_currency": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 709.14,
+          "currency": "SGD"
+        }
+      ]
+    },
+    {
+      "key": "3987c855-c6f6-5ae2-aa1c-c5d3d597ad94",
+      "roomDescription": "Garden Terrace Suite",
+      "roomNormalizedDescription": "Garden Terrace Suite",
+      "type": "321722930",
+      "free_cancellation": true,
+      "long_description": "\u003Cp\u003E\u003Cstrong\u003E1 King Bed\u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E721-sq-foot soundproofed room, balcony with city and garden views \u003C/p\u003E\u003Cbr/\u003E\u003Cp\u003E\u003Cb\u003EClub Level\u003C/b\u003E - Club Lounge access, light refreshments, internet access in the lounge, and separate check-in location\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ELayout\u003C/b\u003E - Separate sitting area\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EInternet\u003C/b\u003E - Free WiFi \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEntertainment\u003C/b\u003E - 65-inch Smart TV with digital channels\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EFood & Drink\u003C/b\u003E - Espresso maker, minibar (fees may apply), and free bottled water\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ESleep\u003C/b\u003E - Hypo-allergenic bedding, a pillow menu, turndown service, and bed sheets \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EBathroom\u003C/b\u003E - Private bathroom, deep soaking bathtub, and separate shower with a rainfall showerhead\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EPractical\u003C/b\u003E - Iron/ironing board, safe, and phone; rollaway/extra beds and free cribs/infant beds available on request\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EComfort\u003C/b\u003E - Air conditioning and daily housekeeping\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EAccessibility\u003C/b\u003E - Tile flooring in room\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEco-friendly\u003C/b\u003E - Energy-saving switches and LED light bulbs\u003C/p\u003E\u003Cp\u003ENon-Smoking\u003C/p\u003E",
+      "roomAdditionalInfo": {
+        "breakfastInfo": "hotel_detail_breakfast_included",
+        "displayFields": {
+          "special_check_in_instructions": "Front desk staff will greet guests on arrival at the property.",
+          "check_in_instructions": "\u003Cul\u003E  \u003Cli\u003EExtra-person charges may apply and vary depending on property policy\u003C/li\u003E\u003Cli\u003EGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges\u003C/li\u003E\u003Cli\u003ESpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed\u003C/li\u003E\u003Cli\u003EThis property accepts credit cards, debit cards, and cash\u003C/li\u003E\u003Cli\u003EThis property reserves the right to pre-authorize the guest's credit card prior to arrival.\u003C/li\u003E\u003Cli\u003EThis property uses solar energy, plus a grey water recycling system\u003C/li\u003E\u003Cli\u003ESafety features at this property include a fire extinguisher, a smoke detector, a security system, and a first aid kit\u003C/li\u003E\u003Cli\u003EThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room\u003C/li\u003E  \u003C/ul\u003E",
+          "know_before_you_go": "\u003Cul\u003E  \u003Cli\u003EPool access available from 7:30 AM to 9:00 PM.\u003C/li\u003E\u003Cli\u003EReservations are required for massage services and spa treatments. Reservations can be made by contacting the hotel prior to arrival, using the contact information on the booking confirmation. \u003C/li\u003E \u003Cli\u003EOne child 12 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. \u003C/li\u003E\u003Cli\u003EParking height restrictions apply. \u003C/li\u003E \u003C/ul\u003E",
+          "fees_optional": "\u003Cul\u003E \u003Cli\u003EFee for buffet breakfast: approximately SGD 48 for adults and SGD 24 for children\u003C/li\u003E\u003Cli\u003EEarly check-in is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ELate check-out is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ERollaway bed fee: SGD 150 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EThe above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. \u003C/p\u003E",
+          "fees_mandatory": "\u003Cp\u003EYou'll be asked to pay the following charges at the property. Fees may include applicable taxes:\u003C/p\u003E \u003Cul\u003E\u003Cli\u003EDeposit: SGD 100.00 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EWe have included all charges provided to us by the property. \u003C/p\u003E",
+          "kaligo_service_fee": 330.44,
+          "hotel_fees": [],
+          "surcharges": [
+            {
+              "type": "TaxAndServiceFee",
+              "amount": 565.98
+            }
+          ]
+        }
+      },
+      "description": "Garden Terrace Suite",
+      "images": [
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_z.jpg",
+          "hero_image": true
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/4b534d95_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/4b534d95_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_z.jpg",
+          "hero_image": false
+        }
+      ],
+      "amenities": [
+        "Soap",
+        "Designer toiletries",
+        "Air conditioning",
+        "Smart TV",
+        "Daily housekeeping",
+        "Non-Smoking",
+        "Wireless internet access",
+        "Slippers",
+        "Separate bathtub and shower",
+        "Hypo-allergenic bedding available",
+        "Espresso maker",
+        "Separate sitting area",
+        "Tile flooring in room",
+        "Private bathroom",
+        "Digital TV service",
+        "Towels provided",
+        "Free bottled water",
+        "High pile carpet in room",
+        "Free WiFi",
+        "LED light bulbs",
+        "Deep soaking bathtub",
+        "Toilet paper",
+        "Rainfall showerhead",
+        "Wardrobe or closet",
+        "Iron/ironing board",
+        "Shampoo",
+        "Minibar",
+        "Energy-saving switches",
+        "Bedsheets provided",
+        "Toothbrush and toothpaste available",
+        "Pillow menu",
+        "Toilet with electronic bidet",
+        "Free cribs/infant beds",
+        "Bathrobes",
+        "Soundproofed rooms",
+        "Balcony",
+        "Hair dryer",
+        "Turndown service",
+        "Club level room",
+        "Phone",
+        "In-room safe",
+        "Rollaway/extra beds (surcharge)",
+        "Free toiletries"
+      ],
+      "price_type": "single",
+      "max_cash_payment": 2331.12,
+      "coverted_max_cash_payment": 3044.39,
+      "points": 76100,
+      "bonuses": 0,
+      "bonus_programs": [],
+      "bonus_tiers": [],
+      "lowest_price": 2331.12,
+      "price": 3044.39,
+      "converted_price": 3044.39,
+      "lowest_converted_price": 3044.39,
+      "chargeableRate": 2331.12,
+      "market_rates": [],
+      "base_rate": 1765.14,
+      "base_rate_in_currency": 2305.24,
+      "included_taxes_and_fees_total": 565.98,
+      "included_taxes_and_fees_total_in_currency": 739.15,
+      "excluded_taxes_and_fees_currency": "USD",
+      "excluded_taxes_and_fees_total": 0,
+      "excluded_taxes_and_fees_total_in_currency": 0,
+      "included_taxes_and_fees": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 565.98,
+          "currency": "USD"
+        }
+      ],
+      "included_taxes_and_fees_in_currency": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 739.15,
+          "currency": "SGD"
+        }
+      ]
+    },
+    {
+      "key": "3a43467a-9dcc-5c54-81c3-37c823644e23",
+      "roomDescription": "Cloud Terrace Suite",
+      "roomNormalizedDescription": "Cloud Terrace Suite",
+      "type": "321722931",
+      "free_cancellation": true,
+      "long_description": "\u003Cp\u003E\u003Cstrong\u003E1 King Bed\u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E721-sq-foot soundproofed room, balcony with city and garden views \u003C/p\u003E\u003Cbr/\u003E\u003Cp\u003E\u003Cb\u003EClub Level\u003C/b\u003E - Club Lounge access, light refreshments, internet access in the lounge, and separate check-in location\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ELayout\u003C/b\u003E - Separate sitting area\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EInternet\u003C/b\u003E - Free WiFi \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEntertainment\u003C/b\u003E - 65-inch Smart TV with digital channels\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EFood & Drink\u003C/b\u003E - Espresso maker, minibar (fees may apply), and free bottled water\u003C/p\u003E\u003Cp\u003E\u003Cb\u003ESleep\u003C/b\u003E - Hypo-allergenic bedding, a pillow menu, turndown service, and bed sheets \u003C/p\u003E\u003Cp\u003E\u003Cb\u003EBathroom\u003C/b\u003E - Private bathroom, deep soaking bathtub, and separate shower with a rainfall showerhead\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EPractical\u003C/b\u003E - Iron/ironing board, safe, and phone; rollaway/extra beds and free cribs/infant beds available on request\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EComfort\u003C/b\u003E - Air conditioning and daily housekeeping\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EAccessibility\u003C/b\u003E - Tile flooring in room\u003C/p\u003E\u003Cp\u003E\u003Cb\u003EEco-friendly\u003C/b\u003E - Energy-saving switches and LED light bulbs\u003C/p\u003E\u003Cp\u003ENon-Smoking\u003C/p\u003E",
+      "roomAdditionalInfo": {
+        "breakfastInfo": "hotel_detail_breakfast_included",
+        "displayFields": {
+          "special_check_in_instructions": "Front desk staff will greet guests on arrival at the property.",
+          "check_in_instructions": "\u003Cul\u003E  \u003Cli\u003EExtra-person charges may apply and vary depending on property policy\u003C/li\u003E\u003Cli\u003EGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges\u003C/li\u003E\u003Cli\u003ESpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed\u003C/li\u003E\u003Cli\u003EThis property accepts credit cards, debit cards, and cash\u003C/li\u003E\u003Cli\u003EThis property reserves the right to pre-authorize the guest's credit card prior to arrival.\u003C/li\u003E\u003Cli\u003EThis property uses solar energy, plus a grey water recycling system\u003C/li\u003E\u003Cli\u003ESafety features at this property include a fire extinguisher, a smoke detector, a security system, and a first aid kit\u003C/li\u003E\u003Cli\u003EThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room\u003C/li\u003E  \u003C/ul\u003E",
+          "know_before_you_go": "\u003Cul\u003E  \u003Cli\u003EPool access available from 7:30 AM to 9:00 PM.\u003C/li\u003E\u003Cli\u003EReservations are required for massage services and spa treatments. Reservations can be made by contacting the hotel prior to arrival, using the contact information on the booking confirmation. \u003C/li\u003E \u003Cli\u003EOne child 12 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. \u003C/li\u003E\u003Cli\u003EParking height restrictions apply. \u003C/li\u003E \u003C/ul\u003E",
+          "fees_optional": "\u003Cul\u003E \u003Cli\u003EFee for buffet breakfast: approximately SGD 48 for adults and SGD 24 for children\u003C/li\u003E\u003Cli\u003EEarly check-in is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ELate check-out is available for a fee (subject to availability)\u003C/li\u003E\u003Cli\u003ERollaway bed fee: SGD 150 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EThe above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. \u003C/p\u003E",
+          "fees_mandatory": "\u003Cp\u003EYou'll be asked to pay the following charges at the property. Fees may include applicable taxes:\u003C/p\u003E \u003Cul\u003E\u003Cli\u003EDeposit: SGD 100.00 per night\u003C/li\u003E\u003C/ul\u003E \u003Cp\u003EWe have included all charges provided to us by the property. \u003C/p\u003E",
+          "kaligo_service_fee": 336.62,
+          "hotel_fees": [],
+          "surcharges": [
+            {
+              "type": "TaxAndServiceFee",
+              "amount": 572.18
+            }
+          ]
+        }
+      },
+      "description": "Cloud Terrace Suite",
+      "images": [
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/a7fc744b_z.jpg",
+          "hero_image": true
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/0a5ab491_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/d14f32e8_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/6ee4e13c_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/6ee4e13c_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8ac6f857_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/3026476b_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/84f8487e_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/84f8487e_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/8bd37c63_z.jpg",
+          "hero_image": false
+        },
+        {
+          "url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_b.jpg",
+          "high_resolution_url": "https://i.travelapi.com/lodging/1000000/30000/28600/28592/005d4540_z.jpg",
+          "hero_image": false
+        }
+      ],
+      "amenities": [
+        "Soap",
+        "Designer toiletries",
+        "Air conditioning",
+        "Smart TV",
+        "Daily housekeeping",
+        "Non-Smoking",
+        "Wireless internet access",
+        "Slippers",
+        "Separate bathtub and shower",
+        "Hypo-allergenic bedding available",
+        "Espresso maker",
+        "Separate sitting area",
+        "Tile flooring in room",
+        "Private bathroom",
+        "Digital TV service",
+        "Towels provided",
+        "Free bottled water",
+        "High pile carpet in room",
+        "Free WiFi",
+        "LED light bulbs",
+        "Deep soaking bathtub",
+        "Toilet paper",
+        "Rainfall showerhead",
+        "Wardrobe or closet",
+        "Iron/ironing board",
+        "Shampoo",
+        "Minibar",
+        "Energy-saving switches",
+        "Bedsheets provided",
+        "Toothbrush and toothpaste available",
+        "Pillow menu",
+        "Toilet with electronic bidet",
+        "Free cribs/infant beds",
+        "Bathrobes",
+        "Soundproofed rooms",
+        "Balcony",
+        "Hair dryer",
+        "Turndown service",
+        "Club level room",
+        "Phone",
+        "In-room safe",
+        "Rollaway/extra beds (surcharge)",
+        "Free toiletries"
+      ],
+      "price_type": "single",
+      "max_cash_payment": 2374.68,
+      "coverted_max_cash_payment": 3101.28,
+      "points": 77525,
+      "bonuses": 0,
+      "bonus_programs": [],
+      "bonus_tiers": [],
+      "lowest_price": 2374.68,
+      "price": 3101.28,
+      "converted_price": 3101.28,
+      "lowest_converted_price": 3101.28,
+      "chargeableRate": 2374.68,
+      "market_rates": [],
+      "base_rate": 1802.5,
+      "base_rate_in_currency": 2354.02,
+      "included_taxes_and_fees_total": 572.18,
+      "included_taxes_and_fees_total_in_currency": 747.25,
+      "excluded_taxes_and_fees_currency": "USD",
+      "excluded_taxes_and_fees_total": 0,
+      "excluded_taxes_and_fees_total_in_currency": 0,
+      "included_taxes_and_fees": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 572.18,
+          "currency": "USD"
+        }
+      ],
+      "included_taxes_and_fees_in_currency": [
+        {
+          "id": "tax_and_service_fee",
+          "amount": 747.25,
+          "currency": "SGD"
+        }
+      ]
+    }
+  ]
+}
