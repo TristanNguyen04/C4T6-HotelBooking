@@ -50,9 +50,9 @@ export const searchLocationRadius = (req:Request, res:Response) => {
         return res.status(400).json({ error: "Invalid params" });
     }
 
-    const EARTH_RADIUS_KM = 6371;
-    const toRadian = (degrees:number) => degrees * Math.PI / 180 ;
     const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: number) => {
+        const EARTH_RADIUS_KM = 6371;
+        const toRadian = (degrees:number) => degrees * Math.PI / 180 ;
         const dLat = toRadian(lat2 - lat1);
         const dLng = toRadian(lng2 - lng1);
         const a = Math.sin(dLat/2) ** 2 + Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) *
@@ -67,5 +67,4 @@ export const searchLocationRadius = (req:Request, res:Response) => {
     });
 
     return res.json(nearbyDest);
-
 }

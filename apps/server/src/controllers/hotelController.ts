@@ -82,3 +82,30 @@ export const getHotelDetails = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Error fetching hotel data' });
     }
 }
+
+
+export const getHotelBasicDetails = async (req: Request, res: Response) => {
+try {
+    const { destination_id} = req.query;
+
+    if (!destination_id) {
+      return res.status(400).json({ error: 'Missing destination_id parameter' });
+    }
+
+    const baseParams = {
+      destination_id,
+      checkin: '2025-07-20', // dummy values
+      checkout: '2025-07-22',
+      guests: '1',
+      currency: 'SGD',
+      lang: 'en_US',
+      partner_id: '1',
+    };
+
+    const hotels = await fetchHotels(baseParams);
+    return res.json(hotels);
+  } catch (error) {
+    console.error('Error fetching hotels by destination:', error);
+    return res.status(500).json({ error: 'Error fetching hotels' });
+  }
+};
