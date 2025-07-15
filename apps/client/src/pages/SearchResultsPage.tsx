@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from "react";
 import { searchHotels } from "../api/hotels";
-import type { SortOption, Hotel } from "../types/hotel";
+import type { SortOption, Hotel, Histogram } from "../types/hotel";
 import HotelCardSkeleton from '../components/HotelCardSkeleton';
 import { getPriceHistogram } from "../utils/histogram";
 import SearchBar from "../components/SearchBar";
@@ -20,7 +20,7 @@ export default function SearchResultsPage(){
 
     const [sortOption, setSortOption] = useState<SortOption>("Relevance (Default)");
 
-    const [histogram, setHistogram] = useState<{bins: number[], min: number, max: number} | null>(null);
+    const [histogram, setHistogram] = useState<Histogram | null>(null);
 
     const [priceMin, setPriceMin] = useState<number>(0);
     const [priceMax, setPriceMax] = useState<number>(Infinity);
@@ -53,13 +53,17 @@ export default function SearchResultsPage(){
 
     useEffect(() => {
         if(hotels && hotels.length > 0){
-            const hist = getPriceHistogram(hotels);
+            const hist = getPriceHistogram(hotels, 30);
             setHistogram(hist);
-
-            if(priceMin === 0) setPriceMin(hist.min);
-            if(priceMax === Infinity) setPriceMax(hist.max);
+            
+            setPriceMin(hist.min);
+            setPriceMax(hist.max);
+            setSelectedStarRatings([]);
+            setSelectedGuestRatings([]);
+            setSelectedAmenities([]);
+            setVisibleCount(10);
         }
-    }, [hotels, priceMin, priceMax]);
+    }, [hotels]);
 
     const filteredHotels = useHotelFilter(
         {
@@ -92,6 +96,15 @@ export default function SearchResultsPage(){
                 <div className="max-w-screen-xl mx-auto px-6 py-4 w-full">
                     <SearchBar
                         onSubmit={({ destination, checkin, checkout, guests }) => {
+                            
+                            setHistogram(null);
+                            setPriceMin(0);
+                            setPriceMax(Infinity);
+                            setSelectedStarRatings([]);
+                            setSelectedGuestRatings([]);
+                            setSelectedAmenities([]);
+                            setVisibleCount(10);
+                            
                             navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`);
                         }}
 
@@ -112,7 +125,7 @@ export default function SearchResultsPage(){
             <main className="w-full p-6 bg-gray-100 md:mt-5 md:p-4 sm:p-3 pt-24 md:pt-20">
                 <div className="max-w-screen-xl mx-auto flex gap-6 items-start w-full flex-col md:flex-row md:gap-4 xl:max-w-none xl:px-10">
 
-                <aside className="w-full md:w-80 md:flex-shrink-0 bg-white rounded-lg p-5 shadow-sm sticky md:top-48 md:max-h-[calc(100vh-12rem)] md:overflow-y-auto border border-gray-200 order-2 md:order-1 md:p-4">
+                    <aside className="w-full md:w-80 md:flex-shrink-0 bg-white rounded-lg p-5 shadow-sm sticky md:top-48 md:max-h-[calc(100vh-12rem)] md:overflow-y-auto border border-gray-200 order-2 md:order-1 md:p-4">
                         {hotels && hotels.length > 0 && (
                             <FilterBar
                                 hotels={hotels}

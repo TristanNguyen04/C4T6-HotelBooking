@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
 
 const NavBar = () => {
+    const navigate = useNavigate();
     const navLinks = [
         { name: 'Destinations', path: '/search' },
         { name: 'About Us', path: '/' },
@@ -23,6 +24,12 @@ const NavBar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    const handleLogoClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        console.log('Logo clicked, navigating to home');
+        navigate('/', { replace: true });
+    };
+
     return (
         <nav className={`fixed top-0 left-0 w-full flex items-center bg-white justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${
             isHomePage 
@@ -30,7 +37,7 @@ const NavBar = () => {
                 : ("py-4 md:py-6")
         }`}>
             {/* Logo */}
-            <Link to="/">
+            <button onClick={handleLogoClick} className="cursor-pointer bg-transparent border-none p-0">
                 <div className='flex items-center space-x-2'>
                     <span className="font-bold text-[24px] leading-[36px] text-[#FF6B6B]">
                         StayEase
@@ -39,15 +46,15 @@ const NavBar = () => {
                         Comfort wherever you go
                     </span>
                 </div>
-            </Link>
+            </button>
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-4 lg:gap-8">
                 {navLinks.map((link, i) => (
-                    <a key={i} href={link.path} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-black"} font-normal`}>
+                    <Link key={i} to={link.path} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-black"} font-normal`}>
                         {link.name}
                         <div className={`${isScrolled ? "bg-gray-700" : "bg-white"} h-0.5 w-0 group-hover:w-full transition-all duration-300`} />
-                    </a>
+                    </Link>
                 ))}
             </div>
 
@@ -77,9 +84,9 @@ const NavBar = () => {
                 </button>
 
                 {navLinks.map((link, i) => (
-                    <a key={i} href={link.path} onClick={() => setIsMenuOpen(false)}>
+                    <Link key={i} to={link.path} onClick={() => setIsMenuOpen(false)}>
                         {link.name}
-                    </a>
+                    </Link>
                 ))}
 
                 <button className="bg-[#FF6B6B] text-white px-8 py-2.5 rounded-full transition-all duration-500">

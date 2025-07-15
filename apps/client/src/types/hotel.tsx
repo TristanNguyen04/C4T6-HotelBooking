@@ -46,6 +46,54 @@ export interface HotelSearchParams {
   guests: string;
 }
 
+export interface Histogram {
+  bins: number[];
+  min: number;
+  max: number;
+  binBoundaries: number[]; // Add this to track actual bin boundaries
+}
+
+export interface FilterBarProps {
+  hotels: Hotel[];
+  histogram: Histogram | null;
+  priceMin: number;
+  setPriceMin: (val: number) => void;
+  priceMax: number;
+  setPriceMax: (val: number) => void;
+  selectedStarRatings: number[];
+  setSelectedStarRatings: (ratings: number[]) => void;
+  selectedGuestRatings: string[];
+  setSelectedGuestRatings: (ratings: string[]) => void;
+  selectedAmenities: string[];
+  setSelectedAmenities: (amenities: string[]) => void;
+}
+
+export interface PriceRangeFilterProps {
+  histogram: Histogram;
+  priceMin: number;
+  setPriceMin: (val: number) => void;
+  priceMax: number;
+  setPriceMax: (val: number) => void;
+}
+
+export interface StarRatingFilterProps {
+  hotels: Hotel[];
+  selectedStarRatings: number[];
+  setSelectedStarRatings: (ratings: number[]) => void;
+}
+
+export interface GuestRatingFilterProps {
+  hotels: Hotel[];
+  selectedGuestRatings: string[];
+  setSelectedGuestRatings: (ratings: string[]) => void;
+}
+
+export interface AmenityFilterProps {
+  hotels: Hotel[];
+  selectedAmenities: string[];
+  setSelectedAmenities: (amenities: string[]) => void;
+} 
+
 export const INIT_HOTEL = {
   "id": "diH7",
   "imageCount": 86,

@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import EmailVerificationPage from './pages/EmailVerificationPage';
@@ -10,11 +10,7 @@ import SearchBar from './components/SearchBar';
 import { useNavigate } from 'react-router-dom';
 
 function App(){
-  const location = useLocation();
   const navigate = useNavigate();
-
-  const noLayoutPaths = ['/login', '/register', '/verify-email'];
-  const shouldUseLayout = !noLayoutPaths.includes(location.pathname);
 
   // Handle search submit for hero SearchBar
   const handleSearchSubmit = ({ destination, checkin, checkout, guests }: {
@@ -28,28 +24,30 @@ function App(){
     );
   };
 
-  if (!shouldUseLayout) {
-    return (
-      <Routes>
-        <Route path='/login' element={<LoginPage/>}/>
-        <Route path='/register' element={<RegisterPage/>}/>
-        <Route path='/verify-email' element={<EmailVerificationPage/>}/>
-      </Routes>
-    );
-  }
-
-  // Determine if current route should show hero
-  const isHomePage = location.pathname === '/';
-  const heroContent = isHomePage ? <SearchBar onSubmit={handleSearchSubmit} /> : undefined;
-
   return (
-    <Layout showHero={isHomePage} heroContent={heroContent}>
-      <Routes>
-        <Route path='/' element={<HomePage/>}/>
-        <Route path='/search' element={<SearchResultsPage/>}/>
-        <Route path='/hotels/:id/details' element={<HotelDetailsPage/>}/>
-      </Routes>
-    </Layout>
+    <Routes>
+      {/* Routes without layout */}
+      <Route path='/login' element={<LoginPage/>}/>
+      <Route path='/register' element={<RegisterPage/>}/>
+      <Route path='/verify-email' element={<EmailVerificationPage/>}/>
+      
+      {/* Routes with layout */}
+      <Route path='/' element={
+        <Layout showHero={true} heroContent={<SearchBar onSubmit={handleSearchSubmit} />}>
+          <HomePage/>
+        </Layout>
+      }/>
+      <Route path='/search' element={
+        <Layout showHero={false}>
+          <SearchResultsPage/>
+        </Layout>
+      }/>
+      <Route path='/hotels/:id/details' element={
+        <Layout showHero={false}>
+          <HotelDetailsPage/>
+        </Layout>
+      }/>
+    </Routes>
   );
 }
 
