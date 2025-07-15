@@ -34,6 +34,7 @@ export default function SearchResultsPage(){
     const checkin = params.get('checkin') || '';
     const checkout = params.get('checkout') || '';
     const guests = params.get('guests') || '';
+    const rooms = guests.split('|').length;
 
     const shouldFetch = destination_id && checkin && checkout && guests;
 
@@ -55,7 +56,6 @@ export default function SearchResultsPage(){
         if(hotels && hotels.length > 0){
             const hist = getPriceHistogram(hotels, 30);
             setHistogram(hist);
-            
             setPriceMin(hist.min);
             setPriceMax(hist.max);
             setSelectedStarRatings([]);
@@ -129,6 +129,7 @@ export default function SearchResultsPage(){
                         {hotels && hotels.length > 0 && (
                             <FilterBar
                                 hotels={hotels}
+                                rooms={rooms}
                                 histogram={histogram}
                                 priceMin={priceMin}
                                 setPriceMin={setPriceMin}

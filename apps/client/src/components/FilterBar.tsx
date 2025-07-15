@@ -9,6 +9,7 @@ import type { FilterBarProps } from '../types/hotel';
 
 const FilterBar: React.FC<FilterBarProps> = ({
     hotels,
+    rooms,
     histogram,
     priceMin,
     setPriceMin,
@@ -78,6 +79,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
             <PriceRangeFilter
                 histogram={histogram}
+                rooms={rooms}
                 priceMin={priceMin}
                 setPriceMin={setPriceMin}
                 priceMax={priceMax}

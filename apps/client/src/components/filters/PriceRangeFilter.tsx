@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import type { PriceRangeFilterProps } from '../../types/hotel';
-import { getBinLabel, getBinRange } from '../../utils/histogram';
+// import { getBinLabel, getBinRange } from '../../utils/histogram';
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
+    rooms,
     histogram,
     priceMin,
     setPriceMin,
@@ -336,10 +337,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
             </div>
 
             <div className="flex justify-center">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
-                    <span className="text-sm font-medium text-blue-800">
-                        ${Math.floor(priceMin)} - ${Math.ceil(priceMax)} per night
-                    </span>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 justify-center items-center">
+                    <p className="text-sm font-medium text-blue-800 text-center">
+                        ${Math.floor(priceMin)} — ${Math.ceil(priceMax)}
+                    </p>
+                    <p className="text-sm font-normal text-blue-500 text-center">
+                        
+                        {rooms > 1 ? rooms + " rooms" : "per room"} per night
+                    </p>
                 </div>
             </div>
         </div>

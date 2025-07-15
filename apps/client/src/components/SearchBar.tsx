@@ -60,8 +60,17 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     }, [term]);
 
     useEffect(() => {
-        setGuests(String(adults + children))
-    }, [adults, children])
+        const guestsReq = adults + children;
+        let req = "";
+        for(let i = 0; i < rooms; i++){
+            req += guestsReq;
+            if(i != rooms - 1){
+                req += '|';
+            }
+        }
+        setGuests(req)
+
+    }, [adults, children, rooms])
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

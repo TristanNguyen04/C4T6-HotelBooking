@@ -55,6 +55,7 @@ export interface Histogram {
 
 export interface FilterBarProps {
   hotels: Hotel[];
+  rooms: number;
   histogram: Histogram | null;
   priceMin: number;
   setPriceMin: (val: number) => void;
@@ -69,6 +70,7 @@ export interface FilterBarProps {
 }
 
 export interface PriceRangeFilterProps {
+  rooms: number;
   histogram: Histogram;
   priceMin: number;
   setPriceMin: (val: number) => void;
