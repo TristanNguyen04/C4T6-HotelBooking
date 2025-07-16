@@ -24,6 +24,12 @@ export type Hotel = {
       };
     };
     number_of_images?: number;
+    trustyou?: {
+        id: string;
+        score: {
+            [key: string]: number;
+        }
+    }
 };
 
 export type SortBy = "price" | "distance" | "rating" | "searchRank";
@@ -57,6 +63,14 @@ export interface SearchContext {
   adults: number;
   children: number;
   term: string;
+}
+
+export interface HotelSearchResponse {
+  searchCompleted: string | null;
+  completed: boolean;
+  status: string | null;
+  currency: string;
+  hotels: Hotel[];
 }
 
 export interface Histogram {
