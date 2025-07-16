@@ -41,7 +41,7 @@ export default function SearchResultsPage(){
 
     const shouldFetch = destination_id && checkin && checkout && guests;
 
-    // Fix: Create a more stable fetchHotels function
+
     const fetchHotels = useCallback(() => {
         if (!shouldFetch) return Promise.resolve([]);
         return searchHotels({ destination_id, checkin, checkout, guests }).then(res => res.data);
@@ -218,10 +218,13 @@ export default function SearchResultsPage(){
                                         <HotelCard
                                             key={h.id}
                                             hotel={h}
-                                            destination_id={params.get('destination_id') || ''}
-                                            checkin={params.get('checkin') || ''}
-                                            checkout={params.get('checkout') || ''}
-                                            guests={params.get('guests') || '2'}
+                                            destination_id={destination_id}
+                                            checkin={checkin}
+                                            checkout={checkout}
+                                            guests={guests}
+                                            rooms={rooms}
+                                            adults={adults}
+                                            children={children}
                                         />
                                     ))}
                                 </ul>

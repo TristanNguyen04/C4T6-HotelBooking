@@ -14,21 +14,30 @@ interface HotelCardProps {
     checkin: string;
     checkout: string;
     guests: string;
+    rooms: number;
+    adults: number;
+    children: number;
 }
 
 export default function HotelCard({ 
     hotel,
     destination_id,
     checkin,
+    rooms,
     checkout,
-    guests
+    guests,
+    adults,
+    children,
 }: HotelCardProps) {
     const navigate = useNavigate();
 
     const handleViewDetails = () => {
         navigate(
-            `/hotels/${hotel.id}/details?destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}`
+            `/hotels/${hotel.id}/details?destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`
         );
+        // navigate(
+        //     `/hotels/${hotel.id}/details?destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&`
+        // );
     };
 
     const [imgSrc, setImgSrc] = useState(
