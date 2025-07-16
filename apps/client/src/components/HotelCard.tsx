@@ -1,6 +1,5 @@
-import React from 'react';
 import { Tooltip } from 'react-tooltip';
-import type { Hotel } from '../types/hotel';
+import type { Hotel, SearchContext } from '../types/hotel';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { assets } from '../assets/assets';
@@ -10,34 +9,28 @@ import { getGuestRatingDisplay } from '../utils/guestRating';
 
 interface HotelCardProps {
     hotel: Hotel;
-    destination_id: string;
-    checkin: string;
-    checkout: string;
-    guests: string;
-    rooms: number;
-    adults: number;
-    children: number;
+    searchContext: SearchContext;
 }
 
 export default function HotelCard({ 
     hotel,
-    destination_id,
-    checkin,
-    rooms,
-    checkout,
-    guests,
-    adults,
-    children,
+    searchContext
 }: HotelCardProps) {
     const navigate = useNavigate();
 
     const handleViewDetails = () => {
-        navigate(
-            `/hotels/${hotel.id}/details?destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`
-        );
-        // navigate(
-        //     `/hotels/${hotel.id}/details?destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&`
-        // );
+        const searchParams = new URLSearchParams({
+            destination_id: searchContext.destination_id,
+            checkin: searchContext.checkin,
+            checkout: searchContext.checkout,
+            guests: searchContext.guests,
+            term: searchContext.term,
+            rooms: searchContext.rooms.toString(),
+            adults: searchContext.adults.toString(),
+            children: searchContext.children.toString()
+        });
+        
+        navigate(`/hotels/${hotel.id}/details?${searchParams.toString()}`);
     };
 
     const [imgSrc, setImgSrc] = useState(
@@ -50,8 +43,6 @@ export default function HotelCard({
         setImgSrc(assets.hotelNotFound);
     };
 
-    console.log(hotel.amenities);
-    
     const amenityKeys = Object.entries(hotel.amenities || {})
         .filter(([, value]) => value === true)
         .map(([key]) => key);

@@ -7,6 +7,7 @@ export type Hotel = {
     distance: number;
     rating: number;
     searchRank: number;
+    description: string;
     amenities?: {
       [key: string]: boolean | undefined;
     };
@@ -22,6 +23,7 @@ export type Hotel = {
           popularity: number;
       };
     };
+    number_of_images?: number;
 };
 
 export type SortBy = "price" | "distance" | "rating" | "searchRank";
@@ -44,6 +46,17 @@ export interface HotelSearchParams {
   checkin: string;
   checkout: string;
   guests: string;
+}
+
+export interface SearchContext {
+  destination_id: string;
+  checkin: string;
+  checkout: string;
+  guests: string;
+  rooms: number;
+  adults: number;
+  children: number;
+  term: string;
 }
 
 export interface Histogram {

@@ -12,6 +12,7 @@ const NavBar = () => {
 
     const location = useLocation();
     const isHomePage = location.pathname === '/';
+    // const isSearchResultPage = location.pathname === '/search';
 
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -32,7 +33,7 @@ const NavBar = () => {
 
     return (
         <nav className={`fixed top-0 left-0 w-full flex items-center bg-white justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${
-            isHomePage 
+            isHomePage
                 ? (isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4" : "py-4 md:py-6")
                 : ("py-4 md:py-6")
         }`}>

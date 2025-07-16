@@ -38,6 +38,7 @@ export default function SearchResultsPage(){
     const rooms = guests.split('|').length;
     const adults = parseInt(params.get('adults') || '');
     const children = parseInt(params.get('children') || '');
+    const term = params.get("term") || '';
 
     const shouldFetch = destination_id && checkin && checkout && guests;
 
@@ -107,7 +108,7 @@ export default function SearchResultsPage(){
                             // setSelectedAmenities([]);
                             // setVisibleCount(10);
                             
-                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);
+                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);
                         }}
 
                         initialValues={{
@@ -218,13 +219,16 @@ export default function SearchResultsPage(){
                                         <HotelCard
                                             key={h.id}
                                             hotel={h}
-                                            destination_id={destination_id}
-                                            checkin={checkin}
-                                            checkout={checkout}
-                                            guests={guests}
-                                            rooms={rooms}
-                                            adults={adults}
-                                            children={children}
+                                            searchContext={{
+                                                destination_id,
+                                                checkin,
+                                                checkout,
+                                                guests,
+                                                rooms,
+                                                adults,
+                                                children,
+                                                term
+                                            }}
                                         />
                                     ))}
                                 </ul>
