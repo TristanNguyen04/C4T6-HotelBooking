@@ -1,13 +1,36 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../api/auth';
-import { useAuth } from '../contexts/AuthContext';
-
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../api/auth";
+import { useAuth } from "../contexts/AuthContext";
 import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa";
 import signInImage from "../assets/signin.jpeg";
 
 export default function LoginPage() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const { login: doLogin } = useAuth();
+    const navigate = useNavigate();
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+
+        try {
+            const res = await login({ email, password });
+
+            if (!res.data.user.isVerified) {
+                setError('Please verify your email before logging in.');
+                return;
+            }
+
+            doLogin(res.data.user, res.data.token);
+            navigate('/');
+        } catch (err: any) {
+            setError(err?.response?.data?.error || 'Login failed!');
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="flex max-w-5xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
@@ -18,12 +41,18 @@ export default function LoginPage() {
                         Sign in to continue your journey and discover amazing stays
                     </p>
 
-                    <form className="space-y-5">
+                    {/* Error */}
+                    {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+
+                    <form className="space-y-5" onSubmit={handleSubmit}>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Email</label>
                             <input
                                 type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                                 placeholder="Enter your email"
+                                required
                                 className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
                             />
                         </div>
@@ -37,7 +66,10 @@ export default function LoginPage() {
                             </div>
                             <input
                                 type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
                                 placeholder="Enter your password"
+                                required
                                 className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
                             />
                         </div>
@@ -53,7 +85,10 @@ export default function LoginPage() {
                             </label>
                         </div>
 
-                        <button className="w-full bg-[#FF6B6B] hover:bg-[#ff5a5a] text-white py-2 rounded-md transition-colors">
+                        <button
+                            type="submit"
+                            className="w-full bg-[#FF6B6B] hover:bg-[#ff5a5a] text-white py-2 rounded-md transition-colors"
+                        >
                             Sign In →
                         </button>
                     </form>
@@ -61,22 +96,19 @@ export default function LoginPage() {
                     <div className="my-5 text-sm text-gray-500 text-center">or continue with</div>
 
                     <div className="flex gap-3 justify-center mb-6">
-                        <button className="border p-2 rounded-md hover:bg-gray-100">
-                            <FaGoogle />
-                        </button>
-                        <button className="border p-2 rounded-md hover:bg-gray-100">
-                            <FaFacebookF />
-                        </button>
-                        <button className="border p-2 rounded-md hover:bg-gray-100">
-                            <FaApple />
-                        </button>
+                        <button className="border p-2 rounded-md hover:bg-gray-100"><FaGoogle /></button>
+                        <button className="border p-2 rounded-md hover:bg-gray-100"><FaFacebookF /></button>
+                        <button className="border p-2 rounded-md hover:bg-gray-100"><FaApple /></button>
                     </div>
 
                     <p className="text-sm text-gray-600 text-center">
                         Don’t have an account?{" "}
-                        <a href="#" className="text-[#FF6B6B] hover:underline">
+                        <span
+                            className="text-[#FF6B6B] hover:underline cursor-pointer"
+                            onClick={() => navigate("/register")}
+                        >
                             Create Account
-                        </a>
+                        </span>
                     </p>
 
                     <div className="bg-[#FFF6F2] text-orange-800 mt-8 p-4 rounded-lg text-sm flex items-start gap-2">
