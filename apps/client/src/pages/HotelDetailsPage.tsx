@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import Spinner from '../components/Spinner';
 import { searchHotelDetails } from '../api/hotels';
 import SearchBar from '../components/SearchBar';
@@ -10,6 +10,7 @@ import HotelImage from '../components/hotelDetails/HotelImage';
 import HotelAmenities from '../components/hotelDetails/HotelAmenities';
 import HotelInformation from '../components/hotelDetails/HotelInformation';
 import HotelQuickActions from '../components/hotelDetails/HotelQuickActions';
+import { usePollingFetch } from '../hooks/usePollingFetch';
 import type { Hotel, SearchContext } from '../types/hotel';
 
 export default function HotelDetailsPage() {
@@ -17,11 +18,6 @@ export default function HotelDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const [searchParams] = useSearchParams();
 
-    const [hotel, setHotel] = useState<Hotel | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    // Extract search context from URL parameters
     const searchContext: SearchContext | null = useMemo(() => {
         return searchParams.get('destination_id') ? {
             destination_id: searchParams.get('destination_id') || '',
@@ -35,38 +31,42 @@ export default function HotelDetailsPage() {
         } : null;
     }, [searchParams]);
 
-    useEffect(() => {
-        if (!id) {
-            setError('Hotel ID is required.');
-            setLoading(false);
-            return;
-        }
+    const shouldFetch = id && searchContext;
 
-        setLoading(true);
+    const fetchHotelDetails = useCallback(async () => {
+        if (!shouldFetch) return Promise.resolve({ data: null, completed: true });
         
-        if (searchContext) {
-            searchHotelDetails(id, {
-                destination_id: searchContext.destination_id,
-                checkin: searchContext.checkin,
-                checkout: searchContext.checkout,
-                guests: searchContext.guests
-            })
-                .then(res => {
-                    setHotel(res.data);
-                    setError(null);
-                })
-                .catch(err => {
-                    console.error('Failed to load hotel details:', err);
-                    setError('Failed to load hotel details. Please try again.');
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        } else {
-            setError('Please access this hotel through the search results.');
-            setLoading(false);
+        return searchHotelDetails(id, {
+            destination_id: searchContext.destination_id,
+            checkin: searchContext.checkin,
+            checkout: searchContext.checkout,
+            guests: searchContext.guests
+        }).then(res => {
+            const responseData = res.data;
+            const { completed, ...hotelData } = responseData;
+            return {
+                data: hotelData,
+                completed: completed
+            };
+        });
+    }, [id, searchContext, shouldFetch]);
+
+    const { data: hotel, loading, error } = usePollingFetch<Hotel>(
+        fetchHotelDetails,
+        {
+            maxRetries: 5,
+            interval: 3000,
+            skip: !shouldFetch
         }
-    }, [id, searchContext]);
+    );
+
+    // Handle specific error cases
+    const errorMessage = useMemo(() => {
+        if (!id) return 'Hotel ID is required.';
+        if (!searchContext) return 'Please access this hotel through the search results.';
+        if (error) return 'Failed to load hotel details. Please try again.';
+        return null;
+    }, [id, searchContext, error]);
 
     const handleBackToSearch = () => {
         if (searchContext) {
@@ -95,11 +95,14 @@ export default function HotelDetailsPage() {
         );
     }
 
-    if (error) {
-        return <HotelDetailsError error={error} onBackToSearch={handleBackToSearch} />;
+    if (errorMessage) {
+        return <HotelDetailsError error={errorMessage} onBackToSearch={handleBackToSearch} />;
     }
 
-    if (!hotel) return null;
+    if (!hotel) return <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+        <Spinner />
+        <p className="mt-4 text-gray-600">hotel not found</p>
+    </div>
 
     return (
         <div className="min-h-screen bg-gray-50">

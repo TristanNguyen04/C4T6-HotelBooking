@@ -37,7 +37,10 @@ export const searchHotels = async (req: Request, res: Response) => {
             return acc;
         }, []);
 
-        res.json(hotelsWithPrices);
+        res.json({
+            data: hotelsWithPrices,
+            completed: prices.completed
+        });
     } catch (error){
         console.error('Error searching hotels:', error);
         res.status(500).json( {error: 'Error fetching hotel data' });
@@ -70,7 +73,8 @@ export const getHotelDetails = async (req: Request, res: Response) => {
 
         return res.json({
             ...hotelInfo,
-            rooms: roomPricing.rooms || []
+            rooms: roomPricing.rooms || [],
+            completed: roomPricing.completed
         });
     } catch (error : any){
         if(axios.isAxiosError(error) && error.response?.status === 422) {

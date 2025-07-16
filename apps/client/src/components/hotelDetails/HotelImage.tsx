@@ -87,7 +87,7 @@ const HotelImage: React.FC<HotelImageProps> = ({ hotel }) => {
     if (imageCount === 0) {
         return (
             <div className="bg-white rounded-lg shadow-sm mb-8 p-4">
-                <div className="aspect-video max-h-32 bg-gray-100 rounded-lg overflow-hidden">
+                <div className="aspect-video w-24 h-24 bg-gray-100 rounded-lg overflow-hidden">
                     <img
                         src={assets.hotelNotFound}
                         alt={hotel.name}

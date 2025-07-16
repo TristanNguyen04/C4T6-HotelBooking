@@ -6,19 +6,6 @@ interface OverviewCardProps {
     hotel: Hotel;
 }
 
-
-// export interface HotelDescription {
-//     amenities: string;
-//     dining: string;
-//     businessAmenities: string;
-//     rooms: string;
-//     attractions: string[];
-//     nearestAirports: string[];
-//     preferredAirport: string;
-//     location: string;
-//     headline: string;
-// }
-
 const OverviewCard: React.FC<OverviewCardProps> = ({ hotel }: OverviewCardProps) => {
     const parsedDescription = parseHotelDescription(hotel.description);
 

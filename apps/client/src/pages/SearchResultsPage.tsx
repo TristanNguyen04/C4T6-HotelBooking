@@ -43,8 +43,8 @@ export default function SearchResultsPage(){
     const shouldFetch = destination_id && checkin && checkout && guests;
 
 
-    const fetchHotels = useCallback(() => {
-        if (!shouldFetch) return Promise.resolve([]);
+    const fetchHotels = useCallback(async () => {
+        if (!shouldFetch) return Promise.resolve({ data: [], completed: true });
         return searchHotels({ destination_id, checkin, checkout, guests }).then(res => res.data);
     }, [destination_id, checkin, checkout, guests, shouldFetch]);
 
@@ -108,7 +108,7 @@ export default function SearchResultsPage(){
                             // setSelectedAmenities([]);
                             // setVisibleCount(10);
                             
-                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination_id}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);
+                            navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);
                         }}
 
                         initialValues={{

@@ -13,8 +13,13 @@ interface UsePollingFetchResult<T> {
   retryCount: number;
 }
 
+interface PollingResponse<T> {
+  data: T;
+  completed: boolean;
+}
+
 export function usePollingFetch<T>(
-  fetchFn: () => Promise<T>,
+  fetchFn: () => Promise<PollingResponse<T>>,
   { maxRetries = 5, interval = 3000, skip = false }: UsePollingFetchOptions = {}
 ): UsePollingFetchResult<T> {
   const [data, setData] = useState<T | null>(null);
@@ -35,12 +40,13 @@ export function usePollingFetch<T>(
       try {
         const result = await fetchFn();
         console.log("result", result);
+        console.log("result.completed", result.completed);
 
         if (!isCancelled) {
-          if (Array.isArray(result) && result.length === 0 && attempt < maxRetries) {
+          if (!result.completed && attempt < maxRetries) {
             retryRef.current = setTimeout(() => attemptFetch(attempt + 1), interval);
           } else {
-            setData(result);
+            setData(result.data);
             setLoading(false);
             setRetryCount(0);
           }

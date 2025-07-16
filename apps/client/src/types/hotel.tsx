@@ -65,14 +65,6 @@ export interface SearchContext {
   term: string;
 }
 
-export interface HotelSearchResponse {
-  searchCompleted: string | null;
-  completed: boolean;
-  status: string | null;
-  currency: string;
-  hotels: Hotel[];
-}
-
 export interface Histogram {
   bins: number[];
   min: number;
