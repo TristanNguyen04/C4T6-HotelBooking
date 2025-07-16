@@ -84,7 +84,7 @@ export const getHotelDetails = async (req: Request, res: Response) => {
 }
 
 
-export const getHotelBasicDetails = async (req: Request, res: Response) => {
+export const searchHotelUsingDest = async (req: Request, res: Response) => {
 try {
     const { destination_id} = req.query;
 

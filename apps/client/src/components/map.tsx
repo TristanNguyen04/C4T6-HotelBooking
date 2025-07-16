@@ -1,12 +1,11 @@
 // src/pages/GoogleMapPage.tsx
 import { useEffect, useState, type SetStateAction } from "react";
 import "../styles/map.css";
-import { APIProvider, Map as Gmap, AdvancedMarker, InfoWindow, Pin} from "@vis.gl/react-google-maps";
+import { APIProvider, Map as Gmap, AdvancedMarker, Pin} from "@vis.gl/react-google-maps";
 import type { Destination } from "../../../server/src/models/Destination";
 import HotelInfoWindow from "../components/mapCard";
 import luggageFallback from "../assets/luggage.png";
-import { BsBack } from "react-icons/bs";
-import { TbBackground } from "react-icons/tb";
+import {searchHotelwithDest, searchDestinationNearby} from '../api/hotels';
 
 type hotel = {
   id: number;
@@ -45,15 +44,22 @@ function zoomToRadius(zoomNo: number): number{
 // fetch from destinationController based on radius
 async function fetchNearbyDestination(lat: number, lng:number, radius: number){
   try{
-    // this is fetching the current lat lng and range (can use zoom score)
-    const res = await fetch(`http://localhost:3000/api/hotels/00Qh/details/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
-    // const res = await fetch(`http://localhost:3000/api/hotels/9jx5/basic-details`);
-    const destinations: Destination[] = await res.json();
+    // this is fetching the current lat lng and radius
+    const res = await searchDestinationNearby({
+      lat: String(lat),
+      lng: String(lng),
+      radius: String(radius),
+    });
+    console.log("res.data" , res.data);
+    const destinations: Destination[] = await res.data;
     const destHotels = await Promise.all(
       destinations.map(async (dest)=>{
         try{
-          const hotelRes = await fetch(`http://localhost:3000/api/destinations/hotel?destination_id=${dest.uid}`);
-          const hotels = await hotelRes.json();
+          const hotelRes = await searchHotelwithDest(dest.uid);
+          const hotels = await hotelRes.data;
+          console.log("Hotels:" , hotels);
+
+
           return { ...dest, hotels };
         }
         catch{
@@ -85,7 +91,7 @@ export default function GoogleMapPage() {
   // This center should be mapped to the hotel position from the hotel details page
   // center and zoom will be used for mapping the current location of the map
   // when zooming in , 
-  const [center , setCenter] = useState({ lat: 53.54, lng: 10.01 });
+  const [center , setCenter] = useState({ lat: 1.2800945, lng: 103.8509491 });
   // use zoom to calculate dynamically the radius we want to query from the destinations.json using lat lng
   // using the destinations code that is queried, we want to query from the api to retrieve all the hotels in each destination code
   // from the destination code, 
@@ -95,19 +101,23 @@ export default function GoogleMapPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [lastFetch, setLastFetch] = useState<{lat: number, lng:number} | null>(null);
   useEffect(() => {
-    const upperBound = 10;
+    // const upperBound = 10;
     const queryThresh = 15;
 
     if(lastFetch && calculateDistance(center.lat, center.lng,lastFetch.lat,lastFetch.lng) < queryThresh){return;}
 
     const radiusKm = zoomToRadius(zoom);
-    fetchNearbyDestination(center.lat, center.lng, 2).then(data => {
-      console.log("Destinations from backend:", data);
-
+    fetchNearbyDestination(center.lat, center.lng, radiusKm).then(data => {
       const allHotels = data.flatMap(dest => dest.hotels || []);
+      const hotelWithRadius = allHotels.filter(hotel => {
+        const lat = hotel.latitude;
+        const lng = hotel.longitude;
+        return calculateDistance(center.lat,center.lng,lat,lng) <= radiusKm;
+      })
+
       const uniqueHotelsMap = new Map<string, hotel>();
 
-      allHotels.forEach(hotel => {
+      hotelWithRadius.forEach(hotel => {
         const key = `${hotel.id}_${hotel.latitude}_${hotel.longitude}`;
         if (!uniqueHotelsMap.has(key)) {
           uniqueHotelsMap.set(key, {
@@ -144,6 +154,7 @@ export default function GoogleMapPage() {
           }}
           style={{ height: "100%", width: "100%" }}
         > 
+        
           {/* Dynamically add hotel markers and pins */}
           {hotels.map((hotel) => {
             let background;
@@ -159,7 +170,7 @@ export default function GoogleMapPage() {
           {selectedHotelId !== null && (() => {
             const hotel = hotels.find(h => h.id === selectedHotelId);
             if(!hotel){return};
-            const imageUrl = hotel.imageUrl && hotel.default_image_index !== undefined
+            const imageUrl = hotel.imageUrl && calculateDistance(center.lat,center.lng,hotel.position.lat, hotel.position.lng) <= 2 && hotel.default_image_index !== undefined
             ? `${hotel.imageUrl.prefix}${hotel.default_image_index}${hotel.imageUrl.suffix}`
             : luggageFallback;
 
