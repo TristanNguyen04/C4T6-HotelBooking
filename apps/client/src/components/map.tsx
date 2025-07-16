@@ -52,23 +52,16 @@ async function fetchNearbyDestination(lat: number, lng:number, radius: number){
     });
     console.log("res.data" , res.data);
     const destinations: Destination[] = await res.data;
-    const destHotels = await Promise.all(
-      destinations.map(async (dest)=>{
-        try{
-          const hotelRes = await searchHotelwithDest(dest.uid);
-          const hotels = await hotelRes.data;
-          console.log("Hotels:" , hotels);
-
-
-          return { ...dest, hotels };
-        }
-        catch{
-          console.log({error: "error"});
-          return {...dest, hotels: [] as hotel[]};
-        }
-      })
-    )
-    return destHotels;
+    if(destinations.length === 0) return null;
+    const firstDest = destinations[0]!;
+    try{
+      const hotelRes = await searchHotelwithDest(firstDest.uid);
+      const hotelsData = await hotelRes.data;
+      return { ...firstDest, hotelsData };
+    }
+    catch{
+      return { ...firstDest, hotels: [] };
+    }
   }
   catch{
     console.log("die")
@@ -101,23 +94,21 @@ export default function GoogleMapPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [lastFetch, setLastFetch] = useState<{lat: number, lng:number} | null>(null);
   useEffect(() => {
-    // const upperBound = 10;
-    const queryThresh = 15;
-
-    if(lastFetch && calculateDistance(center.lat, center.lng,lastFetch.lat,lastFetch.lng) < queryThresh){return;}
-
     const radiusKm = zoomToRadius(zoom);
+    if (lastFetch && calculateDistance(center.lat, center.lng, lastFetch.lat, lastFetch.lng) < radiusKm / 2) {return;}
     fetchNearbyDestination(center.lat, center.lng, radiusKm).then(data => {
-      const allHotels = data.flatMap(dest => dest.hotels || []);
-      const hotelWithRadius = allHotels.filter(hotel => {
-        const lat = hotel.latitude;
-        const lng = hotel.longitude;
-        return calculateDistance(center.lat,center.lng,lat,lng) <= radiusKm;
+      if(!data)return;
+      const hotelsData = (data as any).hotelsData;
+      const destinations = {...data} as Destination;
+      const hotelWithRadius = hotelsData.filter((hotel: any) => {
+      const lat = hotel.latitude;
+      const lng = hotel.longitude;
+      return calculateDistance(center.lat, center.lng, lat, lng) <= radiusKm;
       })
 
       const uniqueHotelsMap = new Map<string, hotel>();
 
-      hotelWithRadius.forEach(hotel => {
+      hotelWithRadius.forEach((hotel: any) => {
         const key = `${hotel.id}_${hotel.latitude}_${hotel.longitude}`;
         if (!uniqueHotelsMap.has(key)) {
           uniqueHotelsMap.set(key, {
@@ -129,7 +120,7 @@ export default function GoogleMapPage() {
 
       const uniqueHotels = Array.from(uniqueHotelsMap.values());
       setHotels(uniqueHotels as hotel[]);
-      setDestinations(data);
+      setDestinations([destinations]);
       setLastFetch(center);
     });
   }, [center,zoom]);
