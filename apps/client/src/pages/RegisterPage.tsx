@@ -144,7 +144,7 @@ export default function RegisterPage() {
 
                     {/* Right side */}
                     <div className="w-full md:w-1/2 bg-gradient-to-br from-orange-300 to-pink-400 px-10 py-12 flex flex-col justify-center items-center text-center gap-4">
-                        <img src={luggageImg} alt="Luggage" className="w-50 h-auto" />
+                        <img src={luggageImg} alt="Luggage" className="w-80 h-auto" />
                         <h2 className="text-white text-xl font-semibold">Your journey begins here</h2>
                         <p className="text-white text-sm max-w-sm">
                             Join thousands of travelers who book their perfect stays with StayEase. Unlock exclusive member rates and collect rewards with every booking.
