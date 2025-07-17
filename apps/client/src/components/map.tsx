@@ -26,10 +26,10 @@ type hotel = {
 
 function zoomToRadius(zoomNo: number): number{
   const zoomRadiusMap: {[key:number]:number} = {
-    21: 0.05,
-    20: 0.1,
-    19: 0.2,
-    18: 0.5,
+    21: 1,
+    20: 1,
+    19: 1,
+    18: 1,
     17: 1,
     16: 2,
     15: 2,
@@ -81,18 +81,22 @@ const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: numb
 };
 
 export default function GoogleMapPage() {
-  // This center should be mapped to the hotel position from the hotel details page
-  // center and zoom will be used for mapping the current location of the map
-  // when zooming in , 
   const [center , setCenter] = useState({ lat: 1.2800945, lng: 103.8509491 });
-  // use zoom to calculate dynamically the radius we want to query from the destinations.json using lat lng
-  // using the destinations code that is queried, we want to query from the api to retrieve all the hotels in each destination code
-  // from the destination code, 
   const [zoom , setZoom] = useState(18);
   const [selectedHotelId , setSelectedHotelId] = useState<number | null> (null);
   const [hotels, setHotels] = useState<hotel[]>([])
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [lastFetch, setLastFetch] = useState<{lat: number, lng:number} | null>(null);
+  const [debounce,setDebounce] = useState(center);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounce(center);
+    }, 500); // Delay time
+  
+    return () => clearTimeout(handler); // Clear timeout if center changes
+  }, [center]);
+
   useEffect(() => {
     const radiusKm = zoomToRadius(zoom);
     if (lastFetch && calculateDistance(center.lat, center.lng, lastFetch.lat, lastFetch.lng) < radiusKm / 2) {return;}
@@ -121,9 +125,9 @@ export default function GoogleMapPage() {
       const uniqueHotels = Array.from(uniqueHotelsMap.values());
       setHotels(uniqueHotels as hotel[]);
       setDestinations([destinations]);
-      setLastFetch(center);
+      setLastFetch(debounce);
     });
-  }, [center,zoom]);
+  }, [debounce,zoom]);
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAP_KEY}>
       <div style={{ height: "80vh", width: "100vw", overflow: "visible" }}>
