@@ -1,5 +1,7 @@
 export type Hotel = {
     id: string;
+    latitude: number;
+    longitude:number;
     name: string;
     address: string;
     currency: string;
@@ -22,6 +24,7 @@ export type Hotel = {
           popularity: number;
       };
     };
+    description:string;
 };
 
 export type SortBy = "price" | "distance" | "rating" | "searchRank";

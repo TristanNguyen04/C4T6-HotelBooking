@@ -4,25 +4,8 @@ import "../styles/map.css";
 import { APIProvider, Map as Gmap, AdvancedMarker, Pin} from "@vis.gl/react-google-maps";
 import type { Destination } from "../../../server/src/models/Destination";
 import HotelInfoWindow from "../components/mapCard";
-import luggageFallback from "../assets/luggage.png";
 import {searchHotelwithDest, searchDestinationNearby} from '../api/hotels';
-
-type hotel = {
-  id: number;
-  name: string;
-  address: string;
-  rating: number;
-  imageUrl: {
-    prefix: string;
-    suffix: string;
-    count: number;
-  };
-  default_image_index: number;
-  position: {
-    lat: number;
-    lng: number;
-  };
-};
+import type {Hotel} from "../types/hotel";
 
 function zoomToRadius(zoomNo: number): number{
   const zoomRadiusMap: {[key:number]:number} = {
@@ -44,7 +27,7 @@ function zoomToRadius(zoomNo: number): number{
 // fetch from destinationController based on radius
 async function fetchNearbyDestination(lat: number, lng:number, radius: number){
   try{
-    // this is fetching the current lat lng and radius
+    // use api to fetch for destinations using lat, lng, radius
     const res = await searchDestinationNearby({
       lat: String(lat),
       lng: String(lng),
@@ -55,6 +38,7 @@ async function fetchNearbyDestination(lat: number, lng:number, radius: number){
     if(destinations.length === 0) return null;
     const firstDest = destinations[0]!;
     try{
+      // use first destination for rendering only
       const hotelRes = await searchHotelwithDest(firstDest.uid);
       const hotelsData = await hotelRes.data;
       return { ...firstDest, hotelsData };
@@ -80,24 +64,36 @@ const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: numb
   return EARTH_RADIUS_KM * c;
 };
 
+// type positionParam = {
+//   position: {
+//   lat: number,
+//   lng: number,
+//   }
+// }
+// export default function GoogleMapPage({position}:positionParam) {
+// either use hotel type from types/hotel.tx or use lat lng only
 export default function GoogleMapPage() {
   const [center , setCenter] = useState({ lat: 1.2800945, lng: 103.8509491 });
+  // const [center , setCenter] = useState({ lat: position.lat, lng: position.lng });
   const [zoom , setZoom] = useState(18);
-  const [selectedHotelId , setSelectedHotelId] = useState<number | null> (null);
-  const [hotels, setHotels] = useState<hotel[]>([])
+  const [selectedHotelId , setSelectedHotelId] = useState<string | null> (null);
+  const [hotels, setHotels] = useState<Hotel[]>([])
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [lastFetch, setLastFetch] = useState<{lat: number, lng:number} | null>(null);
   const [debounce,setDebounce] = useState(center);
 
   useEffect(() => {
+    // this effect sets timeout when center changes
     const handler = setTimeout(() => {
       setDebounce(center);
-    }, 500); // Delay time
+    }, 500); 
   
-    return () => clearTimeout(handler); // Clear timeout if center changes
+    return () => clearTimeout(handler);
   }, [center]);
 
   useEffect(() => {
+    // this effect is used for calling api to fetch hotels and filtering based on the radius.
+    // dependency array is based on debounce timeout and zoom
     const radiusKm = zoomToRadius(zoom);
     if (lastFetch && calculateDistance(center.lat, center.lng, lastFetch.lat, lastFetch.lng) < radiusKm / 2) {return;}
     fetchNearbyDestination(center.lat, center.lng, radiusKm).then(data => {
@@ -110,20 +106,22 @@ export default function GoogleMapPage() {
       return calculateDistance(center.lat, center.lng, lat, lng) <= radiusKm;
       })
 
-      const uniqueHotelsMap = new Map<string, hotel>();
+      const uniqueHotelsMap = new Map<string, Hotel>();
 
-      hotelWithRadius.forEach((hotel: any) => {
+      hotelWithRadius.forEach((hotel: Hotel) => {
         const key = `${hotel.id}_${hotel.latitude}_${hotel.longitude}`;
         if (!uniqueHotelsMap.has(key)) {
           uniqueHotelsMap.set(key, {
             ...hotel,
-            position: { lat: hotel.latitude, lng: hotel.longitude },
+            image_details: hotel.image_details,
+            latitude: hotel.latitude,
+            longitude: hotel.longitude,
           });
         }
       });
 
       const uniqueHotels = Array.from(uniqueHotelsMap.values());
-      setHotels(uniqueHotels as hotel[]);
+      setHotels(uniqueHotels as Hotel[]);
       setDestinations([destinations]);
       setLastFetch(debounce);
     });
@@ -157,7 +155,8 @@ export default function GoogleMapPage() {
             if(hotel.rating <= 4){background = "orange"}
             if(hotel.rating <= 3){background = "red"}
             return (
-            <AdvancedMarker key={`${hotel.id}_${hotel.position.lat}_${hotel.position.lng}`}  position={hotel.position} onClick={()=> setSelectedHotelId(hotel.id)}>
+            <AdvancedMarker key={`${hotel.id}_${hotel.latitude}_${hotel.longitude}`}  position={{ lat: hotel.latitude, lng: hotel.longitude }} 
+              onClick={()=> setSelectedHotelId(hotel.id)}>
               <Pin background={background} borderColor="orange" glyphColor="white" />
             </AdvancedMarker>
           )})};
@@ -165,18 +164,14 @@ export default function GoogleMapPage() {
           {selectedHotelId !== null && (() => {
             const hotel = hotels.find(h => h.id === selectedHotelId);
             if(!hotel){return};
-            const imageUrl = hotel.imageUrl && calculateDistance(center.lat,center.lng,hotel.position.lat, hotel.position.lng) <= 2 && hotel.default_image_index !== undefined
-            ? `${hotel.imageUrl.prefix}${hotel.default_image_index}${hotel.imageUrl.suffix}`
-            : luggageFallback;
+            // console.log(hotel.);
+            // const imageUrl = calculateDistance(center.lat,center.lng,hotel.position.lat, hotel.position.lng) <= 2 && hotel.imageUrl.count !== 0
+            // ? `${hotel.imageUrl.prefix}0${hotel.imageUrl.suffix}`
+            // : luggageFallback;
 
             return hotel ? (
               <HotelInfoWindow
-                lat={hotel.position.lat}
-                lng={hotel.position.lng}
-                name={hotel.name}
-                address={hotel.address}
-                rating={hotel.rating}
-                imageUrl={imageUrl}
+                hotel={hotel}
                 onClose={() => setSelectedHotelId(null)}
               />
             ) : null;
