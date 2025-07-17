@@ -30,3 +30,30 @@ html, body, #root {
   padding: 0;
   overflow: visible;
 }
+
+.carousel {
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+    border-radius:8px
+}
+
+.hotel-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: rgb(255, 107, 107);
+}
+
+.hotel-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.hotel-description {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
