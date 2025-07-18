@@ -12,3 +12,16 @@ export const convertDateFormat = (dateStr? : string): string => {
 
     return newDateFormat;
 }
+
+// Add function to calculate nights between two dates
+export const calculateNights = (checkin: string, checkout: string): number => {
+    const checkinDate = parseDate(checkin);
+    const checkoutDate = parseDate(checkout);
+    
+    if (!checkinDate || !checkoutDate) return 1;
+    
+    const timeDiff = checkoutDate.getTime() - checkinDate.getTime();
+    const nightsDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    return nightsDiff > 0 ? nightsDiff : 1;
+}
