@@ -10,6 +10,11 @@ export const searchHotels = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required parameters' });
         }
 
+        // Calculate number of nights
+        const checkinDate = new Date(checkin as string);
+        const checkoutDate = new Date(checkout as string);
+        const nights = Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
+
         const baseParams = {
             destination_id,
             checkin,
@@ -28,9 +33,14 @@ export const searchHotels = async (req: Request, res: Response) => {
         const hotelsWithPrices = hotels.reduce((acc: any[], hotel: any) => {
             const priceInfo = prices.hotels.find((price: any) => price.id == hotel.id);
             if(priceInfo){
+                const totalPrice = priceInfo?.price || 0;
+                const pricePerNight = nights > 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;
+                
                 acc.push({
                     ...hotel,
-                    price: priceInfo?.price || null,
+                    price: pricePerNight, // Price per night
+                    totalPrice: totalPrice, // Total price for the stay
+                    nights: nights,
                     currency: prices.currency || null,
                 });
             }

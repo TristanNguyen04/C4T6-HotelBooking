@@ -4,6 +4,8 @@ export type Hotel = {
     address: string;
     currency: string;
     price?: number;
+    totalPrice?: number;
+    nights?: number;
     distance: number;
     rating: number;
     searchRank: number;
@@ -65,17 +67,8 @@ export interface SearchContext {
   term: string;
 }
 
-export interface Histogram {
-  bins: number[];
-  min: number;
-  max: number;
-  binBoundaries: number[]; // Add this to track actual bin boundaries
-}
-
 export interface FilterBarProps {
   hotels: Hotel[];
-  rooms: number;
-  histogram: Histogram | null;
   priceMin: number;
   setPriceMin: (val: number) => void;
   priceMax: number;
@@ -86,15 +79,16 @@ export interface FilterBarProps {
   setSelectedGuestRatings: (ratings: string[]) => void;
   selectedAmenities: string[];
   setSelectedAmenities: (amenities: string[]) => void;
+  showTotalPrice: boolean;
 }
 
 export interface PriceRangeFilterProps {
-  rooms: number;
-  histogram: Histogram;
+  hotels: Hotel[];
   priceMin: number;
   setPriceMin: (val: number) => void;
   priceMax: number;
   setPriceMax: (val: number) => void;
+  showTotalPrice: boolean;
 }
 
 export interface StarRatingFilterProps {

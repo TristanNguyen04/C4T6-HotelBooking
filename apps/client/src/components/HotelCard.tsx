@@ -10,11 +10,13 @@ import { getGuestRatingDisplay } from '../utils/guestRating';
 interface HotelCardProps {
     hotel: Hotel;
     searchContext: SearchContext;
+    showTotalPrice?: boolean;
 }
 
 export default function HotelCard({ 
     hotel,
-    searchContext
+    searchContext,
+    showTotalPrice = false
 }: HotelCardProps) {
     const navigate = useNavigate();
 
@@ -154,9 +156,14 @@ export default function HotelCard({
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
                         <div className="text-right">
                             <p className="text-2xl font-bold text-gray-900">
-                                {hotel.currency} {hotel.price}
+                                {hotel.currency} {showTotalPrice ? hotel.totalPrice : hotel.price}
                             </p>
-                            <p className="text-sm text-gray-500">per night</p>
+                            <p className="text-sm text-gray-500">
+                                {showTotalPrice ? 
+                                    `total stay${hotel.nights ? ` (${hotel.nights} night${hotel.nights > 1 ? 's' : ''})` : ''}` : 
+                                    'per night'
+                                }
+                            </p>
                         </div>
                         <button
                             onClick={handleViewDetails}

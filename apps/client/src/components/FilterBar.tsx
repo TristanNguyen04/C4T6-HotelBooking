@@ -6,11 +6,10 @@ import {
     AmenityFilter,
 } from './filters';
 import type { FilterBarProps } from '../types/hotel';
+import { type Hotel } from '../types/hotel';
 
 const FilterBar: React.FC<FilterBarProps> = ({
     hotels,
-    rooms,
-    histogram,
     priceMin,
     setPriceMin,
     priceMax,
@@ -20,23 +19,36 @@ const FilterBar: React.FC<FilterBarProps> = ({
     selectedGuestRatings,
     setSelectedGuestRatings,
     selectedAmenities,
-    setSelectedAmenities
+    setSelectedAmenities,
+    showTotalPrice
 }) => {
-    if (!histogram) return null;
+    if (!hotels || hotels.length === 0) return null;
+
+    // Get the appropriate price based on the toggle
+    const getPrice = (hotel: Hotel) => {
+        if (showTotalPrice) {
+            return hotel.totalPrice || hotel.price || 0;
+        }
+        return hotel.price || 0;
+    };
+
+    const prices = hotels.map(h => getPrice(h)).filter(p => p > 0);
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
 
     const handleClearAll = () => {
         setSelectedStarRatings([]);
         setSelectedGuestRatings([]);
         setSelectedAmenities([]);
-        setPriceMin(histogram.min);
-        setPriceMax(histogram.max);
+        setPriceMin(minPrice);
+        setPriceMax(maxPrice);
     };
 
     const activeFiltersCount = 
         selectedStarRatings.length + 
         selectedGuestRatings.length + 
         selectedAmenities.length + 
-        (priceMin !== histogram?.min || priceMax !== histogram?.max ? 1 : 0);
+        (priceMin !== minPrice || priceMax !== maxPrice ? 1 : 0);
 
     return (
         <div className="w-full h-full space-y-6 overflow-y-auto p-4 pt-1">
@@ -78,12 +90,12 @@ const FilterBar: React.FC<FilterBarProps> = ({
             </div>
 
             <PriceRangeFilter
-                histogram={histogram}
-                rooms={rooms}
+                hotels={hotels}
                 priceMin={priceMin}
                 setPriceMin={setPriceMin}
                 priceMax={priceMax}
                 setPriceMax={setPriceMax}
+                showTotalPrice={showTotalPrice}
             />
 
             <div className="flex flex-col space-y-6">

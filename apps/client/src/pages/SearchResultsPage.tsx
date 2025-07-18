@@ -2,9 +2,8 @@ import { useSearchParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from "react";
 import { searchHotels } from "../api/hotels";
-import type { SortOption, Hotel, Histogram } from "../types/hotel";
+import type { SortOption, Hotel } from "../types/hotel";
 import HotelCardSkeleton from '../components/HotelCardSkeleton';
-import { getPriceHistogram } from "../utils/histogram";
 import SearchBar from "../components/SearchBar";
 import HotelCard from "../components/HotelCard";
 import { usePollingFetch } from "../hooks/usePollingFetch";
@@ -21,8 +20,6 @@ export default function SearchResultsPage(){
 
     const [sortOption, setSortOption] = useState<SortOption>("Relevance (Default)");
 
-    const [histogram, setHistogram] = useState<Histogram | null>(null);
-
     const [priceMin, setPriceMin] = useState<number>(0);
     const [priceMax, setPriceMax] = useState<number>(Infinity);
     const [selectedStarRatings, setSelectedStarRatings] = useState<number[]>([]);
@@ -30,6 +27,7 @@ export default function SearchResultsPage(){
     const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
     const [visibleCount, setVisibleCount] = useState(10);
+    const [showTotalPrice, setShowTotalPrice] = useState(false);
 
     const destination_id = params.get('destination_id') || ''; 
     const checkin = params.get('checkin') || '';
@@ -41,7 +39,6 @@ export default function SearchResultsPage(){
     const term = params.get("term") || '';
 
     const shouldFetch = destination_id && checkin && checkout && guests;
-
 
     const fetchHotels = useCallback(async () => {
         if (!shouldFetch) return Promise.resolve({ data: [], completed: true });
@@ -59,10 +56,11 @@ export default function SearchResultsPage(){
 
     useEffect(() => {
         if(hotels && hotels.length > 0){
-            const hist = getPriceHistogram(hotels, 30);
-            setHistogram(hist);
-            setPriceMin(hist.min);
-            setPriceMax(hist.max);
+            const prices = hotels.map(h => h.price || 0).filter(p => p > 0);
+            const min = Math.min(...prices);
+            const max = Math.max(...prices);
+            setPriceMin(min);
+            setPriceMax(max);
             setSelectedStarRatings([]);
             setSelectedGuestRatings([]);
             setSelectedAmenities([]);
@@ -77,7 +75,8 @@ export default function SearchResultsPage(){
             priceMax,
             selectedStarRatings,
             selectedGuestRatings,
-            selectedAmenities
+            selectedAmenities,
+            showTotalPrice
         }
     );
 
@@ -100,14 +99,6 @@ export default function SearchResultsPage(){
                 <div className="max-w-screen-xl mx-auto px-6 py-4 w-full">
                     <SearchBar
                         onSubmit={({ destination, checkin, checkout, guests, rooms, adults, children }) => {
-                            setHistogram(null);
-                            // setPriceMin(0);
-                            // setPriceMax(Infinity);
-                            // setSelectedStarRatings([]);
-                            // setSelectedGuestRatings([]);
-                            // setSelectedAmenities([]);
-                            // setVisibleCount(10);
-                            
                             navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);
                         }}
 
@@ -137,8 +128,6 @@ export default function SearchResultsPage(){
                         {hotels && hotels.length > 0 && (
                             <FilterBar
                                 hotels={hotels}
-                                rooms={rooms}
-                                histogram={histogram}
                                 priceMin={priceMin}
                                 setPriceMin={setPriceMin}
                                 priceMax={priceMax}
@@ -149,6 +138,7 @@ export default function SearchResultsPage(){
                                 setSelectedGuestRatings={setSelectedGuestRatings}
                                 selectedAmenities={selectedAmenities}
                                 setSelectedAmenities={setSelectedAmenities}
+                                showTotalPrice={showTotalPrice}
                             />
                         )}
                     </aside>
@@ -190,26 +180,50 @@ export default function SearchResultsPage(){
                                         </h2>
                                         
 
-                                        <div className="flex items-center gap-2 min-w-[220px] w-full md:w-auto md:min-w-auto">
-                                            <label htmlFor="sort-select" className="text-sm font-medium text-gray-500 whitespace-nowrap">
-                                                Sort by:
-                                            </label>
-                                            <select
-                                                id="sort-select"
-                                                value={sortOption}
-                                                onChange={(e) => setSortOption(e.target.value as SortOption)}
-                                                className="flex-1 px-3 py-2 border border-gray-200 rounded-md bg-white text-sm text-gray-800 cursor-pointer transition-colors duration-200 ease-in-out hover:border-[#003580] focus:outline-none focus:border-[#003580] focus:shadow-[0_0_0_2px_rgba(0,53,128,0.1)]"
-                                            >
-                                                <option value="Relevance (Default)">Relevance</option>
-                                                <option value="Price (Low to High)">Price (Low to High)</option>
-                                                <option value="Price (High to Low)">Price (High to Low)</option>
-                                                <option value="Star Rating (Low to High)">Star Rating (Low to High)</option>
-                                                <option value="Star Rating (High to Low)">Star Rating (High to Low)</option>
-                                                <option value="Distance (Close to Far)">Distance (Close to Far)</option>
-                                                <option value="Distance (Far to Close)">Distance (Far to Close)</option>
-                                                <option value="Guest Rating (Low to High)">Guest Rating (Low to High)</option>
-                                                <option value="Guest Rating (High to Low)">Guest Rating (High to Low)</option>
-                                            </select>
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-[220px] w-full md:w-auto md:min-w-auto">
+                                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                                <label htmlFor="sort-select" className="text-sm font-medium text-gray-500 whitespace-nowrap">
+                                                    Sort by:
+                                                </label>
+                                                <select
+                                                    id="sort-select"
+                                                    value={sortOption}
+                                                    onChange={(e) => setSortOption(e.target.value as SortOption)}
+                                                    className="flex-1 sm:flex-initial px-3 py-2 border border-gray-200 rounded-md bg-white text-sm text-gray-800 cursor-pointer transition-colors duration-200 ease-in-out hover:border-[#003580] focus:outline-none focus:border-[#003580] focus:shadow-[0_0_0_2px_rgba(0,53,128,0.1)]"
+                                                >
+                                                    <option value="Relevance (Default)">Relevance</option>
+                                                    <option value="Price (Low to High)">Price (Low to High)</option>
+                                                    <option value="Price (High to Low)">Price (High to Low)</option>
+                                                    <option value="Star Rating (Low to High)">Star Rating (Low to High)</option>
+                                                    <option value="Star Rating (High to Low)">Star Rating (High to Low)</option>
+                                                    <option value="Distance (Close to Far)">Distance (Close to Far)</option>
+                                                    <option value="Distance (Far to Close)">Distance (Far to Close)</option>
+                                                    <option value="Guest Rating (Low to High)">Guest Rating (Low to High)</option>
+                                                    <option value="Guest Rating (High to Low)">Guest Rating (High to Low)</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                                <span className="text-sm font-medium text-gray-500 whitespace-nowrap">
+                                                    Price display:
+                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                    <label className="inline-flex items-center cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={showTotalPrice}
+                                                            onChange={(e) => setShowTotalPrice(e.target.checked)}
+                                                            className="sr-only"
+                                                        />
+                                                        <div className={`relative w-11 h-6 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out ${showTotalPrice ? 'bg-blue-600' : 'bg-gray-200'}`}>
+                                                            <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${showTotalPrice ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                                                        </div>
+                                                        <span className="ml-2 text-sm text-gray-700">
+                                                            {showTotalPrice ? 'Total stay' : 'Per night'}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -229,6 +243,7 @@ export default function SearchResultsPage(){
                                                 children,
                                                 term
                                             }}
+                                            showTotalPrice={showTotalPrice}
                                         />
                                     ))}
                                 </ul>

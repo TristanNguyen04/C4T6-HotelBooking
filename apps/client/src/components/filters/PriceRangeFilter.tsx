@@ -1,40 +1,232 @@
-import React, { useState } from 'react';
-import type { PriceRangeFilterProps } from '../../types/hotel';
-// import { getBinLabel, getBinRange } from '../../utils/histogram';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import type { Hotel, PriceRangeFilterProps } from '../../types/hotel';
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
-    rooms,
-    histogram,
+    hotels,
     priceMin,
     setPriceMin,
     priceMax,
-    setPriceMax
+    setPriceMax,
+    showTotalPrice
 }) => {
     const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+    const [minInputValue, setMinInputValue] = useState(Math.floor(priceMin).toString());
+    const [maxInputValue, setMaxInputValue] = useState(Math.floor(priceMax).toString());
+    const sliderRef = useRef<HTMLDivElement>(null);
+    const minInputTimeoutRef = useRef<NodeJS.Timeout>(null);
+    const maxInputTimeoutRef = useRef<NodeJS.Timeout>(null);
+
+    // Get the appropriate price based on the toggle
+    const getPrice = useCallback((hotel: Hotel) => {
+        if (showTotalPrice) {
+            return hotel.totalPrice || hotel.price || 0;
+        }
+        return hotel.price || 0;
+    }, [showTotalPrice]);
+
+    const prices = hotels.map(h => getPrice(h)).filter(p => p > 0);
+    const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+    const maxPrice = prices.length > 0 ? Math.max(...prices) : 1000;
+    
+    const actualMinPrice = minPrice;
+    const actualMaxPrice = maxPrice === minPrice ? minPrice + 100 : maxPrice;
+    const priceRange = actualMaxPrice - actualMinPrice;
+
+    const minPercent = priceRange > 0 ? ((priceMin - actualMinPrice) / priceRange) * 100 : 0;
+    const maxPercent = priceRange > 0 ? ((priceMax - actualMinPrice) / priceRange) * 100 : 100;
+
+    // Update input values when price bounds change or toggle changes
+    useEffect(() => {
+        if (!isDragging) {
+            setMinInputValue(Math.floor(priceMin).toString());
+            setMaxInputValue(Math.floor(priceMax).toString());
+        }
+    }, [priceMin, priceMax, isDragging]);
+
+    // Reset price range when toggle changes
+    useEffect(() => {
+        setPriceMin(actualMinPrice);
+        setPriceMax(actualMaxPrice);
+    }, [showTotalPrice, actualMinPrice, actualMaxPrice, setPriceMin, setPriceMax]);
+
+
+    const handleMouseDown = useCallback((type: 'min' | 'max') => {
+        setIsDragging(type);
+    }, []);
+
+    const handleMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
+        if (!isDragging || !sliderRef.current) return;
+
+        const rect = sliderRef.current.getBoundingClientRect();
+        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        const percent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+        const newValue = actualMinPrice + (percent / 100) * priceRange;
+
+        if (isDragging === 'min') {
+            const constrainedValue = Math.max(actualMinPrice, Math.min(newValue, priceMax - 1));
+            setPriceMin(constrainedValue);
+        } else {
+            const constrainedValue = Math.min(actualMaxPrice, Math.max(newValue, priceMin + 1));
+            setPriceMax(constrainedValue);
+        }
+    }, [isDragging, actualMinPrice, actualMaxPrice, priceRange, priceMin, priceMax, setPriceMin, setPriceMax]);
+
+    const handleMouseUp = useCallback(() => {
+        setIsDragging(null);
+    }, []);
+
+
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            document.addEventListener('touchmove', handleMouseMove);
+            document.addEventListener('touchend', handleMouseUp);
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('touchmove', handleMouseMove);
+            document.removeEventListener('touchend', handleMouseUp);
+        };
+    }, [isDragging, handleMouseMove, handleMouseUp]);
+
+
+    const validateMinInput = useCallback((value: string) => {
+        const numValue = parseFloat(value);
+        
+        if (isNaN(numValue) || value.trim() === '') {
+            setPriceMin(actualMinPrice);
+            setMinInputValue(Math.floor(actualMinPrice).toString());
+            return;
+        }
+
+        const constrainedValue = Math.max(actualMinPrice, Math.min(numValue, priceMax - 1));
+        setPriceMin(constrainedValue);
+        
+        if (constrainedValue !== numValue) {
+            setMinInputValue(Math.floor(constrainedValue).toString());
+        }
+    }, [actualMinPrice, priceMax, setPriceMin]);
+
+    const validateMaxInput = useCallback((value: string) => {
+        const numValue = parseFloat(value);
+        
+        if (isNaN(numValue) || value.trim() === '') {
+            setPriceMax(actualMaxPrice);
+            setMaxInputValue(Math.floor(actualMaxPrice).toString());
+            return;
+        }
+
+        const constrainedValue = Math.min(actualMaxPrice, Math.max(numValue, priceMin + 1));
+        setPriceMax(constrainedValue);
+        
+        if (constrainedValue !== numValue) {
+            setMaxInputValue(Math.floor(constrainedValue).toString());
+        }
+    }, [actualMaxPrice, priceMin, setPriceMax]);
+
+    const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setMinInputValue(value);
+
+        if (minInputTimeoutRef.current) {
+            clearTimeout(minInputTimeoutRef.current);
+        }
+
+        minInputTimeoutRef.current = setTimeout(() => {
+            validateMinInput(value);
+        }, 1200);
+    };
+
+    const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setMaxInputValue(value);
+
+        if (maxInputTimeoutRef.current) {
+            clearTimeout(maxInputTimeoutRef.current);
+        }
+
+        maxInputTimeoutRef.current = setTimeout(() => {
+            validateMaxInput(value);
+        }, 1200);
+    };
+
+    const handleMinInputBlur = () => {
+        if (minInputTimeoutRef.current) {
+            clearTimeout(minInputTimeoutRef.current);
+        }
+        validateMinInput(minInputValue);
+    };
+
+    const handleMaxInputBlur = () => {
+        if (maxInputTimeoutRef.current) {
+            clearTimeout(maxInputTimeoutRef.current);
+        }
+        validateMaxInput(maxInputValue);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.currentTarget.blur();
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (minInputTimeoutRef.current) {
+                clearTimeout(minInputTimeoutRef.current);
+            }
+            if (maxInputTimeoutRef.current) {
+                clearTimeout(maxInputTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (isDragging) return;
+        
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = ((e.clientX - rect.left) / rect.width) * 100;
+        const newValue = actualMinPrice + (percent / 100) * priceRange;
+
+        const distanceToMin = Math.abs(newValue - priceMin);
+        const distanceToMax = Math.abs(newValue - priceMax);
+
+        if (distanceToMin < distanceToMax) {
+            const constrainedValue = Math.max(actualMinPrice, Math.min(newValue, priceMax - 1));
+            setPriceMin(constrainedValue);
+        } else {
+            const constrainedValue = Math.min(actualMaxPrice, Math.max(newValue, priceMin + 1));
+            setPriceMax(constrainedValue);
+        }
+    };
 
     return (
         <div className="w-full bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
             <div className="mb-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">Price Range</h3>
-                <p className="text-sm text-gray-500">Filter hotels by nightly rate</p>
+                <p className="text-sm text-gray-500">
+                    Filter hotels by {showTotalPrice ? 'total stay' : 'nightly'} rate
+                </p>
             </div>
 
             <div className="flex items-center gap-3 mb-6">
                 <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Min Price</label>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Min Price
+                    </label>
                     <div className="relative">
-                        <span className="pr-1 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
                         <input
-                            type="number"
-                            min={histogram.min}
-                            max={histogram.max}
-                            value={Math.floor(priceMin)}
-                            onChange={e => {
-                                const val = parseFloat(e.target.value) || histogram.min;
-                                if (val <= priceMax && val >= histogram.min) setPriceMin(val);
-                            }}
+                            type="text"
+                            value={minInputValue}
+                            onChange={handleMinInputChange}
+                            onBlur={handleMinInputBlur}
+                            onKeyDown={(e) => handleKeyDown(e)}
                             className="w-full pl-6 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                            placeholder="0"
+                            placeholder="Min price"
                         />
                     </div>
                 </div>
@@ -44,307 +236,87 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
                 </div>
                 
                 <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Max Price</label>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Max Price
+                    </label>
                     <div className="relative">
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
                         <input
-                            type="number"
-                            min={histogram.min}
-                            max={histogram.max}
-                            value={Math.ceil(priceMax)}
-                            onChange={e => {
-                                const val = parseFloat(e.target.value) || histogram.max;
-                                if (val >= priceMin && val <= histogram.max) setPriceMax(val);
-                            }}
+                            type="text"
+                            value={maxInputValue}
+                            onChange={handleMaxInputChange}
+                            onBlur={handleMaxInputBlur}
+                            onKeyDown={(e) => handleKeyDown(e)}
                             className="w-full pl-6 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                            placeholder="1000"
+                            placeholder="Max price"
                         />
                     </div>
                 </div>
             </div>
 
-
-            {/* don't need as of now*/}
-            {/* <div className="mb-4 w-full"> */}
-                {/* <div className="flex items-end h-32 gap-1 mb-3 p-3 bg-gradient-to-t from-gray-50 to-white rounded-lg border border-gray-100 w-full overflow-auto"> */}
-                    {/* {histogram.bins.map((count, i) => {
-                        // Use the new adaptive algorithm - no need for bin grouping
-                        const maxCount = Math.max(...histogram.bins);
-                        
-                        // Improved height calculation for better visual balance
-                        const normalizedHeight = maxCount > 0 ? Math.sqrt(count) / Math.sqrt(maxCount) : 0;
-                        const height = count > 0 
-                            ? Math.max(8, Math.min(80, normalizedHeight * 80))
-                            : 0;
-                        
-                        const binRange = getBinRange(i, histogram.binBoundaries);
-                        const binLabel = getBinLabel(i, histogram.binBoundaries);
-                        
-                        const isInRange = binRange.end > priceMin && binRange.start < priceMax;
-                        
-                        return (
-                            <div
-                                key={i}
-                                className={`flex-1 max-w-[5px] min-w-[5px] rounded-t-lg transition-all duration-300 cursor-pointer group relative overflow-hidden ${
-                                    isInRange 
-                                        ? 'bg-gradient-to-t from-blue-600 via-blue-500 to-blue-400 hover:from-blue-700 hover:via-blue-600 hover:to-blue-500 shadow-sm' 
-                                        : 'bg-gradient-to-t from-gray-400 via-gray-300 to-gray-200 hover:from-gray-500 hover:via-gray-400 hover:to-gray-300'
-                                }`}
-                                style={{ height: `${height}%` }}
-                                title={`${binLabel}: ${count} hotels`}
-                                onClick={() => {
-                                    // Allow clicking on bins to set range
-                                    setPriceMin(binRange.start);
-                                    setPriceMax(binRange.end);
-                                }}
-                            >
-                                <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-200 ${
-                                    isInRange ? 'bg-white' : 'bg-gray-600'
-                                }`}></div>
-                                
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-20 shadow-lg">
-                                    <div className="text-center">
-                                        <div className="font-semibold text-blue-200">{binLabel}</div>
-                                        <div className="text-gray-300 text-xs mt-1">
-                                            {count} hotel{count !== 1 ? 's' : ''}
-                                        </div>
-                                    </div>
-                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                                </div> */}
-                                
-                                {/* {count > 0 && height > 25 && (
-                                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[9px] font-normal text-white opacity-80 leading-none">
-                                        {count}
-                                    </div>
-                                )} */}
-                            {/* </div>
-                        );
-                    })}
-                </div> */}
-                
-                {/* <div className="flex justify-between items-center text-xs text-gray-600 px-1">
-                    <div className="flex flex-col items-start">
-                        <span className="font-medium">${Math.floor(histogram.min)}</span>
-                        <span className="text-gray-400">Min</span>
+            {/* Price Range Slider */}
+            <div className="mb-1">
+                <div className="relative h-7">
+                    {/* Price labels */}
+                    <div className="absolute -top-2 left-0 flex justify-between w-full text-xs text-gray-500">
+                        <span className="font-medium">${Math.floor(actualMinPrice)}</span>
+                        <span className="font-medium">${Math.floor((actualMinPrice + actualMaxPrice) / 2)}</span>
+                        <span className="font-medium">${Math.ceil(actualMaxPrice)}</span>
                     </div>
-                    <div className="flex flex-col items-center">
-                        <span className="font-medium">${Math.floor((histogram.min + histogram.max) / 2)}</span>
-                        <span className="text-gray-400">Avg</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <span className="font-medium">${Math.ceil(histogram.max)}</span>
-                        <span className="text-gray-400">Max</span>
-                    </div>
-                </div> */}
-            {/* </div> */}
-
-            {/* Dual Price Range Slider */}
-            <div className="relative mb-2 px-3">
-                <div 
-                    className="relative h-2 bg-gray-200 rounded-full cursor-pointer"
-                    onClick={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const percent = (e.clientX - rect.left) / rect.width;
-                        const value = histogram.min + percent * (histogram.max - histogram.min);
-                        
-                        const minDistance = Math.abs(value - priceMin);
-                        const maxDistance = Math.abs(value - priceMax);
-                        
-                        if (minDistance < maxDistance) {
-                            if (value <= priceMax) setPriceMin(value);
-                        } else {
-                            if (value >= priceMin) setPriceMax(value);
-                        }
-                    }}
-                >
+                    
+                    {/* Track background */}
                     <div 
-                        className="absolute top-0 h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-75"
-                        style={{
-                            left: `${((priceMin - histogram.min) / (histogram.max - histogram.min)) * 100}%`,
-                            right: `${100 - ((priceMax - histogram.min) / (histogram.max - histogram.min)) * 100}%`
-                        }}
+                        ref={sliderRef}
+                        className="absolute top-5 left-0 right-0 h-2 bg-gray-200 rounded-full cursor-pointer"
+                        onClick={handleTrackClick}
                     ></div>
                     
-                    {/* Min thumb */}
-                    <div
-                        className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-600 border-2 border-white rounded-full shadow-lg cursor-pointer transition-all duration-75 ${
-                            isDragging === 'min' ? 'scale-125 shadow-xl ring-4 ring-blue-200' : 'hover:scale-110'
-                        }`}
+                    {/* Selected range */}
+                    <div 
+                        className="absolute top-5 h-2 bg-blue-500 rounded-full pointer-events-none"
                         style={{
-                            left: `calc(${((priceMin - histogram.min) / (histogram.max - histogram.min)) * 100}% - 10px)`,
-                            zIndex: isDragging === 'min' ? 3 : 2
-                        }}
-                        onMouseDown={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsDragging('min');
-                            
-                            const startX = e.clientX;
-                            const startValue = priceMin;
-                            const sliderRect = e.currentTarget.parentElement!.getBoundingClientRect();
-                            const sliderWidth = sliderRect.width;
-                            const valueRange = histogram.max - histogram.min;
-                            
-                            const handleMouseMove = (e: MouseEvent) => {
-                                e.preventDefault();
-                                const deltaX = e.clientX - startX;
-                                const deltaPercent = deltaX / sliderWidth;
-                                const deltaValue = deltaPercent * valueRange;
-                                const newValue = Math.max(
-                                    histogram.min,
-                                    Math.min(priceMax, startValue + deltaValue)
-                                );
-                                setPriceMin(newValue);
-                            };
-                            
-                            const handleMouseUp = (e: MouseEvent) => {
-                                e.preventDefault();
-                                setIsDragging(null);
-                                document.removeEventListener('mousemove', handleMouseMove);
-                                document.removeEventListener('mouseup', handleMouseUp);
-                                document.body.style.userSelect = '';
-                            };
-                            
-                            document.body.style.userSelect = 'none';
-                            document.addEventListener('mousemove', handleMouseMove, { passive: false });
-                            document.addEventListener('mouseup', handleMouseUp, { passive: false });
-                        }}
-                        
-                        onTouchStart={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsDragging('min');
-                            
-                            const touch = e.touches[0];
-                            const startX = touch.clientX;
-                            const startValue = priceMin;
-                            const sliderRect = e.currentTarget.parentElement!.getBoundingClientRect();
-                            const sliderWidth = sliderRect.width;
-                            const valueRange = histogram.max - histogram.min;
-                            
-                            const handleTouchMove = (e: TouchEvent) => {
-                                e.preventDefault();
-                                const touch = e.touches[0];
-                                const deltaX = touch.clientX - startX;
-                                const deltaPercent = deltaX / sliderWidth;
-                                const deltaValue = deltaPercent * valueRange;
-                                const newValue = Math.max(
-                                    histogram.min,
-                                    Math.min(priceMax, startValue + deltaValue)
-                                );
-                                setPriceMin(newValue);
-                            };
-                            
-                            const handleTouchEnd = () => {
-                                setIsDragging(null);
-                                document.removeEventListener('touchmove', handleTouchMove);
-                                document.removeEventListener('touchend', handleTouchEnd);
-                            };
-                            
-                            document.addEventListener('touchmove', handleTouchMove, { passive: false });
-                            document.addEventListener('touchend', handleTouchEnd);
+                            left: `${minPercent}%`,
+                            right: `${100 - maxPercent}%`
                         }}
                     />
                     
-                    {/* Max thumb */}
+                    {/* Min price handle */}
                     <div
-                        className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-600 border-2 border-white rounded-full shadow-lg cursor-pointer transition-all duration-75 ${
-                            isDragging === 'max' ? 'scale-125 shadow-xl ring-4 ring-blue-200' : 'hover:scale-110'
+                        className={`absolute top-3.5 w-5 h-5 bg-white border-2 border-blue-500 rounded-full cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-200 ${
+                            isDragging === 'min' ? 'scale-110' : ''
                         }`}
                         style={{
-                            left: `calc(${((priceMax - histogram.min) / (histogram.max - histogram.min)) * 100}% - 10px)`,
-                            zIndex: isDragging === 'max' ? 3 : 2
+                            left: `calc(${minPercent}% - 12px)`,
+                            zIndex: isDragging === 'min' ? 10 : 1
                         }}
-                        onMouseDown={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsDragging('max');
-                            
-                            const startX = e.clientX;
-                            const startValue = priceMax;
-                            const sliderRect = e.currentTarget.parentElement!.getBoundingClientRect();
-                            const sliderWidth = sliderRect.width;
-                            const valueRange = histogram.max - histogram.min;
-                            
-                            const handleMouseMove = (e: MouseEvent) => {
-                                e.preventDefault();
-                                const deltaX = e.clientX - startX;
-                                const deltaPercent = deltaX / sliderWidth;
-                                const deltaValue = deltaPercent * valueRange;
-                                const newValue = Math.min(
-                                    histogram.max,
-                                    Math.max(priceMin, startValue + deltaValue)
-                                );
-                                setPriceMax(newValue);
-                            };
-                            
-                            const handleMouseUp = (e: MouseEvent) => {
-                                e.preventDefault();
-                                setIsDragging(null);
-                                document.removeEventListener('mousemove', handleMouseMove);
-                                document.removeEventListener('mouseup', handleMouseUp);
-                                document.body.style.userSelect = '';
-                            };
-                            
-                            document.body.style.userSelect = 'none';
-                            document.addEventListener('mousemove', handleMouseMove, { passive: false });
-                            document.addEventListener('mouseup', handleMouseUp, { passive: false });
-                        }}
-                        
-                        onTouchStart={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsDragging('max');
-                            
-                            const touch = e.touches[0];
-                            const startX = touch.clientX;
-                            const startValue = priceMax;
-                            const sliderRect = e.currentTarget.parentElement!.getBoundingClientRect();
-                            const sliderWidth = sliderRect.width;
-                            const valueRange = histogram.max - histogram.min;
-                            
-                            const handleTouchMove = (e: TouchEvent) => {
-                                e.preventDefault();
-                                const touch = e.touches[0];
-                                const deltaX = touch.clientX - startX;
-                                const deltaPercent = deltaX / sliderWidth;
-                                const deltaValue = deltaPercent * valueRange;
-                                const newValue = Math.min(
-                                    histogram.max,
-                                    Math.max(priceMin, startValue + deltaValue)
-                                );
-                                setPriceMax(newValue);
-                            };
-                            
-                            const handleTouchEnd = () => {
-                                setIsDragging(null);
-                                document.removeEventListener('touchmove', handleTouchMove);
-                                document.removeEventListener('touchend', handleTouchEnd);
-                            };
-                            
-                            document.addEventListener('touchmove', handleTouchMove, { passive: false });
-                            document.addEventListener('touchend', handleTouchEnd);
-                        }}
+                        onMouseDown={() => handleMouseDown('min')}
+                        onTouchStart={() => handleMouseDown('min')}
+                        role="slider"
+                        aria-valuemin={actualMinPrice}
+                        aria-valuemax={actualMaxPrice}
+                        aria-valuenow={priceMin}
+                        aria-label="Minimum price"
+                        tabIndex={0}
                     />
-                </div>
-                
-                {isDragging && (
-                    <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium whitespace-nowrap z-20 shadow-lg">
-                        ${Math.floor(priceMin)} - ${Math.ceil(priceMax)}
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
-                    </div>
-                )}
-            </div>
-
-            <div className="flex justify-center">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 justify-center items-center">
-                    <p className="text-sm font-medium text-blue-800 text-center">
-                        ${Math.floor(priceMin)} — ${Math.ceil(priceMax)}
-                    </p>
-                    <p className="text-sm font-normal text-blue-500 text-center">
-                        
-                        {rooms > 1 ? rooms + " rooms" : "per room"} per night
-                    </p>
+                    
+                    {/* Max price handle */}
+                    <div
+                        className={`absolute top-3.5 w-5 h-5 bg-white border-2 border-blue-500 rounded-full cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-200 ${
+                            isDragging === 'max' ? 'scale-110' : ''
+                        }`}
+                        style={{
+                            left: `calc(${maxPercent}% - 12px)`,
+                            zIndex: isDragging === 'max' ? 10 : 1
+                        }}
+                        onMouseDown={() => handleMouseDown('max')}
+                        onTouchStart={() => handleMouseDown('max')}
+                        role="slider"
+                        aria-valuemin={actualMinPrice}
+                        aria-valuemax={actualMaxPrice}
+                        aria-valuenow={priceMax}
+                        aria-label="Maximum price"
+                        tabIndex={0}
+                    />
                 </div>
             </div>
         </div>

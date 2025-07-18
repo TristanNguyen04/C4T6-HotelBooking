@@ -8,6 +8,7 @@ interface UseHotelFilterProps {
   selectedStarRatings: number[];
   selectedGuestRatings: string[];
   selectedAmenities: string[];
+  showTotalPrice?: boolean;
 }
 
 const getGuestRatingRange = (score: number): string | null => {
@@ -61,10 +62,19 @@ const getAllAmenities = (hotels: Hotel[]): string[] => {
   return Array.from(amenitySet).sort();
 };
 
-export function useHotelFilter({ hotels, priceMin, priceMax, selectedStarRatings, selectedGuestRatings, selectedAmenities }: UseHotelFilterProps) {
+export function useHotelFilter({ 
+  hotels, 
+  priceMin, 
+  priceMax, 
+  selectedStarRatings, 
+  selectedGuestRatings, 
+  selectedAmenities, 
+  showTotalPrice = false 
+}: UseHotelFilterProps) {
   return useMemo(() => {
     return (hotels ?? []).filter((hotel) => {
-      const price = hotel.price ?? Infinity;
+      // Get the appropriate price based on the toggle
+      const price = showTotalPrice ? (hotel.totalPrice || hotel.price || Infinity) : (hotel.price ?? Infinity);
       const rating = hotel.rating ?? 0;
       const guestScore = hotel.categories?.overall?.score;
 
@@ -86,8 +96,7 @@ export function useHotelFilter({ hotels, priceMin, priceMax, selectedStarRatings
 
       return withinMin && withinMax && meetsStars && meetsGuestRating && meetsAmenity;
     });
-  }, [hotels, priceMin, priceMax, selectedStarRatings, selectedGuestRatings, selectedAmenities]);
+  }, [hotels, priceMin, priceMax, selectedStarRatings, selectedGuestRatings, selectedAmenities, showTotalPrice]);
 }
-
 
 export { getHotelCountForStarRating, getHotelCountForGuestRating, getHotelCountForAmenity, getAllAmenities };
