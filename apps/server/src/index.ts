@@ -29,6 +29,11 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/payment", paymentRoutes);
 app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// only start server if not in test environment (jest)
+if(process.env.NODE_ENV !== 'test'){
+  app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

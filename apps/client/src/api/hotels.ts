@@ -12,3 +12,15 @@ export const searchHotelDetails = (
     params: HotelSearchParams
 ) => API.get(`/hotels/${id}/details`, { params });
 
+export const searchDestinationNearby = (
+    params: {
+        lat: string,
+        lng: string,
+        radius: string,
+    }
+) => API.get(`/destinations/nearby`, {params});
+
+export const searchHotelwithDest = (
+    uid: string
+) => API.get(`/destinations/hotel`,{params: {destination_id:uid}});
+
