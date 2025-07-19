@@ -115,8 +115,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
         onSubmit({
             destination: selected,
-            checkin: convertDateFormat(dateRange.startDate.toLocaleDateString()), // dd/MM/yyyy
-            checkout: convertDateFormat(dateRange.endDate.toLocaleDateString()), // dd/MM/yyyy
+            checkin: convertDateFormat(dateRange.startDate.toLocaleDateString('en-GB')), // dd/MM/yyyy
+            checkout: convertDateFormat(dateRange.endDate.toLocaleDateString('en-GB')), // dd/MM/yyyy
             guests,
             rooms,
             adults,
