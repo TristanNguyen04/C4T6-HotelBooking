@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-interface UsePollingFetchOptions {
+interface UsePollingFetchOptions<T> {
   maxRetries?: number;
   interval?: number;
-  skip?: boolean; // to delay the first call not satisfy condition(s)
+  skip?: boolean;
+  validateData?: (data: T) => boolean;
 }
 
 interface UsePollingFetchResult<T> {
@@ -20,7 +21,7 @@ interface PollingResponse<T> {
 
 export function usePollingFetch<T>(
   fetchFn: () => Promise<PollingResponse<T>>,
-  { maxRetries = 5, interval = 3000, skip = false }: UsePollingFetchOptions = {}
+  { maxRetries = 5, interval = 3000, skip = false, validateData }: UsePollingFetchOptions<T> = {}
 ): UsePollingFetchResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,14 +42,42 @@ export function usePollingFetch<T>(
         const result = await fetchFn();
         console.log("result", result);
         console.log("result.completed", result.completed);
+        console.log("result.data", result.data);
 
         if (!isCancelled) {
-          if (!result.completed && attempt < maxRetries) {
+          // Check if we have valid data
+          let hasValidData = false;
+          
+          if (result.data !== null && result.data !== undefined) {
+            if (validateData) {
+              // Use custom validation function
+              hasValidData = validateData(result.data);
+            } else {
+              // Default validation for backward compatibility
+              hasValidData = typeof result.data === 'object' && result.data.length > 0;
+            }
+          }
+
+          // Continue polling if:
+          // 1. We don't have valid data yet (regardless of completed status)
+          // 2. We haven't exceeded max retries
+          const shouldContinuePolling = !hasValidData && attempt < maxRetries;
+
+          if (shouldContinuePolling) {
+            setRetryCount(attempt);
             retryRef.current = setTimeout(() => attemptFetch(attempt + 1), interval);
           } else {
+            // Stop polling - either we have valid data or we've exceeded max retries
             setData(result.data);
             setLoading(false);
             setRetryCount(0);
+            
+            // If we stopped due to max retries without valid data, set an error
+            if (!hasValidData && attempt >= maxRetries) {
+              console.warn("Polling stopped due to max retries without valid data");
+              // Uncomment if you want to show an error message
+              // setError("Failed to fetch complete data after several retries.");
+            }
           }
         }
       } catch (err) {
@@ -69,7 +98,7 @@ export function usePollingFetch<T>(
       isCancelled = true;
       if (retryRef.current) clearTimeout(retryRef.current);
     };
-  }, [fetchFn, maxRetries, interval, skip]);
+  }, [fetchFn, maxRetries, interval, skip, validateData]);
 
   return { data, loading, error, retryCount };
 }

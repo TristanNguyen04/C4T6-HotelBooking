@@ -10,15 +10,19 @@ import HotelImage from '../components/hotelDetails/HotelImage';
 import HotelAmenities from '../components/hotelDetails/HotelAmenities';
 import HotelInformation from '../components/hotelDetails/HotelInformation';
 import HotelQuickActions from '../components/hotelDetails/HotelQuickActions';
+import HotelRoomOptions from '../components/hotelDetails/HotelRoomOptions';
 import { usePollingFetch } from '../hooks/usePollingFetch';
 import type { Hotel, SearchContext } from '../types/hotel';
+import { parseChildrenAges } from '../utils/age';
 
 export default function HotelDetailsPage() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [searchParams] = useSearchParams();
 
-    const searchContext: SearchContext | null = useMemo(() => {
+    const childrenAges: number[] = searchParams.get('guests') ? parseChildrenAges(searchParams.get('guests') || '') : [];
+    
+    const searchContext: SearchContext | null = useMemo<SearchContext | null>(() => {
         return searchParams.get('destination_id') ? {
             destination_id: searchParams.get('destination_id') || '',
             checkin: searchParams.get('checkin') || '',
@@ -27,9 +31,11 @@ export default function HotelDetailsPage() {
             rooms: parseInt(searchParams.get('rooms') || '1'),
             adults: parseInt(searchParams.get('adults') || '2'),
             children: parseInt(searchParams.get('children') || '0'),
-            term: searchParams.get('term') || ''
+            term: searchParams.get('term') || '',
+            childrenAges: childrenAges
         } : null;
     }, [searchParams]);
+
 
     const shouldFetch = id && searchContext;
 
@@ -40,7 +46,7 @@ export default function HotelDetailsPage() {
             destination_id: searchContext.destination_id,
             checkin: searchContext.checkin,
             checkout: searchContext.checkout,
-            guests: searchContext.guests
+            guests: searchContext.guests,
         }).then(res => {
             const responseData = res.data;
             const { completed, ...hotelData } = responseData;
@@ -51,12 +57,32 @@ export default function HotelDetailsPage() {
         });
     }, [id, searchContext, shouldFetch]);
 
+    const validateHotelData = useCallback((hotel: Hotel) => {
+        const hasBasicData = !!(hotel && 
+            typeof hotel === 'object' && 
+            'id' in hotel && 
+            'name' in hotel);
+        
+        const hasRoomsData = !!(hotel.rooms && 
+            Array.isArray(hotel.rooms) && 
+            hotel.rooms.length > 0);
+        
+        console.log('Hotel validation:', {
+            hasBasicData,
+            hasRoomsData,
+            roomsCount: hotel.rooms?.length || 0
+        });
+        
+        return hasBasicData && hasRoomsData;
+    }, []);
+
     const { data: hotel, loading, error } = usePollingFetch<Hotel>(
         fetchHotelDetails,
         {
-            maxRetries: 5,
+            maxRetries: 10,
             interval: 3000,
-            skip: !shouldFetch
+            skip: !shouldFetch,
+            validateData: validateHotelData
         }
     );
 
@@ -78,12 +104,18 @@ export default function HotelDetailsPage() {
                 guests: searchContext.guests,
                 adults: searchContext.adults.toString(),
                 children: searchContext.children.toString(),
-                rooms: searchContext.rooms.toString()
+                rooms: searchContext.rooms.toString(),
+                childrenAges: searchContext.childrenAges.join(',')
             });
             navigate(`/search?${params.toString()}`);
         } else {
             navigate('/');
         }
+    };
+
+    const handleBookRoom = (roomKey: string) => {
+        // TODO: Implement room booking logic
+        console.log('Booking room:', roomKey);
     };
 
     if (loading) {
@@ -126,7 +158,8 @@ export default function HotelDetailsPage() {
                                 guests: searchContext.guests,
                                 rooms: searchContext.rooms,
                                 adults: searchContext.adults,
-                                children: searchContext.children
+                                children: searchContext.children,
+                                childrenAges: searchContext.childrenAges
                             }}
                         />
                     </div>
@@ -156,7 +189,7 @@ export default function HotelDetailsPage() {
 
                 {/* Main Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left Column - Overview and Amenities */}
+                    {/* Left Column - Overview, Room Options, and Amenities */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Overview */}
                         <div className="bg-white rounded-lg shadow-sm p-6">
@@ -166,6 +199,13 @@ export default function HotelDetailsPage() {
 
                         {/* Amenities */}
                         <HotelAmenities hotel={hotel} />
+
+                        {/* Room Options */}
+                        <HotelRoomOptions 
+                            hotel={hotel} 
+                            onBookRoom={handleBookRoom} 
+                            searchContext={searchContext}
+                        />
                     </div>
 
                     {/* Right Column - Additional Info */}

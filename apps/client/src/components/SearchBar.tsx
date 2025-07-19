@@ -19,6 +19,7 @@ interface SearchBarProps {
         rooms: number
         adults: number
         children: number
+        childrenAges: number[]
     }) => void;
     initialValues?: {
         destination?: Location;
@@ -28,6 +29,7 @@ interface SearchBarProps {
         rooms?: number
         adults?: number
         children?: number
+        childrenAges?: number[]
     }
 }
 
@@ -47,6 +49,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [rooms, setRooms] = useState(initialValues?.rooms || 1);
     const [adults, setAdults] = useState(initialValues?.adults || 2);
     const [children, setChildren] = useState(initialValues?.children || 0);
+    const [childrenAges, setChildrenAges] = useState<number[]>(initialValues?.childrenAges || []);
 
     useEffect(() => {
         if (term.length < 1) {
@@ -74,9 +77,37 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                 req += '|';
             }
         }
-        setGuests(req)
 
-    }, [adults, children, rooms])
+        if(children > 0 && rooms < 2){
+            req += ':';
+        }
+
+        req += childrenAges.join(',');
+        setGuests(req)
+    }, [children, adults, childrenAges, rooms])
+
+    // Business logic: Reset children to 0 when rooms >= 2
+    useEffect(() => {
+        if (rooms >= 2 && children > 0) {
+            setChildren(0);
+            setChildrenAges([]);
+        }
+    }, [rooms, children]);
+
+    // Update childrenAges array when children count changes
+    useEffect(() => {
+        if (children > childrenAges.length) {
+            // Add default ages (e.g., 5 years old) for new children
+            const newAges = [...childrenAges];
+            for (let i = childrenAges.length; i < children; i++) {
+                newAges.push(5);
+            }
+            setChildrenAges(newAges);
+        } else if (children < childrenAges.length) {
+            // Remove extra ages when children count decreases
+            setChildrenAges(childrenAges.slice(0, children));
+        }
+    }, [children, childrenAges]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -89,8 +120,15 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
             guests,
             rooms,
             adults,
-            children
+            children,
+            childrenAges
         });
+    };
+
+    const updateChildAge = (index: number, age: number) => {
+        const newAges = [...childrenAges];
+        newAges[index] = age;
+        setChildrenAges(newAges);
     };
 
     return (
@@ -223,29 +261,73 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         tabIndex={0}
                     >
                         {[
-                            { label: 'Rooms', value: rooms, setter: setRooms, min: 1 },
-                            { label: 'Adults', value: adults, setter: setAdults, min: 1 },
-                            { label: 'Children', value: children, setter: setChildren, min: 0 }
-                        ].map(({ label, value, setter, min }) => (
+                            { label: 'Rooms', value: rooms, setter: setRooms, min: 1, max: 4 },
+                            { label: 'Adults', value: adults, setter: setAdults, min: 1, max: 4 },
+                            { label: 'Children', value: children, setter: setChildren, min: 0, max: 4, disabled: rooms >= 2 }
+                        ].map(({ label, value, setter, min, max, disabled }) => (
                             <div key={label} className="flex justify-between items-center mb-4 last:mb-0">
-                                <span className="text-sm font-medium text-gray-700">{label}</span>
+                                <span className={`text-sm font-medium ${disabled ? 'text-gray-400' : 'text-gray-700'}`}>
+                                    {label}
+                                    {disabled && label === 'Children' && (
+                                        <span className="text-xs text-gray-400 block">
+                                            (Not available for 2+ rooms)
+                                        </span>
+                                    )}
+                                </span>
                                 <div className="flex items-center gap-3">
                                     <button
                                         type="button"
-                                        className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 
-                                        flex items-center justify-center transition-colors"
-                                        onClick={() => setter(Math.max(min, value - 1))}
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                                            disabled 
+                                                ? 'bg-gray-50 text-gray-300 cursor-not-allowed' 
+                                                : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                                        }`}
+                                        onClick={() => !disabled && setter(Math.max(min, value - 1))}
+                                        disabled={disabled}
                                     >−</button>
-                                    <span className="w-8 text-center font-medium">{value}</span>
+                                    <span className={`w-8 text-center font-medium ${disabled ? 'text-gray-400' : ''}`}>
+                                        {value}
+                                    </span>
                                     <button
                                         type="button"
-                                        className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 
-                                        flex items-center justify-center transition-colors"
-                                        onClick={() => setter(value + 1)}
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                                            disabled 
+                                                ? 'bg-gray-50 text-gray-300 cursor-not-allowed' 
+                                                : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                                        }`}
+                                        onClick={() => !disabled && setter(Math.min(max, value + 1))}
+                                        disabled={disabled}
                                     >+</button>
                                 </div>
                             </div>
                         ))}
+                        
+                        {/* Children Ages Section */}
+                        {children > 0 && (
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                <h4 className="text-sm font-medium text-gray-700 mb-3">Children Ages</h4>
+                                <div className="space-y-3">
+                                    {Array.from({ length: children }, (_, index) => (
+                                        <div key={index} className="flex justify-between items-center">
+                                            <span className="text-sm text-gray-600">Child {index + 1}</span>
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="17"
+                                                    value={childrenAges[index] || 5}
+                                                    onChange={(e) => updateChildAge(index, parseInt(e.target.value) || 5)}
+                                                    className="w-16 px-2 py-1 text-sm border border-gray-300 rounded 
+                                                    focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20"
+                                                />
+                                                <span className="text-xs text-gray-500">years old</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        
                         <div className="flex justify-end mt-4 pt-4 border-t border-gray-200">
                             <button
                                 type='button'

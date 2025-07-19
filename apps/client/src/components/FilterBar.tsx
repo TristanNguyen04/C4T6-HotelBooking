@@ -22,7 +22,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
     setSelectedAmenities,
     showTotalPrice
 }) => {
-    if (!hotels || hotels.length === 0) return null;
+    // Remove the early return that was causing the FilterBar to disappear
+    // if (!hotels || hotels.length === 0) return null;
 
     // Get the appropriate price based on the toggle
     const getPrice = (hotel: Hotel) => {
@@ -32,9 +33,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
         return hotel.price || 0;
     };
 
-    const prices = hotels.map(h => getPrice(h)).filter(p => p > 0);
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
+    // Handle empty hotels case gracefully
+    const prices = hotels ? hotels.map(h => getPrice(h)).filter(p => p > 0) : [];
+    const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+    const maxPrice = prices.length > 0 ? Math.max(...prices) : 1000;
 
     const handleClearAll = () => {
         setSelectedStarRatings([]);
@@ -84,13 +86,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
                     </div>
                 ) : (
                     <p className="text-sm text-gray-500">
-                        Refine your search with the options below
+                        {hotels && hotels.length > 0 
+                            ? "Refine your search with the options below"
+                            : "No hotels found for this search"
+                        }
                     </p>
                 )}
             </div>
 
             <PriceRangeFilter
-                hotels={hotels}
+                hotels={hotels || []}
                 priceMin={priceMin}
                 setPriceMin={setPriceMin}
                 priceMax={priceMax}
@@ -100,19 +105,19 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
             <div className="flex flex-col space-y-6">
                 <StarRatingFilter
-                    hotels={hotels}
+                    hotels={hotels || []}
                     selectedStarRatings={selectedStarRatings}
                     setSelectedStarRatings={setSelectedStarRatings}
                 />
 
                 <GuestRatingFilter
-                    hotels={hotels}
+                    hotels={hotels || []}
                     selectedGuestRatings={selectedGuestRatings}
                     setSelectedGuestRatings={setSelectedGuestRatings}
                 />
 
                 <AmenityFilter
-                    hotels={hotels}
+                    hotels={hotels || []}
                     selectedAmenities={selectedAmenities}
                     setSelectedAmenities={setSelectedAmenities}
                 />

@@ -11,6 +11,8 @@ import { useHotelFilter } from "../hooks/useHotelFilter";
 import { useHotelSort } from "../hooks/useHotelSort";
 import FilterBar from "../components/FilterBar";
 import FilterBarSkeleton from "../components/FilterBarSkeleton";
+import { assets } from "../assets/assets";
+import { parseChildrenAges } from "../utils/age";
 
 export default function SearchResultsPage(){
     const navigate = useNavigate();
@@ -38,6 +40,8 @@ export default function SearchResultsPage(){
     const children = parseInt(params.get('children') || '');
     const term = params.get("term") || '';
 
+    const childrenAges = parseChildrenAges(guests);
+
     const shouldFetch = destination_id && checkin && checkout && guests;
 
     const fetchHotels = useCallback(async () => {
@@ -48,7 +52,7 @@ export default function SearchResultsPage(){
     const { data: hotels, loading, error } = usePollingFetch<Hotel[]>(
         fetchHotels,
         {
-            maxRetries: 5,
+            maxRetries: 10,
             interval: 3000,
             skip: !shouldFetch
         }
@@ -112,7 +116,8 @@ export default function SearchResultsPage(){
                             guests: params.get('guests') || '2',
                             rooms: rooms,
                             adults: adults,
-                            children: children
+                            children: children,
+                            childrenAges: childrenAges
                         }}
                     />
                 </div>
@@ -125,7 +130,7 @@ export default function SearchResultsPage(){
                         {loading && (
                             <FilterBarSkeleton />
                         )}
-                        {hotels && hotels.length > 0 && (
+                        {hotels && (
                             <FilterBar
                                 hotels={hotels}
                                 priceMin={priceMin}
@@ -166,9 +171,61 @@ export default function SearchResultsPage(){
                         )}
                         
                         {!loading && hotels && displayedHotels.length === 0 && (
-                            <p className="text-center py-15 px-5 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
-                                No hotels match your criteria.
-                            </p>
+                            <div className="flex flex-col items-center justify-center py-16 px-5">
+                                <div className="max-w-md text-center">
+                                    <img 
+                                        src={assets.hotelNotFound} 
+                                        alt="No hotels found" 
+                                        className="w-48 h-48 mx-auto mb-6 opacity-75"
+                                    />
+                                    <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                                        No hotels found
+                                    </h3>
+                                    <p className="text-gray-600 mb-6 leading-relaxed">
+                                        We couldn't find any hotels matching your current search criteria. 
+                                        Try adjusting your filters or search parameters.
+                                    </p>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                            <h4 className="font-medium text-blue-900 mb-2">Try these suggestions:</h4>
+                                            <ul className="text-sm text-blue-800 space-y-1 text-left">
+                                                <li>• Adjust your price range</li>
+                                                <li>• Remove some filters</li>
+                                                <li>• Try different dates</li>
+                                                <li>• Search nearby destinations</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                                            <button 
+                                                onClick={() => {
+                                                    // Reset all filters
+                                                    const prices = hotels.map(h => h.price || 0).filter(p => p > 0);
+                                                    const min = Math.min(...prices);
+                                                    const max = Math.max(...prices);
+                                                    setPriceMin(min);
+                                                    setPriceMax(max);
+                                                    setSelectedStarRatings([]);
+                                                    setSelectedGuestRatings([]);
+                                                    setSelectedAmenities([]);
+                                                }}
+                                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                            >
+                                                Clear All Filters
+                                            </button>
+                                            <button 
+                                                onClick={() => {
+                                                    navigate('/');
+                                                }}
+                                                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                            >
+                                                Modify Search
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         )}
 
                         {!loading && displayedHotels.length > 0 && (
@@ -241,7 +298,8 @@ export default function SearchResultsPage(){
                                                 rooms,
                                                 adults,
                                                 children,
-                                                term
+                                                term,
+                                                childrenAges
                                             }}
                                             showTotalPrice={showTotalPrice}
                                         />

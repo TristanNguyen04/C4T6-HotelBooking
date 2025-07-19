@@ -2,12 +2,25 @@ import React from 'react';
 import type { Hotel } from '../../types/hotel';
 import { renderStars } from '../../utils/stars';
 import { getGuestRatingDisplay } from '../../utils/guestRating';
+import { getLowestRoomPrice } from '../../utils/room';
 
 interface HotelDetailsHeaderProps {
     hotel: Hotel;
 }
 
 const HotelDetailsHeader: React.FC<HotelDetailsHeaderProps> = ({ hotel }) => {
+    // Get the lowest price among all rooms, fallback to hotel.price if no rooms
+    const lowestPrice = getLowestRoomPrice(hotel.rooms || []) || hotel.price;
+
+    const formatPrice = (price: number) => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'SGD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(price);
+      };
+    
     return (
         <div className="bg-white rounded-lg shadow-sm mb-8 overflow-hidden">
             <div className="p-6">
@@ -50,9 +63,9 @@ const HotelDetailsHeader: React.FC<HotelDetailsHeaderProps> = ({ hotel }) => {
                     {/* Price Info */}
                     <div className="lg:text-right">
                         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                            <p className="text-sm text-blue-600 font-medium mb-1">Price per night</p>
+                            <p className="text-sm text-blue-600 font-medium mb-1">From per night</p>
                             <p className="text-3xl font-bold text-blue-900">
-                                {hotel.currency} {hotel.price || 'N/A'}
+                                {hotel.currency} {lowestPrice ? formatPrice(lowestPrice) : 'Unavailable'}
                             </p>
                             <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
                                 Book Now

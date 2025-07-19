@@ -21,7 +21,21 @@ const HotelInformation: React.FC<HotelInformationProps> = ({ searchContext }) =>
                 <div className="flex justify-between">
                     <span className="text-gray-600">Guests:</span>
                     <span className="font-medium">
-                        {searchContext ? `${searchContext.adults} adults, ${searchContext.children} children` : 'N/A'}
+                        {searchContext ? (() => {
+                            const { adults, children, childrenAges } = searchContext;
+                            const adultsText = adults === 1 ? '1 adult' : `${adults} adults`;
+                            
+                            if (children === 0) {
+                                return adultsText;
+                            }
+                            
+                            const childrenText = children === 1 ? '1 child' : `${children} children`;
+                            const agesText = childrenAges.length > 0 
+                                ? ` (${childrenAges.map(age => `${age} years old`).join(', ')})`
+                                : '';
+                                
+                            return `${adultsText}, ${childrenText}${agesText}`;
+                        })() : 'N/A'}
                     </span>
                 </div>
                 <div className="flex justify-between">

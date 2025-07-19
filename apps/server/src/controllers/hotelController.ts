@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { fetchHotels, fetchHotelPrices, fetchHotelDetails, fetchHotelRoomPrices } from '../services/hotelService';
 import axios from 'axios';
 
+const calculateNights = (checkin: string, checkout: string) => {
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    return Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export const searchHotels = async (req: Request, res: Response) => {
     try {
         const { destination_id, checkin, checkout, guests, currency='SGD', lang='en_US'} = req.query;
@@ -10,10 +16,7 @@ export const searchHotels = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required parameters' });
         }
 
-        // Calculate number of nights
-        const checkinDate = new Date(checkin as string);
-        const checkoutDate = new Date(checkout as string);
-        const nights = Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
+        const nights = calculateNights(checkin as string, checkout as string);
 
         const baseParams = {
             destination_id,
@@ -66,6 +69,8 @@ export const getHotelDetails = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required paramaters' });
         }
 
+        const nights = calculateNights(checkin as string, checkout as string);
+
         const queryParams = {
             destination_id,
             checkin,
@@ -81,9 +86,22 @@ export const getHotelDetails = async (req: Request, res: Response) => {
             fetchHotelRoomPrices(id, queryParams),
         ]);
 
+        // Process room pricing to convert total prices to per-night prices
+        const processedRooms = roomPricing.rooms?.map((room: any) => {
+            const totalPrice = room.price || 0;
+            const pricePerNight = nights > 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;
+            
+            return {
+                ...room,
+                converted_price: pricePerNight, // Per-night price
+                lowest_converted_price: totalPrice, // Total price for the stay
+                nights: nights
+            };
+        }) || [];
+
         return res.json({
             ...hotelInfo,
-            rooms: roomPricing.rooms || [],
+            rooms: processedRooms,
             completed: roomPricing.completed
         });
     } catch (error : any){

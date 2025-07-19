@@ -21,18 +21,18 @@ export default function HotelCard({
     const navigate = useNavigate();
 
     const handleViewDetails = () => {
-        const searchParams = new URLSearchParams({
-            destination_id: searchContext.destination_id,
-            checkin: searchContext.checkin,
-            checkout: searchContext.checkout,
-            guests: searchContext.guests,
-            term: searchContext.term,
-            rooms: searchContext.rooms.toString(),
-            adults: searchContext.adults.toString(),
-            children: searchContext.children.toString()
-        });
-        
-        navigate(`/hotels/${hotel.id}/details?${searchParams.toString()}`);
+        const queryParams = [
+            `destination_id=${encodeURIComponent(searchContext.destination_id)}`,
+            `checkin=${encodeURIComponent(searchContext.checkin)}`,
+            `checkout=${encodeURIComponent(searchContext.checkout)}`,
+            `guests=${searchContext.guests}`,
+            `term=${encodeURIComponent(searchContext.term)}`,
+            `rooms=${searchContext.rooms}`,
+            `adults=${searchContext.adults}`,
+            `children=${searchContext.children}`
+        ].join('&');
+
+        navigate(`/hotels/${hotel.id}/details?${queryParams}`);
     };
 
     const [imgSrc, setImgSrc] = useState(
