@@ -8,6 +8,7 @@ import HotelDetailsPage from './pages/HotelDetailsPage';
 import Layout from './layouts/Layout';
 import SearchBar from './components/SearchBar';
 import { useNavigate } from 'react-router-dom';
+import Map from '../src/pages/GoogleMap'
 
 function App(){
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ function App(){
       <Route path='/login' element={<LoginPage/>}/>
       <Route path='/register' element={<RegisterPage/>}/>
       <Route path='/verify-email' element={<EmailVerificationPage/>}/>
+      <Route path='/map' element={<Map/>}/>
       
       {/* Routes with layout */}
       <Route path='/' element={

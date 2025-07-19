@@ -1,7 +1,5 @@
 export type Hotel = {
     id: string;
-    latitude: number;
-    longitude:number;
     name: string;
     address: string;
     currency: string;

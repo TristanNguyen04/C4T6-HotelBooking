@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest, } from '../middleware/auth';
 import { Response } from 'express';
-import { createBookingRecord } from '../services/bookingService';
-import prisma from '../utils/prismaClient';
+
+const prisma = new PrismaClient();
 
 export const createBooking = async (req: AuthRequest, res: Response) => {
     if(!req.userId){
@@ -11,17 +11,19 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
 
     const { hotelId, hotelName, checkin, checkout, guests, price, currency , sessionId} = req.body;
 
-    const booking = await createBookingRecord({
-        userId: req.userId,
-        hotelId,
-        hotelName,
-        checkin,
-        checkout,
-        guests,
-        price,
-        currency,
-        sessionId
-    });
+    const booking = await prisma.booking.create({
+        data: {
+            userId: req.userId,
+            hotelId,
+            hotelName,
+            checkin: new Date(checkin),
+            checkout: new Date(checkout),
+            guests,
+            price,
+            currency,
+            stripeSessionId: sessionId // added to check for dup bookings during checkout
+        }
+    })
 
     res.json(booking);
 }
