@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 import { sendVerificationEmail } from '../utils/sendEmail';
+<<<<<<< HEAD
 import prisma from '../utils/prismaClient';
+=======
+import { PrismaClient } from '@prisma/client'; // ORM
+>>>>>>> 90a67899b19cea727779a85af843410a3706e3ff
 
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
