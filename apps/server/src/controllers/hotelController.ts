@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { fetchHotels, fetchHotelPrices, fetchHotelDetails, fetchHotelRoomPrices } from '../services/hotelService';
 import axios from 'axios';
 
+const calculateNights = (checkin: string, checkout: string) => {
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    return Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export const searchHotels = async (req: Request, res: Response) => {
     try {
         const { destination_id, checkin, checkout, guests, currency='SGD', lang='en_US'} = req.query;
@@ -9,6 +15,8 @@ export const searchHotels = async (req: Request, res: Response) => {
         if(!destination_id || !checkin || !checkout || !guests){
             return res.status(400).json({ error: 'Missing required parameters' });
         }
+
+        const nights = calculateNights(checkin as string, checkout as string);
 
         const baseParams = {
             destination_id,
@@ -28,16 +36,24 @@ export const searchHotels = async (req: Request, res: Response) => {
         const hotelsWithPrices = hotels.reduce((acc: any[], hotel: any) => {
             const priceInfo = prices.hotels.find((price: any) => price.id == hotel.id);
             if(priceInfo){
+                const totalPrice = priceInfo?.price || 0;
+                const pricePerNight = nights > 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;
+                
                 acc.push({
                     ...hotel,
-                    price: priceInfo?.price || null,
+                    price: pricePerNight, // Price per night
+                    totalPrice: totalPrice, // Total price for the stay
+                    nights: nights,
                     currency: prices.currency || null,
                 });
             }
             return acc;
         }, []);
 
-        res.json(hotelsWithPrices);
+        res.json({
+            data: hotelsWithPrices,
+            completed: prices.completed
+        });
     } catch (error){
         console.error('Error searching hotels:', error);
         res.status(500).json( {error: 'Error fetching hotel data' });
@@ -52,6 +68,8 @@ export const getHotelDetails = async (req: Request, res: Response) => {
         if(!checkin || !checkout || !guests){
             return res.status(400).json({ error: 'Missing required paramaters' });
         }
+
+        const nights = calculateNights(checkin as string, checkout as string);
 
         const queryParams = {
             destination_id,
@@ -68,9 +86,23 @@ export const getHotelDetails = async (req: Request, res: Response) => {
             fetchHotelRoomPrices(id, queryParams),
         ]);
 
+        // Process room pricing to convert total prices to per-night prices
+        const processedRooms = roomPricing.rooms?.map((room: any) => {
+            const totalPrice = room.price || 0;
+            const pricePerNight = nights > 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;
+            
+            return {
+                ...room,
+                converted_price: pricePerNight, // Per-night price
+                lowest_converted_price: totalPrice, // Total price for the stay
+                nights: nights
+            };
+        }) || [];
+
         return res.json({
             ...hotelInfo,
-            rooms: roomPricing.rooms || []
+            rooms: processedRooms,
+            completed: roomPricing.completed
         });
     } catch (error : any){
         if(axios.isAxiosError(error) && error.response?.status === 422) {
