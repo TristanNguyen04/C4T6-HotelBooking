@@ -52,7 +52,7 @@ export default function SearchResultsPage(){
     const { data: hotels, loading, error } = usePollingFetch<Hotel[]>(
         fetchHotels,
         {
-            maxRetries: 10,
+            maxRetries: 2,
             interval: 3000,
             skip: !shouldFetch
         }
@@ -127,10 +127,10 @@ export default function SearchResultsPage(){
             <main className="w-full p-6 bg-gray-100 md:mt-5 md:p-4 sm:p-3 pt-24 md:pt-20">
                 <div className="max-w-screen-xl mx-auto flex gap-6 items-start w-full flex-col md:flex-row md:gap-4 xl:max-w-none xl:px-10">
                     <aside className="w-full md:w-80 md:flex-shrink-0 bg-white rounded-lg p-5 shadow-sm sticky md:top-48 md:max-h-[calc(100vh-12rem)] md:overflow-y-auto border border-gray-200 order-2 md:order-1 md:p-4">
-                        {loading && (
+                        {(loading || error) && (
                             <FilterBarSkeleton />
                         )}
-                        {hotels && (
+                        {!loading && !error && hotels && (
                             <FilterBar
                                 hotels={hotels}
                                 priceMin={priceMin}
@@ -164,14 +164,35 @@ export default function SearchResultsPage(){
                             </div>
                         )}
 
+                        {/* Handle actual fetch errors differently from no results */}
                         {error && (
-                            <p className="text-center py-15 px-5 text-red-700 bg-red-50 rounded-lg border border-red-200">
-                                {error}
-                            </p>
-                        )}
-                        
-                        {!loading && hotels && displayedHotels.length === 0 && (
                             <div className="flex flex-col items-center justify-center py-16 px-5">
+                                <div className="max-w-md text-center">
+                                    <img 
+                                        src={assets.hotelNotFound} 
+                                        alt="Error occurred" 
+                                        className="w-48 h-48 mx-auto mb-6 opacity-75"
+                                    />
+                                    <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                                        Unable to load hotels
+                                    </h3>
+                                    <p className="text-gray-600 mb-6 leading-relaxed">
+                                        We're having trouble connecting to our servers. Please check your internet connection and try again.
+                                    </p>
+                                    <button 
+                                        onClick={() => window.location.reload()}
+                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                    >
+                                        Try Again
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Handle no results found (successful fetch but empty results) */}
+                        {!error && !loading && hotels && displayedHotels.length === 0 && (
+                            <div className="flex flex-col items-center justify-center py-16 px-5">
+                                {/* Your existing "No hotels found" UI */}
                                 <div className="max-w-md text-center">
                                     <img 
                                         src={assets.hotelNotFound} 
