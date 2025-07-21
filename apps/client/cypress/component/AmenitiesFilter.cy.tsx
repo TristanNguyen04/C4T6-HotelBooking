@@ -1,5 +1,4 @@
 import AmenityFilter from '../../src/components/filters/AmenityFilter';
-import type { FilterBarProps } from '../../src/types/hotel';
 import { mount } from 'cypress/react';
 import type {Hotel} from '../../src/types/hotel';
 import React from 'react';
