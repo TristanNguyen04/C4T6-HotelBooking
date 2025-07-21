@@ -26,13 +26,13 @@ export const mockHotels: Hotel[] = [
       currency: 'SGD',
       price: 220,
       totalPrice: 220,
-      rating: 9.2,
+      rating: 5,
       amenities: {'Wifi': true,'Pool': false,'Gym': false,'Parking': true,'Air Conditioning': true,'Restaurant': false,'Bar': true,'Spa': true},
       distance: 50,
       searchRank: 1,
       description: "Hotel B best",
       image_details: { suffix: ".jpg", count: 21, prefix: "https://d2ey9sqrvkqdfs.cloudfront.net/diH7/" },
-      categories: { overall: { name: "Overall", score: 10, popularity: 1 } },
+      categories: { overall: { name: "Overall", score: 70, popularity: 1 } },
     },
     {
       id: "3",
@@ -49,6 +49,6 @@ export const mockHotels: Hotel[] = [
       searchRank: 1,
       description: "Hotel C worst",
       image_details: { suffix: ".jpg", count: 86, prefix: "https://d2ey9sqrvkqdfs.cloudfront.net/diH7/" },
-      categories: { overall: { name: "Overall", score: 50, popularity: 9 } },
+      categories: { overall: { name: "Overall", score: 80, popularity: 9 } },
     }
   ];
