@@ -1,7 +1,10 @@
 import prisma from '../src/utils/prismaClient';
 import app from '../src/index';
 import request from 'supertest';
-import { createBookingRecord } from '../src/services/bookingService';
+import { createBookingRecord, retrieveBookingRecord } from '../src/services/bookingService';
+import jwt from 'jsonwebtoken';
+
+// const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
 jest.mock('../src/utils/prismaClient',()=>({
     booking: {
@@ -24,7 +27,7 @@ jest.mock('../src/middleware/auth', () => ({
     },
 }));
 
-const booking = {
+const bookingParam = {
     hotelId: '456',
     hotelName: 'Marina Bay Sands',
     checkin: '25-05-2025',
@@ -52,19 +55,27 @@ const mockBookings = [
 
 describe('POST /api/bookings', ()=>{
     beforeEach(()=>{
-        jest.clearAllMocks();
+        jest.resetModules();
+        jest.mock('../src/middleware/auth', () => ({
+            authenticate: (req: any, res: any, next: any) => {
+                req.userId = '123';
+                next();
+            },
+    }));
+    
     })
 
     // Test 1
     test('Test createBooking', async ()=>{
-        (createBookingRecord as jest.Mock).mockResolvedValueOnce({...booking, userId: '123'});
+        (createBookingRecord as jest.Mock).mockResolvedValueOnce({...bookingParam, userId: '123'});
+        const userId = '123';
 
         const res = await request(app)
             .post('/api/bookings')
-            .send(booking);
+            .send({...bookingParam, userId});
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({...booking, userId:'123'})
+        expect(res.body).toEqual({...bookingParam, userId:'123'})
     });
 
     
@@ -86,7 +97,7 @@ describe('POST /api/bookings - Unauthorized', () => {
         const app = require('../src/index').default;
         const res = await request(app)
         .post('/api/bookings')
-        .send(booking);
+        .send(bookingParam);
 
         expect(res.statusCode).toBe(401);
         expect(res.body).toEqual({ error: 'Unauthorized' });
@@ -103,12 +114,10 @@ describe('POST /api/bookings/me', ()=>{
             next();
         },
     }));
-    
 });
     // Test 1
     test('Retrieve Bookings', async ()=>{
-        const mockFindMany = prisma.booking.findMany as jest.Mock;
-        mockFindMany.mockResolvedValueOnce(mockBookings);
+        (retrieveBookingRecord as jest.Mock).mockResolvedValueOnce(mockBookings);
         const res = await request(app).get('/api/bookings/me');
 
         expect(res.statusCode).toBe(200);

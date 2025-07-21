@@ -125,7 +125,7 @@ describe('SearchBar component', () => {
       cy.get('[data-cy=children-1]').focus().type('{downarrow}');
       cy.get('[data-cy=children-1]').should('have.value', 5-i);
     }
-    // increase age to 17
+    // increase age to 17 
     for(let i = 1;i<=18;i++){
       cy.get('[data-cy=children-1]').focus().type('{uparrow}');
       if(i < 18){

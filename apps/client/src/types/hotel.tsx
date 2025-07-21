@@ -4,6 +4,8 @@ export type Hotel = {
     address: string;
     currency: string;
     price?: number;
+    longitude: number;
+    latitude: number;
     totalPrice?: number;
     nights?: number;
     distance: number;

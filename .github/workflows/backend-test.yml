@@ -24,8 +24,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install backend dependencies (sync package-lock file)
-        run: npm install
+      - name: Clean and install fresh dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+
         
       - name: Install backend dependencies
         run: npm ci

@@ -50,6 +50,9 @@ const mockRoomPricing = {
         id: '101',
         name: 'Deluxe Room',
         price: 200,
+        converted_price: 200,
+        lowest_converted_price: 200,
+        nights:null
     },
   ],
 };
@@ -60,7 +63,8 @@ const queryParams = {
     checkout:'26-06-2025', 
     guests:'2',
     currency:'SGD', 
-    lang:'en_US'
+    lang:'en_US',
+    partner_id: '1',
 }
 
 
@@ -79,9 +83,9 @@ describe('GET /api/hotels/search',()=>{
             .query(queryParams);
         
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual([
-            {id:'1', name:'Hotel A', price: 200, currency: 'SGD'},
-            {id:'2', name:'Hotel B', price: 300, currency: 'SGD'},
+        expect(res.body.data).toEqual([
+            {id:'1', name:'Hotel A', price: 200, currency: 'SGD', nights:null, totalPrice:200},
+            {id:'2', name:'Hotel B', price: 300, currency: 'SGD', nights:null, totalPrice:300},
         ]);
     });
     // Test 2
