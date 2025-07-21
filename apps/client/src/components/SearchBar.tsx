@@ -69,7 +69,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     }, [term]);
 
     useEffect(() => {
-        const guestsReq = adults + children;
+        const guestsReq = adults;
         let req = "";
         for(let i = 0; i < rooms; i++){
             req += guestsReq;
