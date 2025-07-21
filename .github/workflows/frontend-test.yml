@@ -29,7 +29,6 @@ jobs:
 
       - name: Start frontend server
         run: |
-          cd ../..
           npm start &
           sleep 10
 
