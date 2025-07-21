@@ -51,6 +51,7 @@ const AmenityFilter: React.FC<AmenityFilterProps> = ({
                 
                 {allAmenities.length > INITIAL_AMENITIES_COUNT && (
                     <button
+                    data-cy={'show-all-button'}
                         onClick={() => setShowAllAmenities(!showAllAmenities)}
                         className="w-full mt-2 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                     >

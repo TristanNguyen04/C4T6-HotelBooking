@@ -1,5 +1,4 @@
 // cypress/component/SearchBar.cy.tsx
-import React from 'react';
 import SearchBar from '../../src/components/SearchBar';
 import '../../src/index.css';
 import { mount } from 'cypress/react';
