@@ -24,6 +24,9 @@ jobs:
           rm -rf node_modules package-lock.json
           npm install
 
+      - name: Generate Prisma
+        run: npx prisma generate
+
       - name: Start frontend server
         run: |
           npm start &
