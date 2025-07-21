@@ -315,12 +315,16 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                                     type="number"
                                                     min="0"
                                                     max="17"
-                                                    value={childrenAges[index] || 5}
-                                                    onChange={(e) => updateChildAge(index, parseInt(e.target.value) || 5)}
+                                                    value={childrenAges[index] ?? ''}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        const parsed = value === '' ? 5 : parseInt(value);
+                                                        updateChildAge(index, parsed);
+                                                    }}
                                                     className="w-16 px-2 py-1 text-sm border border-gray-300 rounded 
                                                     focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20"
                                                 />
-                                                <span className="text-xs text-gray-500">years old</span>
+                                                <span className="text-xs text-gray-500">year{childrenAges[index] == 1 ? '' : 's'} old</span>
                                             </div>
                                         </div>
                                     ))}
