@@ -82,10 +82,56 @@ const OverviewCard: React.FC<OverviewCardProps> = ({ hotel }: OverviewCardProps)
             )}
 
             {/* Business Amenities */}
-            {parsedDescription.businessAmenities && renderSection([parsedDescription.businessAmenities], 'Business Amenities', 
-                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
+            {parsedDescription.businessAmenities && (parsedDescription.businessAmenities.closedFacilities.length > 0 || parsedDescription.businessAmenities.other) && (
+                <div className="mb-6">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+                        <h4 className="text-lg font-semibold text-gray-900">Business Amenities</h4>
+                    </div>
+                    <div className="pl-11">
+                        {parsedDescription.businessAmenities.other && (
+                            <p className="text-gray-700 leading-relaxed mb-4">
+                                {parsedDescription.businessAmenities.other}
+                            </p>
+                        )}
+                        {parsedDescription.businessAmenities.closedFacilities.length > 0 && (
+                            <div className="space-y-4">
+                                {parsedDescription.businessAmenities.closedFacilities.map((closedGroup, groupIndex) => (
+                                    <div key={groupIndex} className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                                        <div className="flex items-start">
+                                            <div className="flex-shrink-0">
+                                                <svg className="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                {closedGroup.context && (
+                                                    <p className="text-sm font-medium text-amber-800 mb-2">
+                                                        {closedGroup.context}
+                                                    </p>
+                                                )}
+                                                <ul className="text-sm text-amber-700 space-y-1">
+                                                    {closedGroup.facilities.map((facility, index) => (
+                                                        <li key={index} className="flex items-center">
+                                                            <svg className="h-3 w-3 mr-2 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5 8.707 7.621a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0z" clipRule="evenodd" />
+                                                            </svg>
+                                                            {facility}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
             )}
 
             {/* Rooms */}
