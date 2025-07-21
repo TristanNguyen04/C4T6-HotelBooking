@@ -2,6 +2,7 @@
 import SearchBar from '../../src/components/SearchBar';
 import '../../src/index.css';
 import { mount } from 'cypress/react';
+import React from 'react';
 
 // Define minimal types (or import from your types file)
 interface Location {
