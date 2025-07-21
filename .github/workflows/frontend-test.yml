@@ -25,10 +25,11 @@ jobs:
           npm install
 
       - name: Generate Prisma
-        run: npx prisma generate
+        run: cd apps/server && npx prisma generate
 
       - name: Start frontend server
         run: |
+          cd ../..
           npm start &
           sleep 10
 
