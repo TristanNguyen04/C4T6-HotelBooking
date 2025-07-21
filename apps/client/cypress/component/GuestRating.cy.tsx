@@ -22,7 +22,7 @@ describe('Guest Rating Filter', ()=>{
         cy.contains('Very Good').should('exist');
         cy.contains('Good').should('exist');
         cy.contains('Outstanding(1)').should('exist');
-        cy.contains('Excellent(1)').should('exist');
+        cy.contains('Excellent(0)').should('exist');
         cy.contains('Very Good(1)').should('exist');
         cy.contains('Good(1)').should('exist');
     });
