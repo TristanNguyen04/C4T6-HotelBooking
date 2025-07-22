@@ -112,9 +112,10 @@ export default function HotelCard({
                         )}
 
                         {amenityKeys.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1" data-cy={'AmenityList'}>
                                 {previewAmenities.map((key) => (
                                     <span 
+                                        data-cy={'preview-amenities'}
                                         key={key}
                                         className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                                     >

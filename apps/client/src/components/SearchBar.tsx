@@ -69,7 +69,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     }, [term]);
 
     useEffect(() => {
-        const guestsReq = adults + children;
+        const guestsReq = adults;
         let req = "";
         for(let i = 0; i < rooms; i++){
             req += guestsReq;
@@ -308,31 +308,35 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         ))}
                         
                         {/* Children Ages Section */}
-                            {children > 0 && (
-                                <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <h4 className="text-sm font-medium text-gray-700 mb-3">Children Ages</h4>
-                                    <div className="space-y-3">
-                                        {Array.from({ length: children }, (_, index) => (
-                                            <div key={index} className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-600">Child {index + 1}</span>
-                                                <div className="flex items-center gap-2">
-                                                    <input
-                                                        type="number"
-                                                        data-cy={`children-${index + 1}`}
-                                                        min="0"
-                                                        max="17"
-                                                        value={childrenAges[index] ?? 5}
-                                                        onChange={(e) => updateChildAge(index, parseInt(e.target.value) ?? 5)}
-                                                        className="w-16 px-2 py-1 text-sm border border-gray-300 rounded 
-                                                        focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20"
-                                                    />
-                                                    <span className="text-xs text-gray-500">years old</span>
-                                                </div>
+                        {children > 0 && (
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                <h4 className="text-sm font-medium text-gray-700 mb-3">Children Ages</h4>
+                                <div className="space-y-3">
+                                    {Array.from({ length: children }, (_, index) => (
+                                        <div key={index} className="flex justify-between items-center">
+                                            <span className="text-sm text-gray-600">Child {index + 1}</span>
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="17"
+                                                    data-cy={`children-${index + 1}`}
+                                                    value={childrenAges[index] ?? ''}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        const parsed = value === '' ? 5 : parseInt(value);
+                                                        updateChildAge(index, parsed);
+                                                    }}
+                                                    className="w-16 px-2 py-1 text-sm border border-gray-300 rounded 
+                                                    focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20"
+                                                />
+                                                <span className="text-xs text-gray-500">year{childrenAges[index] == 1 ? '' : 's'} old</span>
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            )}
+                            </div>
+                        )}
                         
                         <div className="flex justify-end mt-4 pt-4 border-t border-gray-200">
                             <button
@@ -348,6 +352,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
             <button 
                 type="submit"
+                data-cy={'submitButton'}
                 className='flex items-center justify-center gap-2 rounded-lg bg-[#FF6B6B] hover:bg-[#e56060] 
                 py-3 px-6 text-white font-medium cursor-pointer transition-colors lg:flex-shrink-0 lg:self-end'>
                 <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

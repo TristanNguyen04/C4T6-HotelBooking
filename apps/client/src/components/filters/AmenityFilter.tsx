@@ -31,7 +31,8 @@ const AmenityFilter: React.FC<AmenityFilterProps> = ({
             </label>
             <div className="space-y-2">
                 {displayedAmenities.map((amenity: string) => (
-                    <label key={amenity} className="flex items-center gap-2 cursor-pointer">
+                    <label key={amenity} className="flex items-center gap-2 cursor-pointer"
+                    data-cy={`amenity-${amenity}`}>
                         <input
                             type="checkbox"
                             checked={selectedAmenities.includes(amenity)}
@@ -39,10 +40,10 @@ const AmenityFilter: React.FC<AmenityFilterProps> = ({
                             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
                         <div className="flex items-center justify-between flex-1">
-                            <span className="text-sm text-gray-700">
+                            <span className="text-sm text-gray-700" data-cy={`name-${amenity}`}>
                                 {formatAmenityName(amenity)}
                             </span>
-                            <span className="text-xs text-gray-500 ml-2">
+                            <span className="text-xs text-gray-500 ml-2" data-cy={`count-${amenity}`}>
                                 ({getHotelCountForAmenity(hotels, amenity)})
                             </span>
                         </div>
