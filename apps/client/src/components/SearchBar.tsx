@@ -148,7 +148,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                 <div className="relative">
                     <input 
                         list='destinations' 
-                        id="destinationInput" 
+                        id="DestinationInput"
+                        data-cy={"DestinationSearch"}
                         type="text" 
                         className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
                         focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors" 
@@ -166,6 +167,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                             {suggestions.map(dest => (
                                 <li
                                     key={dest.uid}
+                                    data-cy={'DestinationSuggestions'}
                                     onClick={() => {
                                         setSelected(dest);
                                         setTerm(dest.term);
