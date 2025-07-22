@@ -34,6 +34,9 @@ jobs:
 
       - name: Run Cypress component tests
         run: cd apps/client && npx cypress run --component
+      
+      - name: Run Cypress e2e tests
+        run: cd apps/client && npx cypress run
 
 
         

@@ -21,7 +21,7 @@ describe('SearchBar component', () => {
 
   it('Input Destination Calls API', () => {
     // Type destination
-    cy.get('input#destinationInput').type('London');
+    cy.get('input#DestinationInput').type('London');
     // You will need to mock searchLocations API here for suggestions to appear
     // e.g. intercept API calls or stub the module if possible
     cy.wait(500);

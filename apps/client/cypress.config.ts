@@ -1,5 +1,6 @@
-import { defineConfig } from 'cypress'
-import path from 'path'
+import { defineConfig } from 'cypress';
+import path from 'path';
+
 
 export default defineConfig({
   component: {
