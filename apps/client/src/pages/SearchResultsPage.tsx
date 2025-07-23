@@ -52,7 +52,7 @@ export default function SearchResultsPage(){
     const { data: hotels, loading, error } = usePollingFetch<Hotel[]>(
         fetchHotels,
         {
-            maxRetries: 2,
+            maxRetries: 10,
             interval: 3000,
             skip: !shouldFetch
         }
