@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../api/auth';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../api/auth";
+import { useAuth } from "../contexts/AuthContext";
+import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa";
+import signInImage from "../assets/signin.jpeg";
 
-export default function LoginPage(){
+export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login: doLogin } = useAuth();
@@ -12,29 +14,123 @@ export default function LoginPage(){
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
 
         try {
-            const res = await login( { email, password });
+            const res = await login({ email, password });
 
-            if(res.data.user.isVerified){
+            if (!res.data.user.isVerified) {
                 setError('Please verify your email before logging in.');
                 return;
             }
-            
+
             doLogin(res.data.user, res.data.token);
             navigate('/');
-        } catch(err: any){
+        } catch (err: any) {
             setError(err?.response?.data?.error || 'Login failed!');
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
-            {error && <p style={ {color: 'red' }}>{error}</p>}
-            <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email"/> 
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder='Password'/>
-            <button type="submit">Login</button>
-        </form>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="flex max-w-5xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                {/* Left: Form section */}
+                <div className="w-full md:w-1/2 p-8 md:p-10">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-1">Welcome Back!</h2>
+                    <p className="text-sm text-gray-500 mb-6">
+                        Sign in to continue your journey and discover amazing stays
+                    </p>
+
+                    {/* Error */}
+                    {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+
+                    <form className="space-y-5" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                                required
+                                className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+                            />
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between items-center">
+                                <label className="block text-sm font-medium text-gray-700">Password</label>
+                                <a href="#" className="text-sm text-[#FF6B6B] hover:underline">
+                                    Forgot password?
+                                </a>
+                            </div>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                placeholder="Enter your password"
+                                required
+                                className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+                            />
+                        </div>
+
+                        <div className="flex items-center">
+                            <input
+                                id="keepSignedIn"
+                                type="checkbox"
+                                className="h-4 w-4 text-orange-500 focus:ring-orange-400 border-gray-300 rounded"
+                            />
+                            <label htmlFor="keepSignedIn" className="ml-2 block text-sm text-gray-700">
+                                Keep me signed in
+                            </label>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full bg-[#FF6B6B] hover:bg-[#ff5a5a] text-white py-2 rounded-md transition-colors"
+                        >
+                            Sign In →
+                        </button>
+                    </form>
+
+                    <div className="my-5 text-sm text-gray-500 text-center">or continue with</div>
+
+                    <div className="flex gap-3 justify-center mb-6">
+                        <button className="border p-2 rounded-md hover:bg-gray-100"><FaGoogle /></button>
+                        <button className="border p-2 rounded-md hover:bg-gray-100"><FaFacebookF /></button>
+                        <button className="border p-2 rounded-md hover:bg-gray-100"><FaApple /></button>
+                    </div>
+
+                    <p className="text-sm text-gray-600 text-center">
+                        Don’t have an account?{" "}
+                        <span
+                            className="text-[#FF6B6B] hover:underline cursor-pointer"
+                            onClick={() => navigate("/register")}
+                        >
+                            Create Account
+                        </span>
+                    </p>
+
+                    <div className="bg-[#FFF6F2] text-orange-800 mt-8 p-4 rounded-lg text-sm flex items-start gap-2">
+                        <span className="text-xl">🧳</span>
+                        <div>
+                            <strong>Ready for your next adventure?</strong>
+                            <p>
+                                Sign in to see your saved destinations and get personalized recommendations
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right: Image section */}
+                <div className="hidden md:block md:w-1/2">
+                    <img
+                        src={signInImage}
+                        alt="Hotel scenery"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            </div>
+        </div>
     );
 }

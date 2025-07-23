@@ -39,9 +39,12 @@ const NavBar = () => {
         }`}>
             {/* Logo */}
             <button onClick={handleLogoClick} className="cursor-pointer bg-transparent border-none p-0">
-                <div className='flex items-center space-x-2'>
-                    <span className="font-bold text-[24px] leading-[36px] text-[#FF6B6B]">
-                        StayEase
+                <div 
+                    className="flex items-center space-x-4 justify-start"
+                    onClick={() => navigate("/")}
+                    >
+                    <span className="font-bold text-[32px] leading-[36px] text-[#FF6B6B]">
+                        Ascenda
                     </span>
                     <span className="font-extralight text-[14px] leading-[20px] text-gray-700">
                         Comfort wherever you go
@@ -61,10 +64,14 @@ const NavBar = () => {
 
             {/* Desktop Right */}
             <div className="hidden md:flex items-center gap-1">
-                    <button className={`ml-6 transition-all duration-500 ${isScrolled ? "text-[#FF6B6B]" : "text-[#FF6B6B]"}`}>
+                    <button 
+                        className={`ml-6 transition-all duration-500 ${isScrolled ? "text-[#FF6B6B]" : "text-[#FF6B6B]"}`}
+                        onClick={() => navigate("/login")}>
                         Sign In
                     </button>
-                    <button className={`px-4 py-2.5 rounded-xl ml-3 transition-all duration-500 bg-[#FF6B6B] text-white`}>
+                    <button
+                        className={`px-4 py-2.5 rounded-xl ml-3 transition-all duration-500 bg-[#FF6B6B] text-white`}
+                        onClick={() => navigate("/register")}>
                         Register
                     </button>
             </div>
