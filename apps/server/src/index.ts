@@ -13,10 +13,9 @@ import bookingRoutes from "./routes/bookingRoutes";
 const app: Application = express();
 const PORT: number = 3000;
 
-
 app.use(cors({
   origin: "http://localhost:5173", // allow Vite frontend
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 }));
 
