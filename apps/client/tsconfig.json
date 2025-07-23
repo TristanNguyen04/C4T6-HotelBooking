@@ -4,6 +4,13 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
+  "include": [
+    "cypress/e2e/**/*.ts",
+    "cypress/e2e/**/*.tsx",
+    "cypress/component/**/*.ts",
+    "cypress/component/**/*.tsx"
+  ],
+
   "compilerOptions": {
     "types": ["vite/client", "cypress"],
     "target": "ES2020",
@@ -11,6 +18,7 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "declaration": false
   }
 }

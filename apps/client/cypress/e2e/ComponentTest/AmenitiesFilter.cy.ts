@@ -1,56 +1,12 @@
 import React from "react";
-import HotelCard from '../../../src/components/HotelCard';
 import { Tooltip } from "react-tooltip";
+import { navigateToHotelListing } from "../../helper/hotelTest";
 
-function clickLoadMoreIfPresent() {
-    cy.get('body').then(($body)=>{
-        if($body.find('button[data-cy=LoadMoreHotels]').length > 0){
-            cy.get('button[data-cy=LoadMoreHotels]', { timeout: 5000 }).then($btn => {
-                if ($btn.length && !$btn.is(':disabled') && $btn.is(':visible')) {
-                    cy.wrap($btn).click();
-                    cy.wait(500);
-                    clickLoadMoreIfPresent();
-                }
-            })
-        }
-        else{return;}
-  });
-}
 
 describe('Amenities Filter', ()=>{
-
-
     it('Room Facilities Count Based on Destination', ()=>{
-        cy.visit('/');
-        cy.get('input[type=text]').type('Singapr'); 
-        cy.get('[data-cy=DestinationSuggestions').eq(2).click(); // use eq() for the second item in the list
-
-        // select the date
-        const today = new Date();
-        const formatMonth = (date:Date) => date.toLocaleDateString('en-GB' , {month: "long" , year: "numeric"});
-        const currentMonth = formatMonth(today);
-        const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-        // Format dates to match your component's output (dd/MM/yyyy)
-        const pad = (n) => (n < 10 ? '0' + n : n);
-        const todayDate = today.getDate();
-        const startDateStr = `${pad(todayDate)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
-        const endDateStr = `${pad(lastDayOfMonth)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
-        cy.get('[data-cy=stay-period-toggle]').click();
-        cy.get('[data-cy=stay-period-month').should('contain', currentMonth);
-        cy.contains('button', `${todayDate}`).click();
-        cy.contains('button', `${lastDayOfMonth}`).click();
-        cy.contains('button', 'Done').click();
-        cy.get('[data-cy=stay-period-toggle]').should('contain.text', `${startDateStr} - ${endDateStr}`);
-
-        // Click Search
-        cy.get('[data-cy=submitButton]').click()
-        // wait for listings to pop up
-        cy.get('[data-cy=Loading]').first().should('have.attr', 'data-class', 'HotelCardSkele');
-        // After loading
-        // iterate through all of the hotel cards present , get the amenities count for cross checking with filter bar
+        navigateToHotelListing();
         const amenityMap = new Map();
-        cy.get('[data-cy=HotelListings]', {timeout: 999999}).first().should('be.visible');
-        clickLoadMoreIfPresent();
         cy.get('[data-cy=HotelListings]').each(($card)=>{
             cy.wrap($card).within(()=>{
                 cy.get('[data-cy=AmenityList]').each(($amenityList)=>{
