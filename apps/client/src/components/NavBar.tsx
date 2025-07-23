@@ -41,7 +41,6 @@ const NavBar = () => {
             <button onClick={handleLogoClick} className="cursor-pointer bg-transparent border-none p-0">
                 <div 
                     className="flex items-center space-x-4 justify-start"
-                    onClick={() => navigate("/")}
                     >
                     <span className="font-bold text-[32px] leading-[36px] text-[#FF6B6B]">
                         Ascenda

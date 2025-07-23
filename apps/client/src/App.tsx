@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
 import Layout from './layouts/Layout';
+import StaticLayout from './layouts/StaticLayout';
 import SearchBar from './components/SearchBar';
 import { useNavigate } from 'react-router-dom';
 import Map from '../src/pages/GoogleMap'
@@ -39,11 +40,34 @@ function App() {
   return (
     <Routes>
       {/* Routes without layout */}
-      <Route path='/login' element={<LoginPage/>}/>
-      <Route path='/register' element={<RegisterPage/>}/>
-      <Route path='/verify-email' element={<EmailVerificationPage/>}/>
-      <Route path='/map' element={<Map/>}/>
-      
+      <Route path='/map' element={<Map />} />
+
+      {/* Routes with static Nav Bar */}
+      <Route
+        path="/login"
+        element={
+          <StaticLayout>
+            <LoginPage />
+          </StaticLayout>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <StaticLayout>
+            <RegisterPage />
+          </StaticLayout>
+        }
+      />
+      <Route
+        path="/verify-email"
+        element={
+          <StaticLayout>
+            <EmailVerificationPage />
+          </StaticLayout>
+        }
+      />
+
       {/* Routes with layout */}
       <Route
         path="/"
@@ -66,30 +90,6 @@ function App() {
         element={
           <Layout showHero={false}>
             <HotelDetailsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <Layout showHero={false}>
-            <LoginPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <Layout showHero={false}>
-            <RegisterPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/verify-email"
-        element={
-          <Layout showHero={false}>
-            <EmailVerificationPage />
           </Layout>
         }
       />
