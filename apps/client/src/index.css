@@ -8,7 +8,7 @@
 }
 
 
-*{
+* {
   font-family: Outfit;
 }
 
@@ -16,7 +16,7 @@
   font-family: Playfair !important;
 }
 
-.font-poppins{
+.font-poppins {
   font-family: Poppins !important;
 }
 
@@ -31,10 +31,20 @@
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
 }
+
+/* Loader 3: Plane */
+
+
+
+
+
+
+/* Loader 1 */
 
 /* .loader {
   width: 28px;
@@ -55,6 +65,8 @@
   87.5%{box-shadow: 0 -16px #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, -11.3px -11.3px #E3AAD6}
   100% {box-shadow: 0 -16px #F4DD51, 11.3px -11.3px #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
 } */
+
+/* Loader 2: Compass */
 
 .loader {
   width: 90px;
@@ -110,4 +122,71 @@
   100% {
     transform: rotate(245deg)
   }
+} 
+
+/* Cool Search Button */
+.CartBtn {
+  width: 140px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  background-color: #FF6B6B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.5s;
+  overflow: hidden;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.103);
+  position: relative;
+}
+
+.IconContainer {
+  position: absolute;
+  left: -50px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: 0.5s;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  color: white;
+}
+
+.text {
+  height: 100%;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1;
+  transition-duration: 0.5s;
+  font-size: 1.04em;
+  font-weight: 600;
+}
+
+.CartBtn:hover .IconContainer {
+  transform: translateX(58px);
+  border-radius: 40px;
+  transition-duration: 0.5s;
+}
+
+.CartBtn:hover .text {
+  transform: translate(10px, 0px);
+  transition-duration: 0.5s;
+}
+
+.CartBtn:active {
+  transform: scale(0.95);
+  transition-duration: 0.5s;
 }

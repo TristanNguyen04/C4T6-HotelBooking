@@ -4,4 +4,4 @@ export default function ScreenLoader() {
       <div className="loader"></div>
     </div>
   );
-}
+} 
