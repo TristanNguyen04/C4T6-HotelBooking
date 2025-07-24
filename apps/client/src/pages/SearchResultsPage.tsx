@@ -292,6 +292,7 @@ export default function SearchResultsPage(){
                                                     <label className="inline-flex items-center cursor-pointer">
                                                         <input
                                                             type="checkbox"
+                                                            data-cy={'toggle-stay-night'}
                                                             checked={showTotalPrice}
                                                             onChange={(e) => setShowTotalPrice(e.target.checked)}
                                                             className="sr-only"
