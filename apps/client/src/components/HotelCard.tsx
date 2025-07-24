@@ -77,8 +77,8 @@ export default function HotelCard({
                                     <div className="flex items-center gap-1 mb-2">
                                         {renderStars(hotel.rating)}
                                         <span 
-                                            className="text-sm text-gray-600 ml-1">({hotel.rating})
-                                            data-cy={'star-rating'}
+                                            className="text-sm text-gray-600 ml-1" data-cy={'star-rating'}>({hotel.rating})
+                                            
                                         </span>
                                     </div>
                                 )}
