@@ -7,6 +7,9 @@ import { Destination } from "../models/Destination";
 const destinationsFile = path.join(__dirname, '../../data/destinations.json');
 const destinations: Destination[] = JSON.parse(fs.readFileSync(destinationsFile, 'utf-8'));
 
+const TESTDestinationsFile = path.join(__dirname, '../../data/test-destinations.json');
+const TESTdestinations: Destination[] = JSON.parse(fs.readFileSync(TESTDestinationsFile, 'utf-8'));
+    
 const fuseOptions = {
     keys: ['term', 'state'],
     threshold: 0.3, 
@@ -23,6 +26,7 @@ const fuseOptions = {
 };
 
 const fuse = new Fuse(destinations, fuseOptions);
+const TESTfuse = new Fuse(TESTdestinations,fuseOptions);
 
 export const searchDestinations = (req: Request, res: Response) => {
     const query = (req.query.query as string)?.trim();
@@ -38,7 +42,19 @@ export const searchDestinations = (req: Request, res: Response) => {
     return res.json(matches);
 }
 
+export const TESTsearchDestinations = (req: Request, res: Response)=>{
+    const query = (req.query.query as string)?.trim();
 
+    if (!query) {
+        return res.status(400).json({ error: 'Missing query parameter' });
+    }
+
+    const searchResults = TESTfuse.search(query, {limit: 10});
+
+    const matches = searchResults.map(result => result.item);
+
+    return res.json(matches);
+}
 
 export const searchLocationRadius = (req:Request, res:Response) => {
     const lat = parseFloat(req.query.lat as string);
