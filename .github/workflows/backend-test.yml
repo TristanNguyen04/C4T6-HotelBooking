@@ -11,6 +11,21 @@ jobs:
     name: Test Backend
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: hotelproject
+          POSTGRES_PASSWORD: hotelproject
+          POSTGRES_DB: db_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     defaults:
       run:
         working-directory: apps/server
@@ -33,5 +48,21 @@ jobs:
       - name: Install backend dependencies
         run: npm ci
 
+      - name: Wait for PostgresSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U hotelproject; do
+            echo "Waiting for PostgresSQL..."
+            sleep 2
+          done
+      - name: Generate Prisma Client
+        run: npx prisma generate
+      
+      - name: Run Prisma Generate
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+
       - name: Run backend tests
         run: npm test
+        env:
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
