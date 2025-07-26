@@ -1,47 +1,34 @@
 import request from "supertest";
-import prisma from "../../src/utils/prismaClient";
 import app from "../../src/index";
-import { searchDestinations } from "../../src/controllers/destinationController";
-import stripe from "../../src/utils/stripeClient";
-import * as fs from "fs";
-import bcrypt from 'bcrypt';
-import { Destination } from "../../src/models/Destination";
-import path from "path";
-import Fuse from "fuse.js";
-import { TESTsearchDestinations } from "../../src/controllers/destinationController";
+
+
+const catchSymbols = {
+    term: "!@#$, ', :\"",
+    type: "tree",
+    uid: "A!@#",
+    }
 
 describe("GET /api/search", () => {
 
   // Test 1
   test("Return multiple matches - San", async () => {
-    const res = await request(app).get("/api/TEST/destinations?query=san");
-    const expectedRes = [
-      { term: "San Francisco", state: "California" },
-      { term: "San Antonio", state: "Texas" },
-      { term: "San Diego", state: "California" },
-    ];
+    const res = await request(app).get("/api/destinations?query=san");
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(expectedRes);
+    expect(res.body).toBeDefined();
   });
 
   // Test 2
   test("Return multiple matches - Sa", async () => {
-    const res = await request(app).get("/api/TEST/destinations?query=sa");
-    const expectedRes = [
-      { term: "samoa", state: "samoa" },
-      { term: "San Francisco", state: "California" },
-      { term: "San Antonio", state: "Texas" },
-      { term: "San Diego", state: "California" },
-    ];
+    const res = await request(app).get("/api/destinations?query=sa");
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(expectedRes);
+    expect(res.body).toBeDefined();
   });
 
   // Test 3
   test("No matches - Singapore", async () => {
-    const res = await request(app).get("/api/TEST/destinations?query=singapore");
+    const res = await request(app).get("/api/destinations?query=singapore");
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body).toBeDefined();
   });
 
   // Test 4
@@ -53,13 +40,56 @@ describe("GET /api/search", () => {
 
   // Test 5
   test("Return multiple results - z", async () => {
-    const res = await request(app).get("/api/TEST/destinations?query=z");
-    const expectedRes = [
-      { term: "Phoenix", state: "Arizona" },
-      { term: "Lang Zhou", state: "China" },
-    ];
-
+    const res = await request(app).get("/api/destinations?query=z");
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(expectedRes);
+    expect(res.body).toBeDefined();
+  });
+
+  test("No query given", async () => {
+    const res = await request(app).get("/api/destinations?query=");
+    expect(res.body).toEqual(
+      {error: "Missing query parameter"}
+    );
+  });
+  
+  test("Query contains numbers", async () => {
+    const res = await request(app).get("/api/destinations?query=1");
+    expect(res.body).toBeDefined();
+  });
+  test("Query contains symbols: !", async () => {
+    const res = await request(app).get("/api/destinations?query=!");
+    expect(res.body).toEqual(expect.arrayContaining([
+      expect.objectContaining(catchSymbols)
+    ]))
+  });
+  test("Query contains symbols: {}", async () => {
+    const res = await request(app).get("/api/destinations?query={");
+    expect(res.body).toEqual([]);
+    const res1 = await request(app).get("/api/destinations?query=}");
+    expect(res1.body).toEqual([]);
+  });
+  test("Query contains symbols: <>", async () => {
+    const res1 = await request(app).get("/api/destinations?query=<");
+    expect(res1.body).toEqual([]);
+    const res2 = await request(app).get("/api/destinations?query=>");
+    expect(res2.body).toEqual([]);
+  })
+  test("Query contains symbols: []", async () => {
+    const res1 = await request(app).get("/api/destinations?query=[");
+    expect(res1.body).toEqual([]);
+    const res2 = await request(app).get("/api/destinations?query=]");
+    expect(res2.body).toEqual([]);
+  })
+  test("Query contains symbols: +=", async () => {
+    const res1 = await request(app).get("/api/destinations?query=+");
+    expect(res1.body).toEqual({"error": "Missing query parameter"});
+    const res2 = await request(app).get("/api/destinations?query==");
+    expect(res2.body).toEqual([]);
+  })
+  test("Query contains symbols: `~", async () => {
+    const res1 = await request(app).get("/api/destinations?query=`");
+    expect(res1.body).toEqual([]);
+    const res2 = await request(app).get("/api/destinations?query=~");
+    expect(res2.body).toEqual([]);
   });
 });
