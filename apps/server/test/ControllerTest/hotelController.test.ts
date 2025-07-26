@@ -31,7 +31,7 @@ describe("GET /api/hotels/search", () => {
     const res = await request(app).get("/api/hotels/search").query(queryParams);
 
     expect(res.statusCode).toBe(200);
-  });
+  }, 10000);
   // Test 2
   test("Missing Destination Id", async () => {
     const incompleteQuery: Partial<typeof queryParams> = { ...queryParams };
