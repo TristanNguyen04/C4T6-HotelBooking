@@ -179,7 +179,7 @@ const CheckoutPage: React.FC = () => {
         hotelName: bookingDetails.hotelName,
         roomKey: bookingDetails.roomKey,
         roomDescription: bookingDetails.roomDescription,
-        roomImage: bookingDetails.roomImage,
+        roomImage: bookingDetails.roomImage || assets.hotelNotFound,
         name: `${bookingDetails.hotelName} - ${bookingDetails.roomDescription}`,
         image: bookingDetails.roomImage || '',
         price: Math.round(bookingDetails.priceBreakdown.total_price * 100), // Stripe expects cents

@@ -12,13 +12,13 @@ export const calculateRoomPrice = (
     const { nights, showExcludedFees = true } = options;
 
     const baseRateTotal = room.base_rate_in_currency;
-    const baseRatePerNight = baseRateTotal / nights;
+    // const baseRatePerNight = baseRateTotal / nights;
 
     const includedFeesTotal = room.included_taxes_and_fees_total_in_currency;
-    const includedFeesPerNight = includedFeesTotal / nights;
+    // const includedFeesPerNight = includedFeesTotal / nights;
 
     const excludedFeesTotal = room.excluded_taxes_and_fees_total_in_currency;
-    const excludedFeesPerNight = excludedFeesTotal / nights;
+    // const excludedFeesPerNight = excludedFeesTotal / nights;
 
     const subtotal = baseRateTotal + includedFeesTotal;
     const totalPrice = showExcludedFees ? subtotal + excludedFeesTotal : subtotal;
@@ -28,7 +28,7 @@ export const calculateRoomPrice = (
         included_taxes_and_fees_total_in_currency: includedFeesTotal,
         excluded_taxes_and_fees_total_in_currency: excludedFeesTotal,
         total_price: totalPrice,
-        currency: room.excluded_taxes_and_fees_currency || 'SGD',
+        currency: 'SGD',
         nights: nights,
     }
 }

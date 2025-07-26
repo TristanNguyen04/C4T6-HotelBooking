@@ -12,25 +12,16 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
             return res.status(400).json({error: "Missing Booking / Userid"});
         }
 
-        const line_items = items.map((item:any) => {
-            const product_data: any = {
-                name: item.name,
-            };
-            
-            // Only include images if we have a valid image URL
-            if (item.image && item.image.trim() !== '') {
-                product_data.images = [item.image];
-            }
-            
-            return {
-                price_data: {
-                    currency: item.currency,
-                    product_data,
-                    unit_amount: item.price,
+        const line_items = items.map((item:any) => ({
+            price_data: {
+                currency: item.currency,
+                product_data: {
+                    name: item.name,
                 },
-                quantity: item.quantity
-            };
-        });
+                unit_amount: item.price,
+            },
+            quantity: item.quantity
+        }));
 
         const session = await stripe.checkout.sessions.create({
             success_url: 'http://localhost:5173/paymentSuccess?session_id={CHECKOUT_SESSION_ID}',
