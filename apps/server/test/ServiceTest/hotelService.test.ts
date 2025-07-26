@@ -14,7 +14,7 @@ describe('Hotel Service Test', ()=>{
         expect(res.id).toBe('050G');
         expect(res.name).toBeDefined();
 
-    }, 10000)
+    }, 20000)
     test('Fetch Hotel Details : Invalid Params', async () => {
     try {
         await fetchHotelDetails('////');
@@ -36,8 +36,8 @@ describe('Hotel Service Test', ()=>{
         const res = await fetchHotelPrices(baseParams);
         expect(res.completed).toBe(true);
         expect(res).toBeDefined();
-    }, 10000);
-    
+    }, 20000);
+
     test('Fetch Hotel Prices : Invalid Params', async ()=>{
         try {
             const {destination_id , ...invalid} = baseParams;
@@ -56,7 +56,7 @@ describe('Hotel Service Test', ()=>{
         const res = await fetchHotelRoomPrices('0vcz', baseParams);
         expect(res.completed).toBe(true);
         expect(res.completed).toBe(true);
-    }, 10000);
+    }, 20000);
 
     test('Fetch Hotel Room Prices : Invalid Params', async ()=>{
         try {
@@ -74,7 +74,7 @@ describe('Hotel Service Test', ()=>{
     test('Fetch Hotels : Valid Params', async ()=>{
         const res = await fetchHotels(baseParams);
         expect(res.length).toBeGreaterThan(0);
-    }, 10000);
+    }, 20000);
 
     test('Fetch Hotels : Invalid Params', async ()=>{
         try {

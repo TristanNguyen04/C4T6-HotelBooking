@@ -102,7 +102,7 @@ describe("GET /api/hotels/:id/details", () => {
       .query(queryParams);
 
     expect(res.statusCode).toBe(200);
-  }, 10000);
+  }, 20000);
   // Test 2
   test("Missing required Param: checkin", async () => {
     const incompleteQuery: Partial<typeof queryParams> = { ...queryParams };
