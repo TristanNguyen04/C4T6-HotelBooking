@@ -62,6 +62,23 @@ describe("User model", () => {
         })
 
     });
+    test("Create Booking Fail : Invalid userId", async ()=>{
+        await expect(
+            prisma.booking.create({
+                data: {
+                    userId: "123", // Assuming this user doesn't exist
+                    hotelId: "testHotel123",
+                    hotelName: "TestHotel",
+                    checkin: new Date("2025-08-01"),
+                    checkout: new Date("2025-08-05"),
+                    guests: "4",
+                    price: 1234,
+                    currency: "SGD",
+                    stripeSessionId: "stripeSession123",
+                },
+            })
+        ).rejects.toThrow("Foreign key constraint");
+    }); 
 
     test("Retrieve Booking Reccord: Valid UserId", async ()=>{
         const bookings = await prisma.booking.findMany({

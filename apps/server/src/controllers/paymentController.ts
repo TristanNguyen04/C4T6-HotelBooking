@@ -44,7 +44,6 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
 
         res.json({ url: session.url });
     } catch (error) {
-        console.error("Stripe error:", error);
         res.status(500).json({ error: "Failed to create session" });
     }
 };
@@ -58,8 +57,6 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
     try {
         // retrieve stripe 
         const session = await stripe.checkout.sessions.retrieve(sessionId);
-        
-        console.log("Session metadata:", session.metadata);
         
         if (session.payment_status != "paid") {
             return res.status(400).json({ error: "Payment not completed" });

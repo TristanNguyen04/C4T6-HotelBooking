@@ -11,7 +11,9 @@
     "dev:client": "cd apps/client && npm run dev",
     "dev:server": "cd apps/server && npm run dev",
     "build": "npm run build:client && npm run build:server",
-    "test": "cd apps/server && jest --verbose ",
+    "test:backend": "cd apps/server && npm test",
+    "test:frontend": "cd apps/client && npx cypress run",
+    "test": "npm run test:backend && npm run test:frontend",
     "build:client": "cd apps/client && npm run build",
     "build:server": "cd apps/server && npm run build",
     "install:all": "npm install && cd apps/client && npm install && cd ../server && npm install"
