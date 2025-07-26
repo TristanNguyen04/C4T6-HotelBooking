@@ -78,7 +78,15 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token, user: { id: user.id, email: user.email, name: user.name}});
+    res.json({ 
+        token, 
+        user: { 
+            id: user.id, 
+            email: user.email, 
+            name: user.name,
+            isVerified: user.isVerified  // Add this line
+        }
+    });
 }
 
 export const resendVerificationEmail = async (req: Request, res: Response) => {

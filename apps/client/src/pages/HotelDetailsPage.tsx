@@ -1,5 +1,5 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useMemo, useCallback } from 'react';
+import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
+import { useMemo, useCallback, useState } from 'react';
 import Spinner from '../components/Spinner';
 import { searchHotelDetails } from '../api/hotels';
 import SearchBar from '../components/SearchBar';
@@ -11,14 +11,18 @@ import HotelAmenities from '../components/hotelDetails/HotelAmenities';
 import HotelInformation from '../components/hotelDetails/HotelInformation';
 import HotelQuickActions from '../components/hotelDetails/HotelQuickActions';
 import HotelRoomOptions from '../components/hotelDetails/HotelRoomOptions';
+import LoginPromptModal from '../components/LoginPromptModal';
 import { usePollingFetch } from '../hooks/usePollingFetch';
 import type { Hotel, SearchContext } from '../types/hotel';
 import { parseChildrenAges } from '../utils/age';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function HotelDetailsPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { id } = useParams<{ id: string }>();
     const [searchParams] = useSearchParams();
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     const childrenAges: number[] = searchParams.get('guests') ? parseChildrenAges(searchParams.get('guests') || '') : [];
     
@@ -113,9 +117,50 @@ export default function HotelDetailsPage() {
         }
     };
 
+    const { user } = useAuth();
+    
+
     const handleBookRoom = (roomKey: string) => {
-        // TODO: Implement room booking logic
-        console.log('Booking room:', roomKey);
+        if (!user) {
+            setShowLoginModal(true);
+            return;
+        }
+
+        const room = hotel?.rooms?.find(r => r.key === roomKey);
+        if (!room || !hotel || !searchContext) return;
+
+        // Create URL parameters from search context
+        const params = new URLSearchParams({
+            roomKey: roomKey,
+            hotelId: hotel.id,
+            destination_id: searchContext.destination_id,
+            checkin: searchContext.checkin,
+            checkout: searchContext.checkout,
+            guests: searchContext.guests,
+            adults: searchContext.adults.toString(),
+            children: searchContext.children.toString(),
+            rooms: searchContext.rooms.toString(),
+            term: searchContext.term,
+            childrenAges: searchContext.childrenAges.join(',')
+        });
+
+        // Navigate to checkout page with URL parameters
+        navigate(`/checkout?${params.toString()}`);
+    };
+
+    const handleLoginRedirect = () => {
+        setShowLoginModal(false);
+        
+        // Get current URL with all search parameters to return here after login
+        const currentUrl = `${location.pathname}${location.search}`;
+        
+        navigate('/login', { 
+            state: { returnTo: currentUrl } 
+        });
+    };
+
+    const handleCloseLoginModal = () => {
+        setShowLoginModal(false);
     };
 
     if (loading) {
@@ -218,6 +263,13 @@ export default function HotelDetailsPage() {
                     </div>
                 </div>
             </main>
+            
+            {/* Login Prompt Modal */}
+            <LoginPromptModal 
+                isOpen={showLoginModal}
+                onClose={handleCloseLoginModal}
+                onLogin={handleLoginRedirect}
+            />
         </div>
     );
 }

@@ -83,12 +83,12 @@ export interface Room {
   chargeableRate: number;
   market_rates: number[];
   base_rate: number;
-  base_rate_in_currency: number;
+  base_rate_in_currency: number; // display in booking summary
   included_taxes_and_fees_total: number;
-  included_taxes_and_fees_total_in_currency: number;
+  included_taxes_and_fees_total_in_currency: number; // display in booking summary
   excluded_taxes_and_fees_currency: string;
   excluded_taxes_and_fees_total: number;
-  excluded_taxes_and_fees_total_in_currency: number;
+  excluded_taxes_and_fees_total_in_currency: number; // display in booking summary
   included_taxes_and_fees: Array<{
     id: string;
     amount: number;
@@ -292,4 +292,70 @@ export const INIT_HOTEL = {
     "count": 86,
     "prefix": "https://d2ey9sqrvkqdfs.cloudfront.net/diH7/"
   }
+}
+
+export interface BookingPriceBreakdown {
+  base_rate_in_currency: number;
+  included_taxes_and_fees_total_in_currency: number;
+  excluded_taxes_and_fees_total_in_currency: number;
+  total_price: number;
+  currency: string;
+  nights: number;
+}
+
+export interface BookingDetails {
+  hotelId: string;
+  hotelName: string;
+  roomKey: string;
+  roomDescription: string;
+  roomImage?: string;
+  checkin: string;
+  checkout: string;
+  guests: string;
+  adults: number;
+  rooms: number;
+  children: number;
+  childrenAges: number[];
+  priceBreakdown: BookingPriceBreakdown;
+  specialRequest?: string;
+  primaryGuestTitle: string;
+  primaryGuestFirstName: string;
+  primaryGuestLastName: string;
+  primaryGuestPhoneNumber: string;
+}
+
+export interface GuestDetails {
+  primaryGuestTitle: string;
+  primaryGuestFirstName: string;
+  primaryGuestLastName: string;
+  primaryGuestPhoneNumber: string;
+  specialRequest?: string;
+}
+
+export interface PaymentItem {
+  hotelId: string;
+  hotelName: string;
+  roomKey: string;
+  roomDescription: string;
+  roomImage?: string;
+  name: string;
+  image: string;
+  price: number;
+  currency: string;
+  quantity: number;
+  checkin: string;
+  checkout: string;
+  guests: string;
+  adults: number;
+  rooms: number;
+  children: number;
+  childrenAges: number[];
+  baseRateInCurrency: number;
+  includedTaxesAndFeesInCurrency: number;
+  excludedTaxesAndFeesInCurrency: number;
+  primaryGuestTitle: string;
+  primaryGuestFirstName: string;
+  primaryGuestLastName: string;
+  primaryGuestPhoneNumber: string;
+  specialRequest?: string;
 }

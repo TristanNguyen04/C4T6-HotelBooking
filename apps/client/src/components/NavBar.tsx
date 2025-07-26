@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
+import { useAuth } from '../contexts/AuthContext';
 
 const NavBar = () => {
     const navigate = useNavigate();
+    const { user, logout } = useAuth();
     const navLinks = [
         { name: 'Destinations', path: '/search' },
         { name: 'About Us', path: '/' },
@@ -12,7 +14,6 @@ const NavBar = () => {
 
     const location = useLocation();
     const isHomePage = location.pathname === '/';
-    // const isSearchResultPage = location.pathname === '/search';
 
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -29,6 +30,12 @@ const NavBar = () => {
         e.preventDefault();
         console.log('Logo clicked, navigating to home');
         navigate('/', { replace: true });
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+        setIsMenuOpen(false);
     };
 
     return (
@@ -61,21 +68,45 @@ const NavBar = () => {
 
             {/* Desktop Right */}
             <div className="hidden md:flex items-center gap-1">
-                    <button className={`ml-6 transition-all duration-500 ${isScrolled ? "text-[#FF6B6B]" : "text-[#FF6B6B]"}`}>
-                        Sign In
-                    </button>
-                    <button className={`px-4 py-2.5 rounded-xl ml-3 transition-all duration-500 bg-[#FF6B6B] text-white`}>
-                        Register
-                    </button>
+                {user ? (
+                    // Logged in state
+                    <div className="flex items-center gap-4">
+                        <span className="text-gray-700 text-sm">
+                            Welcome, {user.name || user.email}
+                        </span>
+                        <button 
+                            onClick={handleLogout}
+                            className={`ml-2 px-4 py-2 rounded-xl transition-all duration-500 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B] hover:text-white`}
+                        >
+                            Logout
+                        </button>
+                    </div>
+                ) : (
+                    // Logged out state
+                    <>
+                        <button 
+                            onClick={() => navigate('/login')}
+                            className={`ml-6 transition-all duration-500 ${isScrolled ? "text-[#FF6B6B]" : "text-[#FF6B6B]"} hover:underline`}
+                        >
+                            Sign In
+                        </button>
+                        <button 
+                            onClick={() => navigate('/register')}
+                            className={`px-4 py-2.5 rounded-xl ml-3 transition-all duration-500 bg-[#FF6B6B] text-white hover:bg-[#ff5a5a]`}
+                        >
+                            Register
+                        </button>
+                    </>
+                )}
             </div>
 
             {/* Mobile Menu Button */}
             <div className="flex items-center gap-3 md:hidden">
-                    <svg onClick={() => setIsMenuOpen(!isMenuOpen)} className={`h-6 w-6 cursor-pointer ${isScrolled ? "invert" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <line x1="4" y1="6" x2="20" y2="6" />
-                        <line x1="4" y1="12" x2="20" y2="12" />
-                        <line x1="4" y1="18" x2="20" y2="18" />
-                    </svg>
+                <svg onClick={() => setIsMenuOpen(!isMenuOpen)} className={`h-6 w-6 cursor-pointer ${isScrolled ? "invert" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
+                </svg>
             </div>
 
             {/* Mobile Menu */}
@@ -90,9 +121,42 @@ const NavBar = () => {
                     </Link>
                 ))}
 
-                <button className="bg-[#FF6B6B] text-white px-8 py-2.5 rounded-full transition-all duration-500">
-                    Sign In
-                </button>
+                {user ? (
+                    // Mobile logged in state
+                    <div className="flex flex-col items-center gap-4">
+                        <span className="text-gray-700 text-center">
+                            Welcome, {user.name || user.email}
+                        </span>
+                        <button 
+                            onClick={handleLogout}
+                            className="bg-[#FF6B6B] text-white px-8 py-2.5 rounded-full transition-all duration-500"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                ) : (
+                    // Mobile logged out state
+                    <div className="flex flex-col gap-4">
+                        <button 
+                            onClick={() => {
+                                navigate('/login');
+                                setIsMenuOpen(false);
+                            }}
+                            className="border border-[#FF6B6B] text-[#FF6B6B] px-8 py-2.5 rounded-full transition-all duration-500"
+                        >
+                            Sign In
+                        </button>
+                        <button 
+                            onClick={() => {
+                                navigate('/register');
+                                setIsMenuOpen(false);
+                            }}
+                            className="bg-[#FF6B6B] text-white px-8 py-2.5 rounded-full transition-all duration-500"
+                        >
+                            Register
+                        </button>
+                    </div>
+                )}
             </div>
         </nav>
     );

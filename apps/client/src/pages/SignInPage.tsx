@@ -1,8 +1,9 @@
-import React from "react";
 import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa";
 import signInImage from "../assets/signin.png";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+    const navigate = useNavigate();
     return (
         <div className="bg-gray-50 flex justify-center py-12">
             <div className="flex max-w-6xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
@@ -69,7 +70,7 @@ export default function SignIn() {
 
                     <p className="text-sm text-gray-600 text-center">
                         Don’t have an account?{" "}
-                        <a href="#" className="text-[#FF6B6B] hover:underline">
+                        <a href="#" className="text-[#FF6B6B] hover:underline" onClick={() => navigate("/register")}>
                             Create Account
                         </a>
                     </p>

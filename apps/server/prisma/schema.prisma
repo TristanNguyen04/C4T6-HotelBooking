@@ -30,11 +30,26 @@ model Booking {
   userId String
   hotelId String
   hotelName String
+  roomKey String
+  roomDescription String
+  roomImage String?
+  specialRequest String?
+  primaryGuestTitle String
+  primaryGuestFirstName String
+  primaryGuestLastName String
+  primaryGuestPhoneNumber String
   checkin DateTime
   checkout DateTime
   guests String
+  adults Int
+  rooms Int
+  children Int
+  childrenAges Int[]
   price Float
   currency String
+  baseRateInCurrency Float
+  includedTaxesAndFeesInCurrency Float
+  excludedTaxesAndFeesInCurrency Float
   createdAt DateTime @default(now())
   stripeSessionId String
 }

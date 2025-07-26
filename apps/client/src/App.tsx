@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import EmailVerificationPage from './pages/EmailVerificationPage';
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
@@ -9,6 +8,8 @@ import Layout from './layouts/Layout';
 import SearchBar from './components/SearchBar';
 import { useNavigate } from 'react-router-dom';
 import Map from '../src/pages/GoogleMap'
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 function App(){
   const navigate = useNavigate();
@@ -33,8 +34,8 @@ function App(){
       {/* Routes without layout */}
       <Route path='/login' element={<LoginPage/>}/>
       <Route path='/register' element={<RegisterPage/>}/>
-      <Route path='/verify-email' element={<EmailVerificationPage/>}/>
       <Route path='/map' element={<Map/>}/>
+      <Route path='/paymentSuccess' element={<PaymentSuccessPage/>}/>
       
       {/* Routes with layout */}
       <Route path='/' element={
@@ -52,7 +53,15 @@ function App(){
           <HotelDetailsPage/>
         </Layout>
       }/>
+
+      <Route path='/checkout' element={
+        <Layout showHero={false}>
+          <CheckoutPage/>
+        </Layout>
+      }/>
     </Routes>
+
+
   );
 }
 
