@@ -9,6 +9,7 @@ import BookingSummary from '../components/booking/BookingSummary';
 import PrimaryGuestCard from '../components/booking/PrimaryGuestCard';
 import Spinner from '../components/Spinner';
 import type { GuestDetails, BookingDetails, PaymentItem, Room, Hotel, SearchContext, HotelSearchParams } from '../types/hotel';
+import { assets } from '../assets/assets';
 
 const CheckoutPage: React.FC = () => {
   const { user } = useAuth();
@@ -259,14 +260,34 @@ const CheckoutPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Booking Error</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Return to Home
-          </button>
+          <div className="mb-6">
+            <img 
+              src={assets.hotelNotFound} 
+              alt="Room not available" 
+              className="w-48 h-48 mx-auto object-contain"
+            />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+            Room No Longer Available
+          </h2>
+          <p className="text-gray-600 mb-6 leading-relaxed">
+            We're sorry, but this room is no longer available for your selected dates. 
+            This can happen when rooms are booked by other guests or when availability changes.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={handleBackToHotel}
+              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              View Other Rooms
+            </button>
+            <button
+              onClick={() => navigate('/')}
+              className="w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              Search Different Hotels
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -290,7 +311,7 @@ const CheckoutPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 mt-20">
+    <div className="min-h-screen bg-gray-50 mt-25">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

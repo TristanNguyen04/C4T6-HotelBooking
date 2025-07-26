@@ -34,7 +34,6 @@ model Booking {
   roomDescription String
   roomImage String?
   specialRequest String?
-  primaryGuestTitle String
   primaryGuestFirstName String
   primaryGuestLastName String
   primaryGuestPhoneNumber String
@@ -45,11 +44,9 @@ model Booking {
   rooms Int
   children Int
   childrenAges Int[]
-  price Float
   currency String
   baseRateInCurrency Float
   includedTaxesAndFeesInCurrency Float
-  excludedTaxesAndFeesInCurrency Float
   createdAt DateTime @default(now())
   stripeSessionId String
 }

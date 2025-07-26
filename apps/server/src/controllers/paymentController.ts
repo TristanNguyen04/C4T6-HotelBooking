@@ -12,17 +12,25 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
             return res.status(400).json({error: "Missing Booking / Userid"});
         }
 
-        const line_items = items.map((item:any) => ({
-            price_data: {
-                currency: item.currency,
-                product_data: {
-                    name: item.name,
-                    images: [item.image],
+        const line_items = items.map((item:any) => {
+            const product_data: any = {
+                name: item.name,
+            };
+            
+            // Only include images if we have a valid image URL
+            if (item.image && item.image.trim() !== '') {
+                product_data.images = [item.image];
+            }
+            
+            return {
+                price_data: {
+                    currency: item.currency,
+                    product_data,
+                    unit_amount: item.price,
                 },
-                unit_amount: item.price,
-            },
-            quantity: item.quantity
-        }));
+                quantity: item.quantity
+            };
+        });
 
         const session = await stripe.checkout.sessions.create({
             success_url: 'http://localhost:5173/paymentSuccess?session_id={CHECKOUT_SESSION_ID}',
@@ -38,7 +46,6 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
                     roomDescription: item.roomDescription,
                     roomImage: item.roomImage || null,
                     specialRequest: item.specialRequest || null,
-                    primaryGuestTitle: item.primaryGuestTitle,
                     primaryGuestFirstName: item.primaryGuestFirstName,
                     primaryGuestLastName: item.primaryGuestLastName,
                     primaryGuestPhoneNumber: item.primaryGuestPhoneNumber,
@@ -49,11 +56,9 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
                     rooms: item.rooms,
                     children: item.children,
                     childrenAges: item.childrenAges || [],
-                    price: item.price,
                     currency: item.currency,
                     baseRateInCurrency: item.baseRateInCurrency,
                     includedTaxesAndFeesInCurrency: item.includedTaxesAndFeesInCurrency,
-                    excludedTaxesAndFeesInCurrency: item.excludedTaxesAndFeesInCurrency,
                 })))
             },
         });
@@ -123,7 +128,6 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
                     roomDescription: booking.roomDescription,
                     roomImage: booking.roomImage,
                     specialRequest: booking.specialRequest,
-                    primaryGuestTitle: booking.primaryGuestTitle,
                     primaryGuestFirstName: booking.primaryGuestFirstName,
                     primaryGuestLastName: booking.primaryGuestLastName,
                     primaryGuestPhoneNumber: booking.primaryGuestPhoneNumber,
@@ -134,11 +138,9 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
                     rooms: parseInt(booking.rooms),
                     children: parseInt(booking.children),
                     childrenAges: booking.childrenAges || [],
-                    price: parseFloat(booking.price),
                     currency: booking.currency,
                     baseRateInCurrency: parseFloat(booking.baseRateInCurrency),
                     includedTaxesAndFeesInCurrency: parseFloat(booking.includedTaxesAndFeesInCurrency),
-                    excludedTaxesAndFeesInCurrency: parseFloat(booking.excludedTaxesAndFeesInCurrency),
                     stripeSessionId: sessionId,
                 },
             });

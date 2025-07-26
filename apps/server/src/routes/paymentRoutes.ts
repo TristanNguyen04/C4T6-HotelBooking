@@ -3,7 +3,7 @@ import { createCheckoutSession, handlePaymentSuccess } from "../controllers/paym
 
 const router = Router();
 
-router.post("/checkout", createCheckoutSession);
-router.post("/success", handlePaymentSuccess);
+router.post("/payments/checkout", createCheckoutSession);
+router.post("/payments/success", handlePaymentSuccess);
 
 export default router;

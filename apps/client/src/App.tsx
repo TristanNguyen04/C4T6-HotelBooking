@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
+import ProfilePage from './pages/ProfilePage';
 import Layout from './layouts/Layout';
 import SearchBar from './components/SearchBar';
 import { useNavigate } from 'react-router-dom';
@@ -57,6 +58,11 @@ function App(){
       <Route path='/checkout' element={
         <Layout showHero={false}>
           <CheckoutPage/>
+        </Layout>
+      }/>
+      <Route path='/profile' element={
+        <Layout showHero={false}>
+          <ProfilePage/>
         </Layout>
       }/>
     </Routes>

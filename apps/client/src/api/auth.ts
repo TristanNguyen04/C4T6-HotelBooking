@@ -11,3 +11,14 @@ export const register = (data: {
 export const resendVerificationEmail = (data: {
     email: string
 }) => API.post('/auth/resend-verification', data);
+
+export const getProfile = () => API.get('/auth/profile');
+
+export const updateProfile = (data: {
+    name: string
+}) => API.patch('/auth/profile', data);
+
+export const changePassword = (data: {
+    currentPassword: string;
+    newPassword: string;
+}) => API.patch('/auth/change-password', data);

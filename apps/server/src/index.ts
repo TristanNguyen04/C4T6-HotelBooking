@@ -25,8 +25,7 @@ app.use(express.json()); // make sure body parsing works
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, Express with TypeScript!');
 });
-app.use("/payment", paymentRoutes);
-app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes);
+app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, paymentRoutes);
 
 // only start server if not in test environment (jest)
 if(process.env.NODE_ENV !== 'test'){

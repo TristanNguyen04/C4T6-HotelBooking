@@ -9,8 +9,6 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // const { hotelId, hotelName, checkin, checkout, guests, price, currency , sessionId} = req.body;
-
     const {
         hotelId,
         hotelName,
@@ -18,7 +16,6 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
         roomDescription,
         roomImage,
         specialRequest,
-        primaryGuestTitle,
         primaryGuestFirstName,
         primaryGuestLastName,
         primaryGuestPhoneNumber,
@@ -29,11 +26,9 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
         rooms,
         children,
         childrenAges,
-        price,
         currency,
         baseRateInCurrency,
         includedTaxesAndFeesInCurrency,
-        excludedTaxesAndFeesInCurrency,
         sessionId,
     } = req.body;
 
@@ -47,7 +42,6 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
                 roomDescription,
                 roomImage: roomImage || '',
                 specialRequest: specialRequest || '',
-                primaryGuestTitle,
                 primaryGuestFirstName,
                 primaryGuestLastName,
                 primaryGuestPhoneNumber,
@@ -58,11 +52,9 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
                 rooms: parseInt(rooms),
                 children: parseInt(children),
                 childrenAges: childrenAges || [],
-                price: parseFloat(price),
                 currency,
                 baseRateInCurrency: parseFloat(baseRateInCurrency),
                 includedTaxesAndFeesInCurrency: parseFloat(includedTaxesAndFeesInCurrency),
-                excludedTaxesAndFeesInCurrency: parseFloat(excludedTaxesAndFeesInCurrency),
                 stripeSessionId: sessionId,
             }
         });
