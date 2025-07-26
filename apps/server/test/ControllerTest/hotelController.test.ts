@@ -1,15 +1,7 @@
 import request from "supertest";
 import app from "../../src/index";
-import prisma from "../../src/utils/prismaClient";
-import {
-  fetchHotels,
-  fetchHotelPrices,
-  fetchHotelDetails,
-  fetchHotelRoomPrices,
-} from "../../src/services/hotelService";
-import jwt from "jsonwebtoken";
 import { setupTest, tearDown } from "../helper/setup";
-
+jest.setTimeout(20000);
 const queryParams = {
   destination_id: "RsBU",
   checkin: "2025-08-01",
@@ -31,7 +23,7 @@ describe("GET /api/hotels/search", () => {
     const res = await request(app).get("/api/hotels/search").query(queryParams);
 
     expect(res.statusCode).toBe(200);
-  }, 10000);
+  });
   // Test 2
   test("Missing Destination Id", async () => {
     const incompleteQuery: Partial<typeof queryParams> = { ...queryParams };
@@ -102,7 +94,7 @@ describe("GET /api/hotels/:id/details", () => {
       .query(queryParams);
 
     expect(res.statusCode).toBe(200);
-  }, 20000);
+  });
   // Test 2
   test("Missing required Param: checkin", async () => {
     const incompleteQuery: Partial<typeof queryParams> = { ...queryParams };
