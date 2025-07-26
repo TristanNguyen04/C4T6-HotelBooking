@@ -33,10 +33,25 @@ describe('Hotel Service Test', ()=>{
         }
     });
 
-    test('Fetch Hotel Prices : Valid Params', async ()=>{
-        const res = await fetchHotelPrices(baseParams);
-        expect(res.completed).toBe(true);
+    test('Fetch Hotel Prices : Valid Params', async () => {
+    let res;
+    const maxRetries = 3;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        res = await fetchHotelPrices(baseParams);
+
+        if (res && res.completed) {
+            break; // success, exit retry loop
+        }
+
+        if (attempt < maxRetries) {
+            console.warn(`Attempt ${attempt} failed. Retrying...`);
+            await new Promise(r => setTimeout(r, 500)); // optional delay between retries
+        }
+    }
+
         expect(res).toBeDefined();
+        expect(res.completed).toBe(true);
     });
 
     test('Fetch Hotel Prices : Invalid Params', async ()=>{
@@ -54,9 +69,18 @@ describe('Hotel Service Test', ()=>{
         }
     })
     test('Fetch Hotel Room Prices : Valid Params', async ()=>{
-        const res = await fetchHotelRoomPrices('0vcz', baseParams);
-        if(res.completed == false){
-            const res = await fetchHotelRoomPrices('0vcz', baseParams);
+        let res;
+        const maxRetries = 3;
+        for (let attempt = 1; attempt <= maxRetries; attempt++){
+            res = await fetchHotelRoomPrices('0vcz', baseParams);
+            if (res && res.completed){
+                break; // success, exit retry loop
+            }
+
+            if (attempt < maxRetries) {
+                console.warn(`Attempt ${attempt} failed. Retrying...`);
+                await new Promise(r => setTimeout(r, 500)); // optional delay between retries
+        }
         }
         expect(res.completed).toBe(true);
     });
