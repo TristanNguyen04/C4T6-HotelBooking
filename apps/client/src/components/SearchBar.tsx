@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { searchLocations } from '../api/hotels';
 import { parseDate, convertDateFormat } from '../utils/date';
 import DateRangePicker, { type DateRange } from './DateRangePicker';
@@ -50,6 +50,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [adults, setAdults] = useState(initialValues?.adults || 2);
     const [children, setChildren] = useState(initialValues?.children || 0);
     const [childrenAges, setChildrenAges] = useState<number[]>(initialValues?.childrenAges || []);
+    
+    const occupancyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (term.length < 1) {
@@ -67,6 +69,22 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
         return () => clearTimeout(delay);
     }, [term]);
+    
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (occupancyRef.current && !occupancyRef.current.contains(event.target as Node)) {
+                setShowOccupancy(false);
+            }
+        }
+        
+        if (showOccupancy) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showOccupancy]);
 
     useEffect(() => {
         const guestsReq = adults;
@@ -134,6 +152,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     return (
         <form
             onSubmit={handleSubmit} 
+            autoComplete="off"
             className='bg-white text-gray-800 shadow-2xl rounded-xl px-4 py-6 md:px-6 md:py-4 
             flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-4 w-full max-w-none'>
             
@@ -151,6 +170,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         id="DestinationInput"
                         data-cy={"DestinationSearch"}
                         type="text" 
+                        autoComplete="off"
                         className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
                         focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors" 
                         placeholder="Where are you going?" 
@@ -158,6 +178,16 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         onChange={e => {
                             setTerm(e.target.value);
                             setSelected(null);
+                        }}
+                        onFocus={() => {
+                            // Re-fetch suggestions if there's text in the input
+                            if (term.length >= 1) {
+                                searchLocations(term)
+                                    .then(res => {
+                                        setSuggestions(res.data);
+                                    })
+                                    .catch(() => setSuggestions([]));
+                            }
                         }}
                         onBlur={() => setTimeout(() => setSuggestions([]), 100)}
                         required />
@@ -259,8 +289,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
                 {showOccupancy && (
                     <div 
+                        ref={occupancyRef}
                         className="absolute z-30 bg-white border border-gray-300 rounded-lg shadow-lg mt-2 p-6 w-80 right-0 lg:right-auto lg:left-0"
-                        onBlur={() => setShowOccupancy(false)}
                         tabIndex={0}
                     >
                         {[
@@ -320,6 +350,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                                     type="number"
                                                     min="0"
                                                     max="17"
+                                                    autoComplete="off"
                                                     data-cy={`children-${index + 1}`}
                                                     value={childrenAges[index] ?? ''}
                                                     onChange={(e) => {
