@@ -47,8 +47,9 @@ const LoginPromptModal: React.FC<LoginPromptModalProps> = ({
 
   const modalContent = (
     <div 
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1100] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1200] flex items-center justify-center p-4"
       onClick={handleBackdropClick}
+      style={{ isolation: 'isolate' }}
     >
       <div 
         className="relative bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
@@ -102,7 +103,7 @@ const LoginPromptModal: React.FC<LoginPromptModalProps> = ({
     </div>
   );
 
-  return createPortal(modalContent, document.body);
+  return createPortal(modalContent, document.getElementById('portal-root') || document.body);
 };
 
 export default LoginPromptModal; 
