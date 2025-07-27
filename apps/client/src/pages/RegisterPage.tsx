@@ -258,9 +258,9 @@ export default function RegisterPage() {
 
   return (
     <Layout showNavBar={false}>
-      <div className="bg-gray-50 flex justify-center py-12 mt-[-100px] mb-[100px]">
+      <div className="bg-gray-50 flex justify-center mt-20">
         {/* Main Content */}
-        <main className="flex flex-1 justify-center mt-35 px-4 py-8">
+        <main className="flex flex-1 justify-center mt-20 px-4 py-14 mb-20">
           <div className="bg-white rounded-xl shadow-lg flex flex-col md:flex-row w-full max-w-6xl overflow-hidden items-stretch">
 
           {/* Left side: Form */}

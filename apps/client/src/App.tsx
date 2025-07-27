@@ -33,8 +33,6 @@ function App(){
   return (
     <Routes>
       {/* Routes without layout */}
-      <Route path='/login' element={<LoginPage/>}/>
-      <Route path='/register' element={<RegisterPage/>}/>
       <Route path='/map' element={<Map/>}/>
       <Route path='/paymentSuccess' element={<PaymentSuccessPage/>}/>
       
@@ -65,9 +63,17 @@ function App(){
           <ProfilePage/>
         </Layout>
       }/>
+      <Route path='/login' element={
+        <Layout showNavBar={true} showHero={false}>
+          <LoginPage/>
+        </Layout>
+      }/>
+      <Route path='/register' element={
+        <Layout showNavBar={true} showHero={false}>
+          <RegisterPage/>
+        </Layout>
+      }/>
     </Routes>
-
-
   );
 }
 

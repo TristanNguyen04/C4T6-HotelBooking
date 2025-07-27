@@ -4,7 +4,6 @@ import signInImage from "../assets/signin.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { login } from "../api/auth";
 import { useAuth } from "../contexts/AuthContext";
-import Layout from "../layouts/Layout";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -42,8 +41,7 @@ export default function LoginPage() {
     };
 
     return (
-        <Layout showNavBar={false}>
-            <div className="bg-gray-50 flex justify-center py-12 mb-[100px]">
+            <div className="bg-gray-50 flex justify-center py-14 mt-20">
                 <div className="flex max-w-6xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Left: Form section */}
                 <div className="w-full md:w-1/2 p-8 md:p-10">
@@ -155,8 +153,7 @@ export default function LoginPage() {
                     />
                 </div>
             </div>
-            </div>
-        </Layout>
+        </div>
     );
 }
 
