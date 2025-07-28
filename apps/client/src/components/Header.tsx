@@ -23,6 +23,7 @@ export default function Header() {
 
       <div className="flex gap-2">
         <button
+          data-cy={'login-button'}
           onClick={() => navigate('/login')}
           className="text-sm font-normal"
           style={{ color: '#FF6B6B', background: 'none', border: 'none' }}

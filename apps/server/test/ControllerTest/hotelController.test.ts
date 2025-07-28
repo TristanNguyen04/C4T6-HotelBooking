@@ -9,12 +9,16 @@ import {
 } from "../../src/services/hotelService";
 import jwt from "jsonwebtoken";
 import { setupTest, tearDown } from "../helper/setup";
+import { calculateNights , searchHotelUsingDest } from "../../src/controllers/hotelController";
+
+jest.setTimeout(20000);
 
 const queryParams = {
   destination_id: "RsBU",
   checkin: "2025-08-01",
   checkout: "2025-08-05",
   guests: "2",
+  
 };
 
 describe('Testing for Calculation of Nights' , ()=>{
