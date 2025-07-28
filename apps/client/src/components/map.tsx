@@ -2,7 +2,7 @@
 import { useEffect, useState, type SetStateAction } from "react";
 import "../styles/map.css";
 import { APIProvider, Map as Gmap, AdvancedMarker, Pin} from "@vis.gl/react-google-maps";
-import type { Destination } from "../../../server/src/models/Destination";
+import type { Destination } from "apps/server/src/models/Destination";
 import HotelInfoWindow from "../components/mapCard";
 import {searchHotelwithDest, searchDestinationNearby} from '../api/hotels';
 import type {Hotel} from "../types/hotel";

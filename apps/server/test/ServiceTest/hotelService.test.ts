@@ -9,12 +9,12 @@ const baseParams = {
             lang: 'en_US',
             partner_id: '1',
         };
+
 describe('Hotel Service Test', ()=>{
     test('Fetch Hotel Details : Valid ', async ()=>{
         const res = await fetchHotelDetails('050G');
         expect(res.id).toBe('050G');
         expect(res.name).toBeDefined();
-
     })
     test('Fetch Hotel Details : Invalid Params', async () => {
     try {

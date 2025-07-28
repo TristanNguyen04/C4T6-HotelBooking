@@ -1,13 +1,6 @@
-import prisma from "../../src/utils/prismaClient";
 import app from "../../src/index";
 import request from "supertest";
-import {
-  createBookingRecord,
-  retrieveBookingRecord,
-} from "../../src/services/bookingService";
-import jwt from "jsonwebtoken";
 import { setupTest , tearDown } from "../helper/setup";
-const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
 const bookingParam = {
   hotelId: "Test123",
@@ -79,6 +72,15 @@ describe("Test Booking API: /api/bookings", () => {
 
     expect(res.statusCode).toBe(401);
     expect(res.body).toEqual({ error: "Missing authorization header" });
+  });
+
+  test("Retrieve Bookings : Not Authorized", async () => {
+    const res = await request(app)
+      .get("/api/bookings/me")
+      .set('Authorization', `Bearer ${null}`);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ error: "Invalid token" });
   });
 
 });

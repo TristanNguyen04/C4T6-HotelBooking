@@ -22,7 +22,7 @@ export const fetchHotelRoomPrices = async (id: string, params: Record<string, an
         const res = await axios.get(`${BASE_URL}/hotels/${id}/price`, { params });
         return res.data;
     } catch (error) {
-        console.error('Error fetching hotel room prices:', error);
+        // console.error('Error fetching hotel room prices:', error);
         throw error;
     }
 }

@@ -1,13 +1,36 @@
 import request from "supertest";
 import app from "../../src/index";
 import { setupTest, tearDown } from "../helper/setup";
+import { calculateNights , searchHotelUsingDest } from "../../src/controllers/hotelController";
+
 jest.setTimeout(20000);
+
 const queryParams = {
   destination_id: "RsBU",
   checkin: "2025-08-01",
   checkout: "2025-08-05",
   guests: "2",
 };
+
+describe('Testing for Calculation of Nights' , ()=>{
+  test('Check-in is before checkout' , ()=>{
+    const res = calculateNights('2025-08-01', '2025-08-10');
+    expect(res).toBe(9);
+  });
+  test('Check-in is the same as Check-out' , ()=>{
+    const res = calculateNights('2025-08-01', '2025-08-01');
+    expect(res).toBe(0);
+  });
+  test('Check-in is before Check-out' , ()=>{
+    try{
+      calculateNights('2025-08-10', '2025-08-01');
+      fail('Fail to catch error');
+    }
+    catch(e: any){
+      expect(e.message).toBe('Checkin date is before Checkout date')
+    }
+  });
+});
 
 describe("GET /api/hotels/search", () => {
   beforeAll(async () => {

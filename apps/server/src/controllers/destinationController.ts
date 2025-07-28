@@ -3,12 +3,11 @@ import fs from "fs";
 import path from 'path';
 import Fuse from 'fuse.js';
 import { Destination } from "../models/Destination";
+import { calculateDistance } from "../utils/calculateDistance";
 
 const destinationsFile = path.join(__dirname, '../../data/destinations.json');
 const destinations: Destination[] = JSON.parse(fs.readFileSync(destinationsFile, 'utf-8'));
 
-const TESTDestinationsFile = path.join(__dirname, '../../data/test-destinations.json');
-const TESTdestinations: Destination[] = JSON.parse(fs.readFileSync(TESTDestinationsFile, 'utf-8'));
     
 const fuseOptions = {
     keys: ['term', 'state'],
@@ -24,9 +23,7 @@ const fuseOptions = {
     ignoreLocation: false,
     ignoreFieldNorm: false,
 };
-
 const fuse = new Fuse(destinations, fuseOptions);
-const TESTfuse = new Fuse(TESTdestinations,fuseOptions);
 
 export const searchDestinations = (req: Request, res: Response) => {
     const query = (req.query.query as string)?.trim();
@@ -42,45 +39,24 @@ export const searchDestinations = (req: Request, res: Response) => {
     return res.json(matches);
 }
 
-export const TESTsearchDestinations = (req: Request, res: Response)=>{
-    const query = (req.query.query as string)?.trim();
-
-    if (!query) {
-        return res.status(400).json({ error: 'Missing query parameter' });
-    }
-
-    const searchResults = TESTfuse.search(query, {limit: 10});
-
-    const matches = searchResults.map(result => result.item);
-
-    return res.json(matches);
-}
-
 export const searchLocationRadius = (req:Request, res:Response) => {
     const lat = parseFloat(req.query.lat as string);
     const lng = parseFloat(req.query.lng as string);
     const radiusKm = parseFloat(req.query.radius as string);
-    // console.log(radiusKm);
-
     if (isNaN(lat) || isNaN(lng) || isNaN(radiusKm)) {
         return res.status(400).json({ error: "Invalid params" });
     }
-
-    const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: number) => {
-        const EARTH_RADIUS_KM = 6371;
-        const toRadian = (degrees:number) => degrees * Math.PI / 180 ;
-        const dLat = toRadian(lat2 - lat1);
-        const dLng = toRadian(lng2 - lng1);
-        const a = Math.sin(dLat/2) ** 2 + Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) *
-        Math.sin(dLng / 2) ** 2;
-        const c = 2 * Math.atan2(Math.sqrt(a) , Math.sqrt(1-a));
-        return EARTH_RADIUS_KM * c;
-    };
-    console.log("lat:", lat, "lng:", lng, "radiusKm:", radiusKm);
-    const nearbyDest = destinations.filter(dest => {
-        const distance = calculateDistance(lat, lng, dest.lat, dest.lng);
-        return distance <= radiusKm;
-    });
-
-    return res.json(nearbyDest);
+    try{
+        const nearbyDest = destinations.filter(dest => {
+            const distance = calculateDistance(lat, lng, dest.lat, dest.lng);
+            return distance <= radiusKm;
+        });
+        return res.json(nearbyDest);
+    }
+    catch(err:any){
+        if(err.message === "Invalid latitude or longitude values"){
+            return res.status(400).json({error: err.message});
+        }
+        return res.status(500).json({error: "Internal Server Error"});
+    }
 }
