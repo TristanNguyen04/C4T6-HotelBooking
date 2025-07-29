@@ -25,7 +25,9 @@ export const searchHotels = async (req: Request, res: Response) => {
             guests,
             currency,
             lang,
-            partner_id: '1',
+            partner_id: '1089',
+            landing_page: 'wl-acme-earn',
+            product_type: 'earn'
         };
 
         const [hotels, prices] = await Promise.all([
@@ -78,7 +80,9 @@ export const getHotelDetails = async (req: Request, res: Response) => {
             guests,
             currency,
             lang,
-            partner_id: '1'
+            partner_id: '1089',
+            landing_page: 'wl-acme-earn',
+            product_type: 'earn'
         };
 
         const [hotelInfo, roomPricing] = await Promise.all([
