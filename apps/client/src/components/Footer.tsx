@@ -13,7 +13,7 @@ export default function Footer() {
         <div>
             <div className='flex items-center space-x-2 mb-5'>
                 <span className="font-bold text-[24px] leading-[36px] text-[#FF6B6B]">
-                    StayEase
+                    Ascenda
                 </span>
                 <span className="font-extralight text-[14px] leading-[20px] text-white">
                     Comfort wherever you go

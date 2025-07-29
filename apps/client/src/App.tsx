@@ -11,8 +11,9 @@ import { useNavigate } from 'react-router-dom';
 import Map from '../src/pages/GoogleMap'
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import CheckoutPage from './pages/CheckoutPage';
+import StaticLayout from './layouts/StaticLayout';
 
-function App(){
+function App() {
   const navigate = useNavigate();
 
   // Handle SearchBar at Home Page
@@ -33,46 +34,55 @@ function App(){
   return (
     <Routes>
       {/* Routes without layout */}
-      <Route path='/map' element={<Map/>}/>
-      <Route path='/paymentSuccess' element={<PaymentSuccessPage/>}/>
-      
+      <Route path='/map' element={<Map />} />
+      <Route path='/paymentSuccess' element={<PaymentSuccessPage />} />
+
+      {/* Routes with static Nav Bar */}
+      <Route
+        path="/login"
+        element={
+          <StaticLayout>
+            <LoginPage />
+          </StaticLayout>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <StaticLayout>
+            <RegisterPage />
+          </StaticLayout>
+        }
+      />
+
+
       {/* Routes with layout */}
       <Route path='/' element={
         <Layout showHero={true} heroContent={<SearchBar onSubmit={handleSearchSubmit} />}>
-          <HomePage/>
+          <HomePage />
         </Layout>
-      }/>
+      } />
       <Route path='/search' element={
         <Layout showHero={false}>
-          <SearchResultsPage/>
+          <SearchResultsPage />
         </Layout>
-      }/>
+      } />
       <Route path='/hotels/:id/details' element={
         <Layout showHero={false}>
-          <HotelDetailsPage/>
+          <HotelDetailsPage />
         </Layout>
-      }/>
+      } />
 
       <Route path='/checkout' element={
         <Layout showHero={false}>
-          <CheckoutPage/>
+          <CheckoutPage />
         </Layout>
-      }/>
+      } />
       <Route path='/profile' element={
         <Layout showHero={false}>
-          <ProfilePage/>
+          <ProfilePage />
         </Layout>
-      }/>
-      <Route path='/login' element={
-        <Layout showNavBar={true} showHero={false}>
-          <LoginPage/>
-        </Layout>
-      }/>
-      <Route path='/register' element={
-        <Layout showNavBar={true} showHero={false}>
-          <RegisterPage/>
-        </Layout>
-      }/>
+      } />
     </Routes>
   );
 }

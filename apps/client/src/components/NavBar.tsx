@@ -88,7 +88,7 @@ const NavBar = () => {
                 <button onClick={handleLogoClick} className="cursor-pointer bg-transparent border-none p-0">
                     <div className='flex items-center space-x-2'>
                         <span className="font-bold text-[24px] leading-[36px] text-[#FF6B6B]">
-                            StayEase
+                            Ascenda
                         </span>
                         <span className="font-extralight text-[14px] leading-[20px] text-gray-700">
                             Comfort wherever you go
