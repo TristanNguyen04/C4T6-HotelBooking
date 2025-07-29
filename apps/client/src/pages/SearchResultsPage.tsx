@@ -67,7 +67,7 @@ export default function SearchResultsPage(){
         if (loading) {
             const timeout = setTimeout(() => {
                 setInitialLoading(false);
-            }, 2500); // small buffer to prevent flashing
+            }, 2000); // small buffer to prevent flashing
             return () => clearTimeout(timeout);
         }
     }, [loading]);

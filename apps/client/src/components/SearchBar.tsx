@@ -37,12 +37,12 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [term, setTerm] = useState(initialValues?.destination?.term || '');
     const [suggestions, setSuggestions] = useState<Location[]>([]);
     const [selected, setSelected] = useState<Location | null>(initialValues?.destination || null);
-    
+
     const [dateRange, setDateRange] = useState<DateRange>({
         startDate: parseDate(initialValues?.checkin),
         endDate: parseDate(initialValues?.checkout)
     });
-    
+
     const [guests, setGuests] = useState(initialValues?.guests || '2');
     const [showOccupancy, setShowOccupancy] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -71,14 +71,14 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     useEffect(() => {
         const guestsReq = adults;
         let req = "";
-        for(let i = 0; i < rooms; i++){
+        for (let i = 0; i < rooms; i++) {
             req += guestsReq;
-            if(i != rooms - 1){
+            if (i != rooms - 1) {
                 req += '|';
             }
         }
 
-        if(children > 0 && rooms < 2){
+        if (children > 0 && rooms < 2) {
             req += ':';
         }
 
@@ -111,7 +111,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if(!selected || !dateRange.startDate || !dateRange.endDate) return;
+        if (!selected || !dateRange.startDate || !dateRange.endDate) return;
 
         onSubmit({
             destination: selected,
@@ -133,10 +133,10 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
     return (
         <form
-            onSubmit={handleSubmit} 
+            onSubmit={handleSubmit}
             className='bg-white text-gray-800 shadow-2xl rounded-xl px-4 py-6 md:px-6 md:py-4 
             flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-4 w-full max-w-none'>
-            
+
             <div className="flex-1 min-w-0">
                 <div className='flex items-center gap-2 mb-2'>
                     <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -146,13 +146,13 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                     <label htmlFor="destinationInput" className="text-sm font-medium text-gray-700">Destination</label>
                 </div>
                 <div className="relative">
-                    <input 
-                        list='destinations' 
-                        id="destinationInput" 
-                        type="text" 
+                    <input
+                        list='destinations'
+                        id="destinationInput"
+                        type="text"
                         className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                        focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors" 
-                        placeholder="Where are you going?" 
+                        focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                        placeholder="Where are you going?"
                         value={term}
                         onChange={e => {
                             setTerm(e.target.value);
@@ -178,24 +178,24 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                             <div className="flex-shrink-0">
                                                 {dest.type === 'city' && (
                                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                                     </svg>
                                                 )}
                                                 {dest.type === 'hotel' && (
                                                     <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 21v-4a2 2 0 012-2h2a2 2 0 012 2v4"/>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 21v-4a2 2 0 012-2h2a2 2 0 012 2v4" />
                                                     </svg>
                                                 )}
                                                 {dest.type === 'airport' && (
                                                     <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                                     </svg>
                                                 )}
                                                 {(!dest.type || !['city', 'hotel', 'airport'].includes(dest.type)) && (
                                                     <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                     </svg>
                                                 )}
                                             </div>
@@ -207,10 +207,10 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                             {dest.type && (
                                                 <span className={`
                                                     inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize
-                                                    ${dest.type === 'city' ? 'bg-blue-100 text-blue-800' : 
-                                                      dest.type === 'hotel' ? 'bg-green-100 text-green-800' : 
-                                                      dest.type === 'airport' ? 'bg-purple-100 text-purple-800' : 
-                                                      'bg-gray-100 text-gray-800'}
+                                                    ${dest.type === 'city' ? 'bg-blue-100 text-blue-800' :
+                                                        dest.type === 'hotel' ? 'bg-green-100 text-green-800' :
+                                                            dest.type === 'airport' ? 'bg-purple-100 text-purple-800' :
+                                                                'bg-gray-100 text-gray-800'}
                                                 `}>
                                                     {dest.type}
                                                 </span>
@@ -227,7 +227,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
             <div className="flex-1 min-w-0">
                 <div className='flex items-center gap-2 mb-2'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" />
                     </svg>
                     <label className="text-sm font-medium text-gray-700">Stay Period</label>
                 </div>
@@ -242,7 +242,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
             <div className="relative flex-1 min-w-0">
                 <div className='flex items-center gap-2 mb-2'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
                     <label className="text-sm font-medium text-gray-700">Rooms & Guests</label>
                 </div>
@@ -255,7 +255,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                 </div>
 
                 {showOccupancy && (
-                    <div 
+                    <div
                         className="absolute z-30 bg-white border border-gray-300 rounded-lg shadow-lg mt-2 p-6 w-80 right-0 lg:right-auto lg:left-0"
                         onBlur={() => setShowOccupancy(false)}
                         tabIndex={0}
@@ -277,11 +277,10 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                 <div className="flex items-center gap-3">
                                     <button
                                         type="button"
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                                            disabled 
-                                                ? 'bg-gray-50 text-gray-300 cursor-not-allowed' 
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${disabled
+                                                ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
                                                 : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                                        }`}
+                                            }`}
                                         onClick={() => !disabled && setter(Math.max(min, value - 1))}
                                         disabled={disabled}
                                     >−</button>
@@ -290,18 +289,17 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                     </span>
                                     <button
                                         type="button"
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                                            disabled 
-                                                ? 'bg-gray-50 text-gray-300 cursor-not-allowed' 
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${disabled
+                                                ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
                                                 : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                                        }`}
+                                            }`}
                                         onClick={() => !disabled && setter(Math.min(max, value + 1))}
                                         disabled={disabled}
                                     >+</button>
                                 </div>
                             </div>
                         ))}
-                        
+
                         {/* Children Ages Section */}
                         {children > 0 && (
                             <div className="mt-4 pt-4 border-t border-gray-200">
@@ -331,7 +329,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                 </div>
                             </div>
                         )}
-                        
+
                         <div className="flex justify-end mt-4 pt-4 border-t border-gray-200">
                             <button
                                 type='button'
@@ -344,14 +342,13 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                 )}
             </div>
 
-            <button 
-                type="submit"
-                className='flex items-center justify-center gap-2 rounded-lg bg-[#FF6B6B] hover:bg-[#e56060] 
-                py-3 px-6 text-white font-medium cursor-pointer transition-colors lg:flex-shrink-0 lg:self-end'>
-                <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
-                </svg>
-                <span>Search</span>
+            <button type="submit" className="CartBtn lg:self-end">
+                <span className="IconContainer">
+                    <svg className="icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                    </svg>
+                </span>
+                <span className="text">Search</span>
             </button>
         </form>
     )
