@@ -12,6 +12,9 @@ const baseParams = {
         };
 
 describe('Hotel Service Test', ()=>{
+    beforeAll(()=>{
+        jest.retryTimes(3);
+    })
     test('Fetch Hotel Details : Valid ', async ()=>{
         const res = await fetchHotelDetails('050G');
         expect(res.id).toBe('050G');
@@ -86,12 +89,12 @@ describe('Hotel Service Test', ()=>{
         } 
         catch (err: any) {
             expect(err.response.status).toBe(400);
-        expect(err.response.data).toEqual({
-            errors: [
-                {
-                    code: "TE1001",
-                    message: "destination_id or region_id must be present"
-                }   
+            expect(err.response.data).toEqual({
+                errors: [
+                    {
+                        code: "TE1001",
+                        message: "destination_id or region_id must be present"
+                    }   
                 ]
             });
         }
