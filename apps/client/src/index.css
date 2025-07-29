@@ -8,7 +8,7 @@
 }
 
 
-*{
+* {
   font-family: Outfit;
 }
 
@@ -16,7 +16,7 @@
   font-family: Playfair !important;
 }
 
-.font-poppins{
+.font-poppins {
   font-family: Poppins !important;
 }
 
@@ -31,6 +31,7 @@
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -46,8 +47,85 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* .loader {
+  width: 28px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #F10C49;
+  animation: l9 2s infinite;
+}
+
+@keyframes l9 {
+  0%   {box-shadow: 0 -16px #F4DD51, 11.3px -11.3px #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
+  12.5%{box-shadow: 0 0 #F4DD51, 11.3px -11.3px #E3AAD6, 16px 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
+  25%  {box-shadow: 0 0 #F4DD51, 0 0 #E3AAD6, 16px 0 #F4DD51, 11.3px 11.3px #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
+  37.5%{box-shadow: 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 11.3px 11.3px #E3AAD6, 0 16px #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
+  50%  {box-shadow: 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 16px #F4DD51, -11.3px 11.3px #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
+  62.5%{box-shadow: 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, -11.3px 11.3px #E3AAD6, -16px 0 #F4DD51, 0 0 #E3AAD6}
+  75%  {box-shadow: 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, -16px 0 #F4DD51, -11.3px -11.3px #E3AAD6}
+  87.5%{box-shadow: 0 -16px #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, -11.3px -11.3px #E3AAD6}
+  100% {box-shadow: 0 -16px #F4DD51, 11.3px -11.3px #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
+} */
+
+.loader {
+  width: 90px;
+  height: 90px;
+  position: relative;
+  background: #FFF;
+  border: 4px solid black;
+  border-radius: 50%;
+  transform: rotate(45deg);
+  animation: rotate 2s linear infinite;
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 15px;
+  height: 30px;
+  background: #FF3D00;
+  transform: skew(5deg, 60deg) translate(-50%, -5%);
+}
+
+.loader:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FFF;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(45deg)
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: rotate(230deg)
+  }
+
+  40%,
+  60%,
+  80% {
+    transform: rotate(240deg)
+  }
+
+  100% {
+    transform: rotate(245deg)
   }
 }
