@@ -74,6 +74,13 @@
   100% {box-shadow: 0 -16px #F4DD51, 11.3px -11.3px #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6, 0 0 #F4DD51, 0 0 #E3AAD6}
 } */
 
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .loader {
   width: 90px;
   height: 90px;
@@ -92,7 +99,7 @@
   top: 50%;
   width: 15px;
   height: 30px;
-  background: #FF3D00;
+  background: #FF6B6B;
   transform: skew(5deg, 60deg) translate(-50%, -5%);
 }
 
@@ -107,6 +114,14 @@
   background: #FFF;
   transform: translate(-50%, -50%);
 }
+
+.loading-text {
+  margin-top: 16px;
+  font-size: 18px;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+}
+
 
 @keyframes rotate {
   0% {
