@@ -23,7 +23,7 @@ const StarRatingFilter: React.FC<StarRatingFilterProps> = ({
             </label>
             <div className="space-y-2">
                 {[5, 4, 3, 2, 1].map((rating) => (
-                    <label data-cy={`starsCount-${rating}`} key={rating} className="flex items-center gap-2 cursor-pointer">
+                    <label key={rating} className="flex items-center gap-2 cursor-pointer">
                         <input
                             type="checkbox"
                             checked={selectedStarRatings.includes(rating)}

@@ -156,10 +156,7 @@ export default function SearchResultsPage(){
                                     <div className="w-48 h-8 bg-gray-200 rounded shimmer"></div>
                                 </div>
                                 
-                                <ul className="list-none p-0 m-0 flex flex-col gap-4"
-                                    data-cy={'Loading'}
-                                    data-class={'HotelCardSkele'}
-                                    >
+                                <ul className="list-none p-0 m-0 flex flex-col gap-4">
                                     {[...Array(6)].map((_, index) => (
                                         <HotelCardSkeleton key={index} />
                                     ))}
@@ -292,7 +289,6 @@ export default function SearchResultsPage(){
                                                     <label className="inline-flex items-center cursor-pointer">
                                                         <input
                                                             type="checkbox"
-                                                            data-cy={'toggle-stay-night'}
                                                             checked={showTotalPrice}
                                                             onChange={(e) => setShowTotalPrice(e.target.checked)}
                                                             className="sr-only"
@@ -310,9 +306,7 @@ export default function SearchResultsPage(){
                                     </div>
                                 </div>
                                 
-                                <ul className="list-none p-0 m-0 flex flex-col gap-4"
-                                    data-cy={'HotelListings'}
-                                >
+                                <ul className="list-none p-0 m-0 flex flex-col gap-4">
                                     {displayedHotels.slice(0, visibleCount).map(h => (
                                         <HotelCard
                                             key={h.id}
@@ -336,7 +330,6 @@ export default function SearchResultsPage(){
                                 {visibleCount < displayedHotels.length && (
                                     <div className="text-center mt-8 p-5">
                                         <button 
-                                        data-cy={'LoadMoreHotels'}
                                             className="bg-blue-600 text-white border-none px-6 py-3 text-sm font-medium rounded cursor-pointer transition-colors duration-200 ease-in-out min-w-[160px] hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                                             onClick={() => setVisibleCount((prev) => prev + 10)}
                                             disabled={visibleCount >= displayedHotels.length}

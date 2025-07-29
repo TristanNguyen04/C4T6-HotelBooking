@@ -6,12 +6,13 @@ interface LayoutProps {
     children: React.ReactNode;
     showHero?: boolean;
     heroContent?: React.ReactNode;
+    showNavBar?: boolean;
 }
 
-export default function Layout({ children, showHero = false, heroContent }: LayoutProps) {
+export default function Layout({ children, showHero = false, heroContent, showNavBar = true }: LayoutProps) {
     return (
         <div>
-            <NavBar />
+            {showNavBar && <NavBar />}
             {showHero && (
                 <Hero>
                     {heroContent}

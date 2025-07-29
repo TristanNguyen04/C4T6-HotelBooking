@@ -76,10 +76,7 @@ export default function HotelCard({
                                 {hotel.rating && (
                                     <div className="flex items-center gap-1 mb-2">
                                         {renderStars(hotel.rating)}
-                                        <span 
-                                            className="text-sm text-gray-600 ml-1" data-cy={'star-rating'}>({hotel.rating})
-                                            
-                                        </span>
+                                        <span className="text-sm text-gray-600 ml-1">({hotel.rating})</span>
                                     </div>
                                 )}
                                 <h3 className="text-xl font-semibold text-gray-900 mb-1">{hotel.name}</h3>
@@ -94,10 +91,7 @@ export default function HotelCard({
                                 const ratingDisplay = getGuestRatingDisplay(hotel.categories.overall.score);
                                 return ratingDisplay ? (
                                     <div className="flex-shrink-0">
-                                        <span 
-                                            className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ${ratingDisplay.bgColor} ${ratingDisplay.textColor} ${ratingDisplay.borderColor} border`}
-                                            data-cy={'rating-text'}
-                                            >
+                                        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ${ratingDisplay.bgColor} ${ratingDisplay.textColor} ${ratingDisplay.borderColor} border`}>
                                             <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M10 18l-1.45-1.32C5.4 14.36 2 11.28 2 7.5 2 5.42 3.42 4 5.5 4c1.74 0 3.41.81 4.5 2.09C11.59 4.81 13.26 4 15 4 17.58 4 19 5.42 19 7.5c0 3.78-3.4 6.86-6.55 9.18L10 18z" clipRule="evenodd" />
                                             </svg>
@@ -118,10 +112,9 @@ export default function HotelCard({
                         )}
 
                         {amenityKeys.length > 0 && (
-                            <div className="flex flex-wrap gap-1" data-cy={'AmenityList'}>
+                            <div className="flex flex-wrap gap-1">
                                 {previewAmenities.map((key) => (
                                     <span 
-                                        data-cy={'preview-amenities'}
                                         key={key}
                                         className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                                     >
@@ -162,7 +155,7 @@ export default function HotelCard({
 
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
                         <div className="text-right">
-                            <p className="text-2xl font-bold text-gray-900" data-cy={'hotel-price'}>
+                            <p className="text-2xl font-bold text-gray-900">
                                 {hotel.currency} {showTotalPrice ? hotel.totalPrice : hotel.price}
                             </p>
                             <p className="text-sm text-gray-500">

@@ -125,3 +125,18 @@ export const checkVerificationStatus = async (req: Request, res: Response) => {
 
     res.json({ isVerified: user.isVerified });
 }
+
+
+export const getUID = async (req: Request, res: Response)=>{
+    console.log("Query received:", req.query);
+    const { email } = req.query;
+    if(!email || typeof email !== 'string'){
+        return res.status(400).json({error: 'Email not in use'});
+    }
+
+    const user = await prisma.user.findFirst({
+        where: {email : email}
+    })
+    console.log(JSON.stringify(user));
+    res.json({token: user?.verificationToken});
+}

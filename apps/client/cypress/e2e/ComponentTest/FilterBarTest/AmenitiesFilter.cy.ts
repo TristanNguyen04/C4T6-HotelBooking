@@ -12,9 +12,7 @@ describe("Amenities Filter", () => {
             cy.wrap($amenityList).then(($list) => {
               const hasToolTip = $list.find("span[data-tooltip-id]").length > 0;
               if (hasToolTip) {
-                cy.wrap($list)
-                  .find("span[data-tooltip-id]")
-                  .each(($span) => {
+                cy.wrap($list).find("span[data-tooltip-id]").each(($span) => {
                     cy.wrap($span).trigger("mouseover");
                     const toolTipId = $span.attr("data-tooltip-id");
                     cy.get(`#${toolTipId}`)

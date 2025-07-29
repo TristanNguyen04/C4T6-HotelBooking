@@ -19,10 +19,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, hotelCount }) => {
                     />
                 ))}
             </div>
-            <span 
-                className="text-xs text-gray-500 ml-2"
-                data-cy={`hotel-count-${rating}`}
-            >({hotelCount})</span>
+            <span className="text-xs text-gray-500 ml-2">({hotelCount})</span>
         </div>
     );
 };

@@ -140,7 +140,6 @@ export default function DateRangePicker({
     return (
         <div className="relative w-full">
             <div
-                data-cy="stay-period-toggle"
                 onClick={onToggle}
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm cursor-pointer bg-white 
                 hover:border-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
@@ -154,7 +153,6 @@ export default function DateRangePicker({
                     <div className="flex justify-between items-center mb-4">
                         <button
                             type="button"
-                            data-cy={`calendar-previous-month`}
                             onClick={() => navigateMonth('prev')}
                             className="p-1 rounded hover:bg-gray-100"
                         >
@@ -162,12 +160,11 @@ export default function DateRangePicker({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                         </button>
-                        <h3 className="text-lg font-semibold" data-cy={`stay-period-month`}>
+                        <h3 className="text-lg font-semibold">
                             {currentMonth.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
                         </h3>
                         <button
                             type="button"
-                            data-cy={`calendar-next-month`}
                             onClick={() => navigateMonth('next')}
                             className="p-1 rounded hover:bg-gray-100"
                         >

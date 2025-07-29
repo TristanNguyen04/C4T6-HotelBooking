@@ -88,11 +88,10 @@ const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         <div className="mb-1">
             <div className="relative h-7">
                 {/* Price labels */}
-                <div data-cy={'price-slider-info'} 
-                    className="absolute -top-2 left-0 flex justify-between w-full text-xs text-gray-500">
-                    <span data-cy={'minPrice'} className="font-medium">${Math.floor(actualMinPrice)}</span>
+                <div className="absolute -top-2 left-0 flex justify-between w-full text-xs text-gray-500">
+                    <span className="font-medium">${Math.floor(actualMinPrice)}</span>
                     <span className="font-medium">${Math.floor((actualMinPrice + actualMaxPrice) / 2)}</span>
-                    <span data-cy={'maxPrice'} className="font-medium">${Math.ceil(actualMaxPrice)}</span>
+                    <span className="font-medium">${Math.ceil(actualMaxPrice)}</span>
                 </div>
                 
                 {/* Track background */}

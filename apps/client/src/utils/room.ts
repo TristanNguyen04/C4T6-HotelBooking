@@ -4,10 +4,21 @@ import type { Room } from '../types/hotel';
 
 export function parseRoomJson(json: Room) {
     const html = json.long_description;
+    
+    if (!html || typeof html !== 'string') {
+        return {
+            roomDetails: {},
+            additionalInfo: {
+                checkInInstructions: [],
+                knowBeforeYouGo: [],
+                feesOptional: { items: [] }
+            }
+        };
+    }
+    
     const $ = cheerio.load(html);
 
-    // Initialize the result object with proper typing
-    const extracted: any = {};
+    const extracted: Record<string, string> = {};
 
     // 1. Extract Room Type (inside <p><strong>...</strong></p>)
     const strongText = $('p strong').first().text().trim();
