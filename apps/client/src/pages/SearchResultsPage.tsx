@@ -156,7 +156,9 @@ export default function SearchResultsPage(){
                                     <div className="w-48 h-8 bg-gray-200 rounded shimmer"></div>
                                 </div>
                                 
-                                <ul className="list-none p-0 m-0 flex flex-col gap-4">
+                                <ul className="list-none p-0 m-0 flex flex-col gap-4"
+                                    data-cy={'Loading'}
+                                    data-class={'HotelCardSkele'}>
                                     {[...Array(6)].map((_, index) => (
                                         <HotelCardSkeleton key={index} />
                                     ))}
@@ -306,7 +308,8 @@ export default function SearchResultsPage(){
                                     </div>
                                 </div>
                                 
-                                <ul className="list-none p-0 m-0 flex flex-col gap-4">
+                                <ul className="list-none p-0 m-0 flex flex-col gap-4"
+                                data-cy={'HotelListings'}>
                                     {displayedHotels.slice(0, visibleCount).map(h => (
                                         <HotelCard
                                             key={h.id}
@@ -330,6 +333,7 @@ export default function SearchResultsPage(){
                                 {visibleCount < displayedHotels.length && (
                                     <div className="text-center mt-8 p-5">
                                         <button 
+                                            data-cy={'LoadMoreHotels'}
                                             className="bg-blue-600 text-white border-none px-6 py-3 text-sm font-medium rounded cursor-pointer transition-colors duration-200 ease-in-out min-w-[160px] hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                                             onClick={() => setVisibleCount((prev) => prev + 10)}
                                             disabled={visibleCount >= displayedHotels.length}

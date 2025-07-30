@@ -73,22 +73,29 @@ export function navigateToHotelListing(){
   cy.visit('/');
   cy.wait(1000);
   cy.get('input[type=text]').type('Singapr'); 
-  cy.get('[data-cy=DestinationSuggestions').eq(2).click(); // use eq() for the second item in the list
+  cy.get('[data-cy=DestinationSuggestions]').eq(2).click(); // use eq() for the second item in the list
 
   // select the date
   const today = new Date();
   const formatMonth = (date:Date) => date.toLocaleDateString('en-GB' , {month: "long" , year: "numeric"});
-  const currentMonth = formatMonth(today);
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   // Format dates to match your component's output (dd/MM/yyyy)
   const pad = (n) => (n < 10 ? '0' + n : n);
-  const todayDate = today.getDate();
-  const startDateStr = `${pad(todayDate)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
-  const endDateStr = `${pad(lastDayOfMonth)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
+  const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  const nextMonth = formatMonth(nextMonthDate);
+  const firstDay = 10;
+  const lastDayOfNextMonth = new Date(nextMonthDate.getFullYear(), nextMonthDate.getMonth() + 1, 0).getDate();
+  const startDateStr = `${pad(firstDay)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;
+  const endDateStr = `${pad(lastDayOfNextMonth)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;
+
   cy.get('[data-cy=stay-period-toggle]').click();
-  cy.get('[data-cy=stay-period-month').should('contain', currentMonth);
-  cy.contains('button', `${todayDate}`).click();
-  cy.contains('button', `${lastDayOfMonth}`).click();
+  cy.get('[data-cy=stay-period-month').should('contain', formatMonth(today));
+
+  cy.get('[data-cy=calendar-next-month]').click();
+  cy.get('[data-cy=stay-period-month]').should('contain', nextMonth);
+
+  cy.contains('button', `${firstDay}`).click();
+  cy.contains('button', `${lastDayOfNextMonth}`).click();
+
   cy.contains('button', 'Done').click();
   cy.get('[data-cy=stay-period-toggle]').should('contain.text', `${startDateStr} - ${endDateStr}`);
 

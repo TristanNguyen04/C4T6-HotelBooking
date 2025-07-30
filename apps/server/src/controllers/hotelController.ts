@@ -5,9 +5,6 @@ import axios from 'axios';
 export const calculateNights = (checkin: string, checkout: string) => {
     const checkinDate = new Date(checkin);
     const checkoutDate = new Date(checkout);
-    if(checkinDate > checkoutDate){
-        throw new Error('Checkin date is before Checkout date');
-    }
     return Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
 }
 
@@ -19,51 +16,45 @@ export const searchHotels = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required parameters' });
         }
 
-        try{
-            const nights = calculateNights(checkin as string, checkout as string);
-            const baseParams = {
-                destination_id,
-                checkin,
-                checkout,
-                guests,
-                currency,
-                lang,
-                landing_page: 'wl-acme-earn',
-                product_type: 'earn',
-                partner_id: '1089'
-            };
-    
-            const [hotels, prices] = await Promise.all([
-                fetchHotels(baseParams),
-                fetchHotelPrices(baseParams),
-            ]);
-    
-            const hotelsWithPrices = hotels.reduce((acc: any[], hotel: any) => {
-                const priceInfo = prices.hotels.find((price: any) => price.id == hotel.id);
-                if(priceInfo){
-                    const totalPrice = priceInfo?.price || 0;
-                    const pricePerNight = nights > 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;
-                    
-                    acc.push({
-                        ...hotel,
-                        price: pricePerNight, // Price per night
-                        totalPrice: totalPrice, // Total price for the stay
-                        nights: nights,
-                        currency: prices.currency || null,
-                    });
-                }
-                return acc;
-            }, []);
-    
-            res.json({
-                data: hotelsWithPrices,
-                completed: prices.completed
-            });
-        }
-        catch(e: any){
-            return res.status(500).json({error: 'Checkin date is before Checkout date'})
-        }
+        const nights = calculateNights(checkin as string, checkout as string);
+        const baseParams = {
+            destination_id,
+            checkin,
+            checkout,
+            guests,
+            currency,
+            lang,
+            landing_page: 'wl-acme-earn',
+            product_type: 'earn',
+            partner_id: '1089'
+        };
 
+        const [hotels, prices] = await Promise.all([
+            fetchHotels(baseParams),
+            fetchHotelPrices(baseParams),
+        ]);
+
+        const hotelsWithPrices = hotels.reduce((acc: any[], hotel: any) => {
+            const priceInfo = prices.hotels.find((price: any) => price.id == hotel.id);
+            if(priceInfo){
+                const totalPrice = priceInfo?.price || 0;
+                const pricePerNight = nights > 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;
+                
+                acc.push({
+                    ...hotel,
+                    price: pricePerNight, // Price per night
+                    totalPrice: totalPrice, // Total price for the stay
+                    nights: nights,
+                    currency: prices.currency || null,
+                });
+            }
+            return acc;
+        }, []);
+
+        res.json({
+            data: hotelsWithPrices,
+            completed: prices.completed
+        });
     } catch (error){
         res.status(500).json( {error: 'Error fetching hotel data' });
     }
