@@ -4,19 +4,31 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel as RawCarousel} from "react-responsive-carousel";
 import type {Hotel} from "../types/hotel";
 import default_hotel_image from "../assets/default_hotel_image.png";
-
+import { useNavigate ,  useLocation } from "react-router-dom";
 
 const Carousel = RawCarousel as unknown as React.ComponentType<any>;
+
 type HotelInfoWindowProps = {
   hotel: Hotel;
   onClose: () => void;
 };
 
 export default function HotelInfoWindow({ hotel, onClose }: HotelInfoWindowProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigateToDetails = () => {
+    const queryParams = location.search;
+    navigate(`/hotels/${hotel.id}/details${queryParams}`);
+  };
+
   return (
-    <InfoWindow position={{ lat:hotel.latitude, lng:hotel.longitude }} onCloseClick={onClose}>
+    <InfoWindow position={{ lat:parseFloat(hotel.latitude), lng:parseFloat(hotel.longitude)}} onCloseClick={onClose}>
       <div style={{ width: "300px"}}>
-        <div className="hotel-name">{hotel.name}</div> {/**maybe can use name to be onclick and link to hotel page */}
+        <div className="hotel-name text-orange-600 hover:underline hover:text-blue-800 cursor-pointer font-semibold text-lg mb-2" 
+        onClick={handleNavigateToDetails}>
+          {hotel.name}
+        </div> {/**maybe can use name to be onclick and link to hotel page */}
         {hotel.image_details.count > 0 ? (
             <Carousel showThumbs={false} showStatus={false} showIndicators={false} infiniteLoop autoPlay>
               {Array.from({ length: hotel.image_details.count }).map((_, index) => (

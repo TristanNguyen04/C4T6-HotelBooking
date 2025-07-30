@@ -33,7 +33,6 @@ function App(){
   return (
     <Routes>
       {/* Routes without layout */}
-      <Route path='/map' element={<Map/>}/>
       <Route path='/paymentSuccess' element={<PaymentSuccessPage/>}/>
       
       {/* Routes with layout */}

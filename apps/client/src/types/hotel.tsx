@@ -3,6 +3,8 @@ export type Hotel = {
     name: string;
     address: string;
     currency: string;
+    latitude: string;
+    longitude: string;
     price?: number;
     totalPrice?: number;
     nights?: number;
@@ -358,4 +360,13 @@ export interface PaymentItem {
   primaryGuestLastName: string;
   primaryGuestPhoneNumber: string;
   specialRequest?: string;
+}
+
+export interface Destination{
+    uid: string;
+    term: string;
+    lat: number;
+    lng: number;
+    state?: string;
+    type: 'city' | 'hotel' | 'airport';
 }

@@ -71,6 +71,7 @@ export function clickLoadMoreIfPresent() {
 
 export function navigateToHotelListing(){
   cy.visit('/');
+  cy.wait(1000);
   cy.get('input[type=text]').type('Singapr'); 
   cy.get('[data-cy=DestinationSuggestions').eq(2).click(); // use eq() for the second item in the list
 
@@ -100,4 +101,5 @@ export function navigateToHotelListing(){
   
   cy.get('[data-cy=HotelListings]', {timeout: 999999}).first().should('be.visible');
   clickLoadMoreIfPresent();
+  cy.wait(1000);
 }

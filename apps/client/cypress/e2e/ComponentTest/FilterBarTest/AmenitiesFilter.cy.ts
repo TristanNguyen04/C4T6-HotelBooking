@@ -36,7 +36,6 @@ describe("Amenities Filter", () => {
                 cy.wrap($amenityList).within(() => {
                   cy.get("span[data-cy=preview-amenities]").each(($span) => {
                     const entry = $span.text().trim();
-                    cy.log("fuck", entry);
                     if (amenityMap.has(entry)) {
                       amenityMap.set(entry, amenityMap.get(entry) + 1);
                     } else {
