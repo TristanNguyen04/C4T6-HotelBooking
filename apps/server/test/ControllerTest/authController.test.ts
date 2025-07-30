@@ -4,6 +4,7 @@ import prisma from '../../src/utils/prismaClient';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PassThrough } from 'stream';
+import { sendVerificationEmail } from '../../src/utils/sendEmail';
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 const testUserData = {
   email: 'testuser@example.com',
@@ -53,7 +54,7 @@ describe('Email Verification', ()=>{
     await prisma.user.deleteMany();
   });
   test('Email Verification Successful', async () => {
-    const register = await request(app).post('/api/auth/register').send(testUserData);
+    await request(app).post('/api/auth/register').send(testUserData);
     const user = await prisma.user.findUnique({ where: { email: testUserData.email } });
 
     const res = await request(app).get('/api/auth/verify-email').query({ token: user?.verificationToken });

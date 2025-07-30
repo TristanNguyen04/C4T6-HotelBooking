@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.49% </span>
+                <span class="strong">74.6% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/63</span>
+                <span class='fraction'>47/63</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.86% </span>
+                <span class="strong">53.48% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/43</span>
+                <span class='fraction'>23/43</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/10</span>
+                <span class='fraction'>8/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.81% </span>
+                <span class="strong">72.72% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/55</span>
+                <span class='fraction'>40/55</span>
             </div>
         
             
@@ -262,20 +262,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">729x</span>
-<span class="cline-any cline-yes">729x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">729x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -322,10 +322,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -394,7 +394,7 @@ export const calculateNights = (checkin: string, checkout: string) =&gt; {
 &nbsp;
 export const searchHotels = async (req: Request, res: Response) =&gt; {
     try {
-        const { destination_id, checkin, checkout, guests, currency='SGD', lang='en_US'} = req.query;
+        const { destination_id, checkin, checkout, guests, currency=<span class="branch-0 cbranch-no" title="branch not covered" >'SGD',</span> lang=<span class="branch-0 cbranch-no" title="branch not covered" >'en_US'}</span> = req.query;
 &nbsp;
         if(!destination_id || !checkin || !checkout || !guests){
             return res.status(400).json({ error: 'Missing required parameters' });
@@ -420,17 +420,17 @@ export const searchHotels = async (req: Request, res: Response) =&gt; {
             ]);
     
             const hotelsWithPrices = hotels.reduce((acc: any[], hotel: any) =&gt; {
-                const priceInfo = prices.hotels.find(<span class="fstat-no" title="function not covered" >(p</span>rice: any) =&gt; <span class="cstat-no" title="statement not covered" >price.id == hotel.id)</span>;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if(priceInfo){
-                    const totalPrice = <span class="cstat-no" title="statement not covered" >priceInfo?.price || 0;</span>
-                    const pricePerNight = <span class="cstat-no" title="statement not covered" >nights &gt; 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;</span>
+                const priceInfo = prices.hotels.find((price: any) =&gt; price.id == hotel.id);
+                if(priceInfo){
+                    const totalPrice = priceInfo<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>rice || <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
+                    const pricePerNight = nights &gt; 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >Math.round((totalPrice / nights) * 100) / 100 </span>: totalPrice;
                     
-<span class="cstat-no" title="statement not covered" >                    acc.push({</span>
+                    acc.push({
                         ...hotel,
                         price: pricePerNight, // Price per night
                         totalPrice: totalPrice, // Total price for the stay
                         nights: nights,
-                        currency: prices.currency || null,
+                        currency: prices.currency || <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
                     });
                 }
                 return acc;
@@ -453,7 +453,7 @@ export const searchHotels = async (req: Request, res: Response) =&gt; {
 export const getHotelDetails = async (req: Request, res: Response) =&gt; {
     try {
         const { id } = req.params;
-        const { destination_id, checkin, checkout, guests, currency='SGD', lang='en_US'} = req.query;
+        const { destination_id, checkin, checkout, guests, currency=<span class="branch-0 cbranch-no" title="branch not covered" >'SGD',</span> lang=<span class="branch-0 cbranch-no" title="branch not covered" >'en_US'}</span> = req.query;
 &nbsp;
         if(!checkin || !checkout || !guests){
             return res.status(400).json({ error: 'Missing required paramaters' });
@@ -479,11 +479,11 @@ export const getHotelDetails = async (req: Request, res: Response) =&gt; {
         ]);
 &nbsp;
         // Process room pricing to convert total prices to per-night prices
-        const processedRooms = roomPricing.rooms<span class="branch-0 cbranch-no" title="branch not covered" >?.m</span>ap(<span class="fstat-no" title="function not covered" >(r</span>oom: any) =&gt; {
-            const totalPrice = <span class="cstat-no" title="statement not covered" >room.price || 0;</span>
-            const pricePerNight = <span class="cstat-no" title="statement not covered" >nights &gt; 0 ? Math.round((totalPrice / nights) * 100) / 100 : totalPrice;</span>
+        const processedRooms = roomPricing.rooms<span class="branch-0 cbranch-no" title="branch not covered" >?.m</span>ap((room: any) =&gt; {
+            const totalPrice = room.price || <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
+            const pricePerNight = nights &gt; 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >Math.round((totalPrice / nights) * 100) / 100 </span>: totalPrice;
             
-<span class="cstat-no" title="statement not covered" >            return {</span>
+            return {
                 ...room,
                 converted_price: pricePerNight, // Per-night price
                 lowest_converted_price: totalPrice, // Total price for the stay
@@ -544,7 +544,7 @@ export const searchHotelUsingDest = <span class="fstat-no" title="function not c
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-29T09:45:20.116Z
+                at 2025-07-30T06:34:39.096Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

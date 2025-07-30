@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import prisma from './prismaClient';
 
 const transporter = nodemailer.createTransport({ 
     host: process.env.SMTP_HOST,
@@ -10,6 +11,9 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendVerificationEmail = async (to: string, token: string) => {
+    if(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'jest'){
+        return;
+    }
     const verifyUrl = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
 
     const htmlContent = `

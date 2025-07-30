@@ -8,7 +8,8 @@
     "cypress/e2e/**/*.ts",
     "cypress/e2e/**/*.tsx",
     "cypress/component/**/*.ts",
-    "cypress/component/**/*.tsx"
+    "cypress/component/**/*.tsx",
+    "cypress/helper/**/*.ts",
   ],
 
   "compilerOptions": {

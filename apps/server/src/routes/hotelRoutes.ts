@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { searchHotels, getHotelDetails } from '../controllers/hotelController';
 import {searchLocationRadius} from '../controllers/destinationController';
-import { searchHotelUsingDest } from '../controllers/hotelController';
+// import { searchHotelUsingDest } from '../controllers/hotelController';
 const router = Router();
 
 router.get('/hotels/search', searchHotels);

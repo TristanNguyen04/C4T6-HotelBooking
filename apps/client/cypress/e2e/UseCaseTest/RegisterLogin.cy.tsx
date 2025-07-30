@@ -1,8 +1,3 @@
-import React from "react";
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
-
 describe('Log in E2E', ()=>{
     
     it('Register and verify successfully',  ()=>{
