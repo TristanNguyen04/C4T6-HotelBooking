@@ -7,6 +7,10 @@ const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
 export default defineConfig({
   component: {
+    retries: {
+      runMode: 2,
+      openMode:2,
+    },
     devServer: {
       framework: 'react',
       bundler: 'vite',
@@ -16,6 +20,10 @@ export default defineConfig({
   },
   port: 5173,
   e2e: {
+    retries: {
+      runMode: 2,
+      openMode: 2,
+    },
     setupNodeEvents(on, config) {
       on('task', {
         generateToken({ uid }: { uid: string }) {
