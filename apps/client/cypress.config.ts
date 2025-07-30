@@ -1,6 +1,7 @@
 import { defineConfig } from 'cypress';
 import path from 'path';
 import jwt from 'jsonwebtoken';
+import viteConfig from './vite.config'; // import your vite config here
 
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
@@ -9,10 +10,11 @@ export default defineConfig({
     devServer: {
       framework: 'react',
       bundler: 'vite',
-      viteConfig: path.resolve('apps/client/vite.config.ts'), // <-- point to your vite config
+      viteConfig,  // <-- pass imported vite config directly
     },
     specPattern: 'cypress/component/**/*.cy.{ts,tsx,js,jsx}',
   },
+  port: 5173,
   e2e: {
     setupNodeEvents(on, config) {
       on('task', {
@@ -23,4 +25,4 @@ export default defineConfig({
     },
     baseUrl: 'http://localhost:5173',
   },
-})
+});

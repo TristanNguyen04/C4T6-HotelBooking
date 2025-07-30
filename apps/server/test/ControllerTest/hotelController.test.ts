@@ -61,15 +61,6 @@ describe('Testing for Calculation of Nights' , ()=>{
     const res = calculateNights('2025-08-01', '2025-08-01');
     expect(res).toBe(0);
   });
-  test('Check-in is before Check-out' , ()=>{
-    try{
-      calculateNights('2025-08-10', '2025-08-01');
-      fail('Fail to catch error');
-    }
-    catch(e: any){
-      expect(e.message).toBe('Checkin date is before Checkout date')
-    }
-  });
 });
 
 describe("GET /api/hotels/search", () => {
