@@ -1,42 +1,42 @@
-name: Run Frontend Tests
+  name: Run Frontend Tests
 
-on:
-  pull_request:
-    branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
-  push:
-    branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
+  on:
+    pull_request:
+      branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
+    push:
+      branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
 
-jobs:
-  test-frontend:
-    runs-on: ubuntu-latest
+  jobs:
+    test-frontend:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        - name: Use Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
 
-      - name: Clean and install fresh dependencies in root
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
+        - name: Clean and install fresh dependencies in root
+          run: |
+            rm -rf node_modules package-lock.json
+            npm install
 
-      - name: Generate Prisma
-        run: cd apps/server && npx prisma generate
+        - name: Generate Prisma
+          run: cd apps/server && npx prisma generate
 
-      - name: Start frontend server
-        run: |
-          npm start &
-          sleep 10
+        - name: Start Server
+          run: |
+            npm run start:test &
+            sleep 10
 
-      - name: Run Cypress component tests
-        run: cd apps/client && npx cypress run --component
-      
-      - name: Run Cypress e2e tests
-        run: cd apps/client && npx cypress run
-
-
+        - name: Run Cypress component tests
+          run: cd apps/client && npx cypress run --component
         
+        - name: Run Cypress e2e tests
+          run: cd apps/client && npx cypress run
+
+
+          
