@@ -138,6 +138,16 @@ describe("GET /api/hotels/search", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: "Missing required parameters" });
   });
+  // Test 5
+  test("Unexpected Error Thrown", async () => {
+    (fetchHotelPrices as jest.Mock).mockRejectedValueOnce(Error('Unexpected Error'));
+    const incompleteQuery: Partial<typeof queryParams> = { ...queryParams };
+    delete incompleteQuery.guests;
+    const res = await request(app).get("/api/hotels/search").query(queryParams);
+
+    expect(res.statusCode).toBe(500);
+    expect(res.body.error).toEqual('Error fetching hotel data');
+  });
 });
 
 describe("GET /api/hotels/:id/details", () => {
@@ -203,6 +213,28 @@ describe("GET /api/hotels/:id/details", () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: "Missing required paramaters" });
+  });
+
+  test('Returns 400 if required query params are missing', async () => {
+    (fetchHotelDetails as jest.Mock).mockResolvedValue(mockHotelInfo);
+    (fetchHotelRoomPrices as jest.Mock).mockRejectedValue({
+      isAxiosError: true,
+      response: { status: 422 },
+    });
+    const res = await request(app).get("/api/hotels/050G/details").query(queryParams);
+    expect(res.status).toBe(422);
+    expect(res.body.error).toBe('This hotel does not support price lookup for the given dates or guest configuration.');
+  });
+  test("Returns 500 on unexpected error", async () => {
+    (fetchHotelDetails as jest.Mock).mockResolvedValue(mockHotelInfo);
+    (fetchHotelRoomPrices as jest.Mock).mockRejectedValue(new Error("Unexpected"));
+
+    const res = await request(app)
+      .get("/api/hotels/050G/details")
+      .query(queryParams);
+
+    expect(res.status).toBe(500);
+    expect(res.body.error).toBe("Error fetching hotel data");
   });
 
 });

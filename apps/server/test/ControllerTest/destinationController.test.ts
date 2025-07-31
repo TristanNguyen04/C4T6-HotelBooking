@@ -1,7 +1,8 @@
 import request from "supertest";
 import app from "../../src/index";
 import { searchLocationRadius } from "../../src/controllers/destinationController";
-
+import { fetchHotels } from "../../src/services/hotelService";
+import * as calculateDistance from '../../src/utils/calculateDistance';
 const catchSymbols = {
     term: "!@#$, ', :\"",
     type: "tree",
@@ -188,4 +189,85 @@ describe('Calculate Distance between two locations using Lat and Lng', ()=>{
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({error: "Invalid params"});
   });
+});
+
+jest.mock("../../src/services/hotelService", () => ({
+  fetchHotels: jest.fn(),
+}));
+
+const baseParams = {
+  destination_id: 'RsBU',
+  checkin: '2025-07-20', // dummy values
+  checkout: '2025-07-22',
+  guests: '1',
+  currency: 'SGD',
+  lang: 'en_US',
+  landing_page: 'wl-acme-earn',
+  product_type: 'earn',
+  partner_id: '1089'
+};
+
+const mockHotels = [
+    {id: '1', name: 'Hotel A'},
+    {id:'2', name: 'Hotel B'},
+]
+
+
+describe('Search Hotels using Destination', ()=>{
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('Successfully Search for Hotels with correct params', async()=>{
+    (fetchHotels as jest.Mock).mockResolvedValue(mockHotels)
+    const hotels = await request(app).get('/api/destinations/hotel').query(baseParams);
+    expect(hotels.body).toEqual(mockHotels);
+  });
+
+  test('Unexpected Error', async()=>{
+    (fetchHotels as jest.Mock).mockRejectedValueOnce(Error('Error'));
+    const hotels = await request(app).get('/api/destinations/hotel').query(baseParams);
+    expect(hotels.body.error).toEqual('Error fetching hotels');
+    expect(hotels.statusCode).toBe(500);
+  });
+  
+  test('Missing Parameter : destination_id', async()=>{
+    const {destination_id , ...incompleteParam} = baseParams
+    const hotels = await request(app).get('/api/destinations/hotel').query(incompleteParam);
+    expect(hotels.statusCode).toBe(400);
+    expect(hotels.body.error).toEqual('Missing destination_id parameter');
+  });
+  test('Missing Parameter : checkin', async()=>{
+    const {checkin , ...incompleteParam} = baseParams
+    const hotels = await request(app).get('/api/destinations/hotel').query(incompleteParam);
+    expect(hotels.statusCode).toBe(400);
+    expect(hotels.body.error).toEqual('Missing destination_id parameter');
+  });
+  test('Missing Parameter : checkout', async()=>{
+    const {checkout , ...incompleteParam} = baseParams
+    const hotels = await request(app).get('/api/destinations/hotel').query(incompleteParam);
+    expect(hotels.statusCode).toBe(400);
+    expect(hotels.body.error).toEqual('Missing destination_id parameter');
+  });
+  test('Missing Parameter : guests', async()=>{
+    const {guests , ...incompleteParam} = baseParams
+    const hotels = await request(app).get('/api/destinations/hotel').query(incompleteParam);
+    expect(hotels.statusCode).toBe(400);
+    expect(hotels.body.error).toEqual('Missing destination_id parameter');
+  });
+
+  test("should return 500 if calculateDistance throws an error", async () => {
+    jest.spyOn(calculateDistance, 'calculateDistance').mockImplementation(() => {
+      throw new Error("Something went wrong");
+    });
+
+    const res = await request(app).get('/api/destinations/nearby')
+      .query({ lat: '1.3521', lng: '103.8198', radius: '10' });
+
+      expect(res.body).toEqual({ error: "Internal Server Error" });
+      expect(res.status).toBe(500);
+
+    jest.restoreAllMocks();
+  });
+
 })
