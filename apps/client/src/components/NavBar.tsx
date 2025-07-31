@@ -77,7 +77,7 @@ const NavBar = () => {
     };
 
     return (
-        <nav className={`fixed top-0 left-0 w-full flex items-center bg-white justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${
+        <nav className={`fixed top-0 left-0 w-full flex items-center bg-white justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-[1100] ${
             isHomePage
                 ? (isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4" : "py-4 md:py-6")
                 : "bg-gray-500 shadow-md py-4 md:py-6"
@@ -120,7 +120,7 @@ const NavBar = () => {
                         
                         {/* Dropdown Menu */}
                         {isDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[1000]">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[1100]">
                                 <div className="px-4 py-2 border-b border-gray-100">
                                     <p className="text-sm font-medium text-gray-900 truncate">
                                         {user.name || user.email}
