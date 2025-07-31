@@ -178,7 +178,7 @@ const searchContext: SearchContext | null = useMemo(() => {
             if(hotel.rating <= 4){background = "orange"}
             if(hotel.rating <= 3){background = "red"}
             return (
-            <AdvancedMarker key={`${hotel.id}_${hotel.latitude}_${hotel.longitude}`}  position={{ lat: parseFloat(hotel.latitude), lng: parseFloat(hotel.longitude) }} 
+            <AdvancedMarker key={`${hotel.id}_${hotel.latitude}_${hotel.longitude}`}  position={{ lat: hotel.latitude, lng: hotel.longitude }} 
               onClick={()=> setSelectedHotelId(hotel.id)}>
               <Pin background={background} borderColor="orange" glyphColor="white" />
             </AdvancedMarker>
