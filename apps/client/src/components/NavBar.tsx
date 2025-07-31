@@ -14,8 +14,8 @@ const NavBar = () => {
 
     const location = useLocation();
     const isHomePage = location.pathname === '/';
-    const isCheckoutPage = location.pathname === '/checkout';
-    const isProfilePage = location.pathname === '/profile';
+    // const isCheckoutPage = location.pathname === '/checkout';
+    // const isProfilePage = location.pathname === '/profile';
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -73,8 +73,7 @@ const NavBar = () => {
 
     const handleBookingClick = () => {
         setIsDropdownOpen(false);
-        // TODO: Navigate to booking history page when it's created
-        console.log('Navigate to booking history page');
+        navigate('/bookings');
     };
 
     return (

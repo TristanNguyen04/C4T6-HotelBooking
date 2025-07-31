@@ -359,3 +359,22 @@ export interface PaymentItem {
   primaryGuestPhoneNumber: string;
   specialRequest?: string;
 }
+
+export interface BookingHistory {
+  id: string;
+  hotelId: string;
+  hotelName: string;
+  roomKey: string;
+  roomDescription: string;
+  roomImage?: string;
+  request?: string;
+  guestName: string;
+  guestNumber: string;
+  checkin: string;
+  checkout: string;
+  guests: string;
+  baseRateInCurrency: number;
+  includedTaxesAndFeesInCurrency: number;
+  createdAt: string;
+  stripeSessionId: string;
+}

@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import Map from '../src/pages/GoogleMap'
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import CheckoutPage from './pages/CheckoutPage';
+import BookingHistoryPage from './pages/BookingHistoryPage';
 
 function App(){
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ function App(){
       {/* Routes without layout */}
       <Route path='/map' element={<Map/>}/>
       <Route path='/paymentSuccess' element={<PaymentSuccessPage/>}/>
-      
+
       {/* Routes with layout */}
       <Route path='/' element={
         <Layout showHero={true} heroContent={<SearchBar onSubmit={handleSearchSubmit} />}>
@@ -71,6 +72,11 @@ function App(){
       <Route path='/register' element={
         <Layout showNavBar={true} showHero={false}>
           <RegisterPage/>
+        </Layout>
+      }/>
+      <Route path='/bookings' element={
+        <Layout showHero={false}>
+          <BookingHistoryPage/>
         </Layout>
       }/>
     </Routes>

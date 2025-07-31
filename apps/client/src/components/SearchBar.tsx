@@ -97,14 +97,12 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     // Update childrenAges array when children count changes
     useEffect(() => {
         if (children > childrenAges.length) {
-            // Add default ages (e.g., 5 years old) for new children
             const newAges = [...childrenAges];
             for (let i = childrenAges.length; i < children; i++) {
                 newAges.push(5);
             }
             setChildrenAges(newAges);
         } else if (children < childrenAges.length) {
-            // Remove extra ages when children count decreases
             setChildrenAges(childrenAges.slice(0, children));
         }
     }, [children, childrenAges]);
