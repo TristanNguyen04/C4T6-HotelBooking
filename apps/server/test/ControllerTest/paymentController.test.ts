@@ -3,8 +3,9 @@
 import request from "supertest";
 import app from "../../src/index";
 import stripe from "../../src/utils/stripeClient";
-import { mock } from "node:test";
+import { after, mock } from "node:test";
 import prisma from "../../src/utils/prismaClient";
+import { setupTest, tearDown } from "../helper/setup";
 
 // mock the stripe client
 jest.mock("../../src/utils/stripeClient", () => ({
@@ -17,49 +18,97 @@ jest.mock("../../src/utils/stripeClient", () => ({
 }));
 
 const item = {
-  name: "Marina Bay Sands - 6D5N - 05/05 to 11/05",
-  hotelId: "hotel1",
-  hotelName: "Marina Bay Sands",
-  checkin: "2025-05-05",
-  checkout: "2025-05-11",
-  guests: 2,
-  currency: "sgd",
-  price: 1200000,
-  quantity: 1,
-  image:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUgw1QcpVM_ETgHLuSxL9GMVLXULvNq4ePDg&s",
+  hotelId: "h123",
+  hotelName: "Grand Hotel",
+  roomKey: "R1",
+  roomDescription: "Sea View",
+  roomImage: "https://example.com/image.jpg",
+  request: "Late check-in",
+  guestName: "John Doe",
+  guestNumber: "12345678",
+  checkin: new Date().toISOString(),
+  checkout: new Date(Date.now() + 86400000).toISOString(),
+  guests: "2",
+  baseRateInCurrency: 100,
+  includedTaxesAndFeesInCurrency: 120
 };
 
+const metaData = {
+  userId: 'userId',
+  bookings: JSON.stringify([
+    {
+      hotelId: item.hotelId,
+      hotelName: item.hotelName,
+      roomKey: item.roomKey,
+      roomDescription: item.roomDescription,
+      roomImage: item.roomImage,
+      request: item.request,
+      guestName: item.guestName,
+      guestNumber: item.guestNumber,
+      checkin: "2025-08-05T00:00:00.000Z",
+      checkout: "2025-08-11T00:00:00.000Z",
+      guests: item.guests,
+      baseRateInCurrency: item.baseRateInCurrency,
+      includedTaxesAndFeesInCurrency: item.includedTaxesAndFeesInCurrency,
+    },
+  ]),
+};
+
+const bookingData = [
+    {
+      hotelId: item.hotelId,
+      hotelName: item.hotelName,
+      roomKey: item.roomKey,
+      roomDescription: item.roomDescription,
+      roomImage: item.roomImage,
+      specialRequest: item.request, // key should match controller code
+      guestName: item.guestName,
+      guestNumber: item.guestNumber,
+      checkin: new Date(item.checkin).toISOString(),
+      checkout: new Date(item.checkout).toISOString(),
+      guests: item.guests,
+      baseRateInCurrency: item.baseRateInCurrency,
+      includedTaxesAndFeesInCurrency: item.includedTaxesAndFeesInCurrency,
+    },
+  ];
+
 describe("POST /payment/checkout", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+  beforeEach(()=>{
+    jest.clearAllMocks()
+  })
+  let userId: string;
+  let token: string;
+  beforeAll(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
   });
+  afterAll(async ()=>{
+    await tearDown();
+  })
 
   const mockURL = "https://mockstripe.com/session";
   const mockStripe = stripe.checkout.sessions.create as jest.Mock;
-  mockStripe.mockResolvedValueOnce({
-    url: mockURL,
-  });
-
   // Test 1:
   test("Receive Post Request | Create Stripe Checkout Session", async () => {
+    mockStripe.mockResolvedValueOnce({ url: mockURL });
     const res = await request(app)
       // make post request to createCheckOutSession
-      .post("/payment/checkout")
+      .post("/api/payments/checkout")
       .send({
-        userId: "testUser123",
+        userId: userId,
         items: [item],
       });
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ url: mockURL });
-    expect(mockStripe).toHaveBeenCalledTimes(1);
+      expect(res.body).toEqual({ url: mockURL });
+      expect(mockStripe).toHaveBeenCalledTimes(1);
+      expect(res.statusCode).toBe(200);
   });
 
   // Test 2:
   test("No UserID", async () => {
     const res = await request(app)
-      .post("/payment/checkout")
+      .post("/api/payments/checkout")
       .send({
         items: [item],
       });
@@ -70,8 +119,8 @@ describe("POST /payment/checkout", () => {
 
   // Test 3:
   test("No item", async () => {
-    const res = await request(app).post("/payment/checkout").send({
-      userId: "testUser123",
+    const res = await request(app).post("/api/payments/checkout").send({
+      userId: userId,
       items: [],
     });
 
@@ -84,9 +133,9 @@ describe("POST /payment/checkout", () => {
     mockStripe.mockRejectedValueOnce(new Error("Stripe API Error"));
 
     const res = await request(app)
-      .post("/payment/checkout")
+      .post("/api/payments/checkout")
       .send({
-        userId: "testUser123",
+        userId: userId,
         items: [item],
       });
 
@@ -95,52 +144,43 @@ describe("POST /payment/checkout", () => {
   });
 });
 
-jest.mock("../../src/utils/prismaClient", () => ({
-  user: {
-    findUnique: jest.fn(),
-    create: jest.fn(),
-  },
-  booking: {
-    findFirst: jest.fn(),
-    create: jest.fn(),
-  },
-}));
-
-const metaData = {
-  userId: "testUser123",
-  bookings: JSON.stringify([
-    {
-      hotelId: "hotel1",
-      hotelName: "Marina Bay Sands",
-      checkin: "2025-05-05",
-      checkout: "2025-05-11",
-      guests: "2",
-      price: 1200000,
-      currency: "sgd",
-    },
-  ]),
-};
-
-describe("POST /payment/success", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe("POST /api/payments/success", () => {
+  beforeEach(()=>{
+    jest.clearAllMocks()
+  })
+  let userId: string;
+  let token: string;
+  beforeAll(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
   });
+  afterAll(async ()=>{
+    await tearDown();
+  })
 
   const mockURL = "https://mockstripe.com/session";
   const mockRetrieve = stripe.checkout.sessions.retrieve as jest.Mock;
 
   // Test 1
   test("Payment Success", async () => {
-    mockRetrieve.mockResolvedValueOnce({
-      payment_status: "paid",
-      metadata: metaData,
-    });
-    const res = await request(app)
-      .post("/payment/success")
-      .send({ sessionId: "1234" });
-    expect(res.statusCode).toBe(201);
-    expect(res.body).toEqual({ message: "Booking created successfully" });
+  const metaDataMock = {
+    userId: userId,
+    bookings: JSON.stringify(bookingData),
+  };
+
+  mockRetrieve.mockResolvedValueOnce({
+    payment_status: "paid",
+    metadata: metaDataMock,
   });
+  const res = await request(app)
+    .post("/api/payments/success")
+    .send({ sessionId: "1234" });
+
+  expect(res.body.message).toBe("Booking created successfully");
+  expect(res.statusCode).toBe(201);
+  expect(res.body.bookings.length).toBeGreaterThan(0);
+});
 
   // Test 2
   test("Payment Unsuccessful", async () => {
@@ -149,7 +189,7 @@ describe("POST /payment/success", () => {
       metadata: metaData,
     });
     const res = await request(app)
-      .post("/payment/success")
+      .post("/api/payments/success")
       .send({ sessionId: "1234" });
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: "Payment not completed" });
@@ -162,7 +202,7 @@ describe("POST /payment/success", () => {
       metadata: {},
     });
     const res = await request(app)
-      .post("/payment/success")
+      .post("/api/payments/success")
       .send({ sessionId: "1234" });
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({
@@ -178,7 +218,7 @@ describe("POST /payment/success", () => {
       metadata: modifiedMetaData,
     });
     const res = await request(app)
-      .post("/payment/success")
+      .post("/api/payments/success")
       .send({ sessionId: "1234" });
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({
@@ -188,52 +228,24 @@ describe("POST /payment/success", () => {
 
   // Test 5
   test("Booking Exist", async () => {
+  const metaDataMock = {
+    userId: userId,
+    bookings: JSON.stringify(bookingData),
+  };
+
     mockRetrieve.mockResolvedValueOnce({
       payment_status: "paid",
-      metadata: metaData,
+      metadata: metaDataMock,
     });
-
-    const mockFindFirst = prisma.booking.findFirst as jest.Mock;
-    mockFindFirst.mockResolvedValueOnce({
-      id: "existingBookingId", // some mock booking data
-      userId: "testUser123",
-      stripeSessionId: "1234",
-    });
-
-    // Mock prisma.booking.create to track if it's called (should not be)
-    const mockCreate = prisma.booking.create as jest.Mock;
 
     const res = await request(app)
-      .post("/payment/success")
+      .post("/api/payments/success")
       .send({ sessionId: "1234" });
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({
       message: "Bookings for this session already exist, skipping creation.",
     });
-    expect(mockFindFirst).toHaveBeenCalledTimes(1);
-    expect(mockCreate).not.toHaveBeenCalled();
-  });
-
-  // Test 6
-  test("Booking Not Exist -> Create Booking", async () => {
-    mockRetrieve.mockResolvedValueOnce({
-      payment_status: "paid",
-      metadata: metaData,
-    });
-    // Booking not found
-    (prisma.booking.findFirst as jest.Mock).mockResolvedValueOnce(null);
-    // Create new booking
-    (prisma.booking.create as jest.Mock).mockResolvedValue({
-      id: "newBookingId",
-    });
-    const res = await request(app)
-      .post("/payment/success")
-      .send({ sessionId: "1234" });
-
-    expect(res.statusCode).toBe(201);
-    expect(res.body).toEqual({ message: "Booking created successfully" });
-    expect(prisma.booking.create).toHaveBeenCalled();
   });
 
   // Test 7
@@ -241,7 +253,7 @@ describe("POST /payment/success", () => {
     mockRetrieve.mockRejectedValueOnce(new Error("Stripe API Failure"));
 
     const res = await request(app)
-      .post("/payment/success")
+      .post("/api/payments/success")
       .send({ sessionId: "1234" });
 
     expect(res.statusCode).toBe(500);

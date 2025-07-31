@@ -102,7 +102,7 @@ describe('Log In Flow',()=>{
     const res = await request(app).post('/api/auth/login').send(testUserData);
     const user = await prisma.user.findUnique({where: {email: testUserData.email}});
     const token = jwt.sign({ id:user?.id  }, JWT_SECRET, { expiresIn: '1d' });
-    expect(res.body).toEqual({token, user: {id: user?.id , email: user?.email , name: user?.name }});
+    expect(res.body).toEqual({token, user: {id: user?.id , email: user?.email , name: user?.name, isVerified: true }});
   });
 
   test('Log in Error: Sign Up first', async ()=>{
