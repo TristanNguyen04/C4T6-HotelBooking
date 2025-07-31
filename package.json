@@ -41,6 +41,7 @@
     "dotenv": "^16.5.0",
     "react-photo-album": "^3.1.0",
     "react-tooltip": "^5.29.1",
-    "stripe": "^18.2.1"
+    "stripe": "^18.2.1",
+    "wait-on": "^8.0.4"
   }
 }
