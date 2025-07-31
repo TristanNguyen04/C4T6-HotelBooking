@@ -30,7 +30,7 @@
         - name: Start Server
           run: |
             npm run start:test &
-            sleep 10
+            npx wait-on http://localhost:3000 http://localhost:5173
 
         - name: Run Cypress component tests
           run: cd apps/client && npx cypress run --component
