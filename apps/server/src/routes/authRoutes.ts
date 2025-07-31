@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, verifyEmail, resendVerificationEmail, checkVerificationStatus, getProfile, updateProfile, changePassword } from '../controllers/authController';
+import { register, login, verifyEmail, resendVerificationEmail, checkVerificationStatus, getProfile, updateProfile, changePassword, deleteAccount } from '../controllers/authController';
 import { authenticate } from '../middleware/auth';
 
 const router = Router();
@@ -14,5 +14,6 @@ router.get('/auth/check-verification', checkVerificationStatus);
 router.get('/auth/profile', authenticate, getProfile);
 router.patch('/auth/profile', authenticate, updateProfile);
 router.patch('/auth/change-password', authenticate, changePassword);
+router.delete('/auth/delete-account', authenticate, deleteAccount);
 
 export default router;

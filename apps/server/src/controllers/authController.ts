@@ -224,3 +224,36 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ error: 'Failed to change password' });
     }
 };
+
+export const deleteAccount = async (req: AuthRequest, res: Response) => {
+    try {
+        const { password } = req.body;
+
+        if (!password) {
+            return res.status(400).json({ error: 'Password is required to delete account' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: 'Invalid password' });
+        }
+
+        // Delete the user (bookings will be cascade deleted due to schema)
+        await prisma.user.delete({
+            where: { id: req.userId }
+        });
+
+        res.json({ message: 'Account deleted successfully' });
+    } catch (error) {
+        console.error('Delete account error:', error);
+        res.status(500).json({ error: 'Failed to delete account' });
+    }
+};
