@@ -14,7 +14,7 @@ import FilterBarSkeleton from "../components/FilterBarSkeleton";
 import { assets } from "../assets/assets";
 import { parseChildrenAges } from "../utils/age";
 
-import FullScreenLoader from "../components/ScreenLoader"; 
+// import FullScreenLoader from "../components/ScreenLoader"; 
 
 
 export default function SearchResultsPage(){
@@ -23,7 +23,7 @@ export default function SearchResultsPage(){
     const [params] = useSearchParams();
 
     //Preload state
-    const [initialLoading, setInitialLoading] = useState(true);
+    // const [initialLoading, setInitialLoading] = useState(true);
 
     const [displayedHotels, setDisplayedHotels] = useState<Hotel[]>([]);
 
@@ -65,14 +65,14 @@ export default function SearchResultsPage(){
         }
     )
 
-    useEffect(() => {
-        if (loading) {
-            const timeout = setTimeout(() => {
-                setInitialLoading(false);
-            }, 2000); // small buffer to prevent flashing
-            return () => clearTimeout(timeout);
-        }
-    }, [loading]);
+    // useEffect(() => {
+    //     if (loading) {
+    //         const timeout = setTimeout(() => {
+    //             setInitialLoading(false);
+    //         }, 2000); // small buffer to prevent flashing
+    //         return () => clearTimeout(timeout);
+    //     }
+    // }, [loading]);
 
     useEffect(() => {
         if(hotels && hotels.length > 0){
@@ -113,7 +113,7 @@ export default function SearchResultsPage(){
         setVisibleCount(10);
     }, [displayedHotels]);
 
-    if (initialLoading) return <FullScreenLoader />;
+    // if (initialLoading) return <FullScreenLoader />;
 
     return (
         <div className="min-h-screen bg-gray-100 w-screen m-0 p-0 box-border">
