@@ -1,42 +1,60 @@
-name: Run Frontend Tests
+  name: Run Frontend Tests
 
-on:
-  pull_request:
-    branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
-  push:
-    branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
+  on:
+    pull_request:
+      branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
+    push:
+      branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
 
-jobs:
-  test-frontend:
-    runs-on: ubuntu-latest
+  jobs:
+    test-frontend:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      services: 
+        postgres:
+          image: postgres:15
+          ports:
+            - 5432:5432
+          env:
+            POSTGRES_USER: hotelproject
+            POSTGRES_PASSWORD: hotelproject
+            POSTGRES_DB: db_test
+          options:
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-      - name: Clean and install fresh dependencies in root
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
+        - name: Use Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
 
-      - name: Generate Prisma
-        run: cd apps/server && npx prisma generate
+        - name: Clean and install fresh dependencies in root
+          run: |
+            rm -rf node_modules package-lock.json
+            npm install
 
-      - name: Start frontend server
-        run: |
-          npm start &
-          sleep 10
+        - name: Generate Prisma
+          run: cd apps/server && npx prisma generate
 
-      - name: Run Cypress component tests
-        run: cd apps/client && npx cypress run --component
-      
-      - name: Run Cypress e2e tests
-        run: cd apps/client && npx cypress run
+        - name: Run DB migrations
+          run: cd apps/server && npx prisma migrate deploy
 
+        - name: Start Server
+          run: |
+            npm run start:test &
+            npx wait-on http://localhost:3000 http://localhost:5173
 
+        - name: Run Cypress component tests
+          run: cd apps/client && npx cypress run --component
         
+        - name: Run Cypress e2e tests
+          run: cd apps/client && npx cypress run
+
+
+          

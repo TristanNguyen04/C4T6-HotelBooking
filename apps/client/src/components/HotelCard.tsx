@@ -1,17 +1,20 @@
 import { Tooltip } from 'react-tooltip';
 import type { Hotel, SearchContext } from '../types/hotel';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { assets } from '../assets/assets';
 import { renderStars } from '../utils/stars';
 import { formatAmenityName } from '../utils/amenity';
 import { getGuestRatingDisplay } from '../utils/guestRating';
+import GoogleMapPage from './map';
+import ReactDOM from "react-dom";
 
 interface HotelCardProps {
     hotel: Hotel;
     searchContext: SearchContext;
     showTotalPrice?: boolean;
 }
+
 
 export default function HotelCard({ 
     hotel,
@@ -34,6 +37,23 @@ export default function HotelCard({
 
         navigate(`/hotels/${hotel.id}/details?${queryParams}`);
     };
+    const [showMapPopup, setShowMapPopup] = useState(false);
+
+    const handleToggleMapPopup = () => {
+        setShowMapPopup(prev => !prev);
+    };
+
+      useEffect(() => {
+    if (showMapPopup) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    // Clean up on unmount
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showMapPopup]);
 
     const [imgSrc, setImgSrc] = useState(
         hotel.image_details
@@ -58,6 +78,7 @@ export default function HotelCard({
         .join(' • ');
         
     return (
+        <>
         <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200">
             <div className="flex flex-col sm:flex-row">
                 <div className="w-full h-48 sm:w-64 sm:h-72 bg-gray-100 flex-shrink-0">
@@ -76,10 +97,7 @@ export default function HotelCard({
                                 {hotel.rating && (
                                     <div className="flex items-center gap-1 mb-2">
                                         {renderStars(hotel.rating)}
-                                        <span 
-                                            className="text-sm text-gray-600 ml-1" data-cy={'star-rating'}>({hotel.rating})
-                                            
-                                        </span>
+                                        <span className="text-sm text-gray-600 ml-1" data-cy={'star-rating'}>({hotel.rating})</span>
                                     </div>
                                 )}
                                 <h3 className="text-xl font-semibold text-gray-900 mb-1">{hotel.name}</h3>
@@ -94,10 +112,8 @@ export default function HotelCard({
                                 const ratingDisplay = getGuestRatingDisplay(hotel.categories.overall.score);
                                 return ratingDisplay ? (
                                     <div className="flex-shrink-0">
-                                        <span 
-                                            className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ${ratingDisplay.bgColor} ${ratingDisplay.textColor} ${ratingDisplay.borderColor} border`}
-                                            data-cy={'rating-text'}
-                                            >
+                                        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ${ratingDisplay.bgColor} ${ratingDisplay.textColor} ${ratingDisplay.borderColor} border`}
+                                        data-cy={'rating-text'}>
                                             <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M10 18l-1.45-1.32C5.4 14.36 2 11.28 2 7.5 2 5.42 3.42 4 5.5 4c1.74 0 3.41.81 4.5 2.09C11.59 4.81 13.26 4 15 4 17.58 4 19 5.42 19 7.5c0 3.78-3.4 6.86-6.55 9.18L10 18z" clipRule="evenodd" />
                                             </svg>
@@ -158,6 +174,8 @@ export default function HotelCard({
                                 />
                             </div>
                         )}
+                        
+                        
                     </div>
 
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
@@ -172,15 +190,54 @@ export default function HotelCard({
                                 }
                             </p>
                         </div>
-                        <button
+                        
+                         <div className="flex gap-2">
+                            <button
+                            onClick={() => setShowMapPopup(true)}
+                            className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            >
+                            View on Map
+                            </button>
+
+                            <button
                             onClick={handleViewDetails}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        >
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            >
                             View Details
-                        </button>
+                            </button>
+                        </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
+
+        {showMapPopup && ReactDOM.createPortal(
+            <>
+                {/* Overlay */}
+                <div
+                className="fixed inset-0 bg-gray-500 bg-opacity-40 z-10"
+                onClick={() => setShowMapPopup(false)}
+                ></div>
+
+                {/* Modal popup */}
+                <div className="fixed z-50 bg-white border border-gray-300 shadow-xl p-4 rounded-lg w-[90vw] h-[90vh] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden flex flex-col"
+                style={{ zIndex: 9999 }}
+                >
+                <div className="flex justify-end mb-2">
+                    <button
+                    onClick={() => setShowMapPopup(false)}
+                    className="text-gray-500 hover:text-black text-xl font-bold"
+                    aria-label="Close map popup"
+                    >
+                    &times;
+                    </button>
+                </div>
+                <GoogleMapPage position={{ lat: parseFloat(hotel.latitude), lng: parseFloat(hotel.longitude) }} />
+                </div>
+            </>,
+            document.body
+            )}
+            </>
     );
 }

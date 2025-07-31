@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test DATABASE_URL='postgresql://hotelproject:hotelproject@localhost:5432/db_test' jest --verbose --runInBand",
+    "start:test": "cross-env NODE_ENV=test DATABASE_URL='postgresql://hotelproject:hotelproject@localhost:5432/db_test' ts-node src/index.ts",
+    "test": "cross-env NODE_ENV=jest DATABASE_URL='postgresql://hotelproject:hotelproject@localhost:5432/db_test' jest --verbose --runInBand",
     "build": "tsc",
     "dev": "ts-node-dev src/index.ts",
     "start": "ts-node src/index.ts"
@@ -23,7 +24,7 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.5",
     "prisma": "^6.11.1",
-    "stripe": "^18.3.0"
+    "stripe": "^18.4.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

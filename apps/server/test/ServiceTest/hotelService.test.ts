@@ -1,5 +1,4 @@
 import { fetchHotelDetails, fetchHotelPrices , fetchHotelRoomPrices , fetchHotels } from "../../src/services/hotelService";
-jest.setTimeout(20000);
 const baseParams = {
             destination_id: 'RsBU',
             checkin: '2025-08-10',
@@ -7,15 +6,21 @@ const baseParams = {
             guests: '2',
             currency: 'SGD',
             lang: 'en_US',
-            partner_id: '1',
+            landing_page: 'wl-acme-earn',
+            product_type: 'earn',
+            partner_id: '1089'
         };
+
 describe('Hotel Service Test', ()=>{
+    beforeAll(()=>{
+        jest.retryTimes(3);
+    })
     test('Fetch Hotel Details : Valid ', async ()=>{
         const res = await fetchHotelDetails('050G');
         expect(res.id).toBe('050G');
         expect(res.name).toBeDefined();
 
-    })
+    }, 20000)
     test('Fetch Hotel Details : Invalid Params', async () => {
     try {
         await fetchHotelDetails('////');
@@ -33,24 +38,8 @@ describe('Hotel Service Test', ()=>{
         }
     });
 
-    test('Fetch Hotel Prices : Valid Params', async () => {
-    let res;
-    const maxRetries = 3;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        res = await fetchHotelPrices(baseParams);
-
-        if (res && res.completed) {
-            break; // success, exit retry loop
-        }
-
-        if (attempt < maxRetries) {
-            console.warn(`Attempt ${attempt} failed. Retrying...`);
-            await new Promise(r => setTimeout(r, 500)); // optional delay between retries
-        }
-    }
-
-        expect(res).toBeDefined();
+    test('Fetch Hotel Prices : Valid Params', async ()=>{
+        const res = await fetchHotelPrices(baseParams);
         expect(res.completed).toBe(true);
     });
 
@@ -69,21 +58,10 @@ describe('Hotel Service Test', ()=>{
         }
     })
     test('Fetch Hotel Room Prices : Valid Params', async ()=>{
-        let res;
-        const maxRetries = 3;
-        for (let attempt = 1; attempt <= maxRetries; attempt++){
-            res = await fetchHotelRoomPrices('0vcz', baseParams);
-            if (res && res.completed){
-                break; // success, exit retry loop
-            }
-
-            if (attempt < maxRetries) {
-                console.warn(`Attempt ${attempt} failed. Retrying...`);
-                await new Promise(r => setTimeout(r, 500)); // optional delay between retries
-        }
-        }
+        const res = await fetchHotelRoomPrices('0vcz', baseParams);
         expect(res.completed).toBe(true);
-    });
+        expect(res.completed).toBe(true);
+    }, 20000);
 
     test('Fetch Hotel Room Prices : Invalid Params', async ()=>{
         try {
@@ -101,7 +79,7 @@ describe('Hotel Service Test', ()=>{
     test('Fetch Hotels : Valid Params', async ()=>{
         const res = await fetchHotels(baseParams);
         expect(res.length).toBeGreaterThan(0);
-    });
+    }, 20000);
 
     test('Fetch Hotels : Invalid Params', async ()=>{
         try {
@@ -111,12 +89,12 @@ describe('Hotel Service Test', ()=>{
         } 
         catch (err: any) {
             expect(err.response.status).toBe(400);
-        expect(err.response.data).toEqual({
-            errors: [
-                {
-                    code: "TE1001",
-                    message: "destination_id or region_id must be present"
-                }   
+            expect(err.response.data).toEqual({
+                errors: [
+                    {
+                        code: "TE1001",
+                        message: "destination_id or region_id must be present"
+                    }   
                 ]
             });
         }

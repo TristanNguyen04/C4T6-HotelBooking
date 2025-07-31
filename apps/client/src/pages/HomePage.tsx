@@ -2,7 +2,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-6xl mx-auto px-4">
-        <section className="pt-60 sm:pt-60 lg:pt-20 text-center">
+        <section className="pt-60 sm:pt-60 lg:pt-30 text-center">
           <h2 className="text-2xl font-bold mb-8">Why Book With Us</h2>
           <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div className="bg-white p-5 md:p-6 rounded-lg shadow text-center">

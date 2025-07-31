@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { fetchHotels, fetchHotelPrices, fetchHotelDetails, fetchHotelRoomPrices } from '../services/hotelService';
 import axios from 'axios';
 
-const calculateNights = (checkin: string, checkout: string) => {
+export const calculateNights = (checkin: string, checkout: string) => {
     const checkinDate = new Date(checkin);
     const checkoutDate = new Date(checkout);
     return Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -17,7 +17,6 @@ export const searchHotels = async (req: Request, res: Response) => {
         }
 
         const nights = calculateNights(checkin as string, checkout as string);
-
         const baseParams = {
             destination_id,
             checkin,
@@ -57,7 +56,6 @@ export const searchHotels = async (req: Request, res: Response) => {
             completed: prices.completed
         });
     } catch (error){
-        console.error('Error searching hotels:', error);
         res.status(500).json( {error: 'Error fetching hotel data' });
     }
 }
@@ -121,29 +119,42 @@ export const getHotelDetails = async (req: Request, res: Response) => {
 
 
 export const searchHotelUsingDest = async (req: Request, res: Response) => {
-try {
-    const { destination_id} = req.query;
+    try {
+        const { destination_id, checkin:checkin , checkout: checkout , guests:guest} = req.query;
 
-    if (!destination_id) {
-      return res.status(400).json({ error: 'Missing destination_id parameter' });
+        if (!destination_id || !checkin || !checkout || !guest) {
+        return res.status(400).json({ error: 'Missing destination_id parameter' });
+        }
+
+        const baseParams = {
+            destination_id,
+            checkin: checkin,
+            checkout: checkout,
+            guests: guest,
+            currency: 'SGD',
+            lang: 'en_US',
+            landing_page: 'wl-acme-earn',
+            product_type: 'earn',
+            partner_id: '1089'
+        };
+
+        const hotels = await fetchHotels(baseParams);
+        return res.json(hotels);
+    } catch (error) {
+        console.error('Error fetching hotels by destination:', error);
+        return res.status(500).json({ error: 'Error fetching hotels' });
     }
-
-    const baseParams = {
-      destination_id,
-      checkin: '2025-07-20', // dummy values
-      checkout: '2025-07-22',
-      guests: '1',
-      currency: 'SGD',
-      lang: 'en_US',
-      landing_page: 'wl-acme-earn',
-      product_type: 'earn',
-      partner_id: '1089'
-    };
-
-    const hotels = await fetchHotels(baseParams);
-    return res.json(hotels);
-  } catch (error) {
-    console.error('Error fetching hotels by destination:', error);
-    return res.status(500).json({ error: 'Error fetching hotels' });
-  }
 };
+
+    // const baseParams = {
+    //   destination_id,
+    //   checkin: '2025-07-20', // dummy values
+    //   checkout: '2025-07-22',
+    //   guests: '1',
+    //   currency: 'SGD',
+    //   lang: 'en_US',
+    //   landing_page: 'wl-acme-earn',
+    //   product_type: 'earn',
+    //   partner_id: '1089'
+    // };
+

@@ -14,10 +14,17 @@ import FilterBarSkeleton from "../components/FilterBarSkeleton";
 import { assets } from "../assets/assets";
 import { parseChildrenAges } from "../utils/age";
 
+// import FullScreenLoader from "../components/ScreenLoader"; 
+
+
 export default function SearchResultsPage(){
     const navigate = useNavigate();
 
     const [params] = useSearchParams();
+
+    //Preload state
+    // const [initialLoading, setInitialLoading] = useState(true);
+
     const [displayedHotels, setDisplayedHotels] = useState<Hotel[]>([]);
 
     const [sortOption, setSortOption] = useState<SortOption>("Relevance (Default)");
@@ -58,6 +65,15 @@ export default function SearchResultsPage(){
         }
     )
 
+    // useEffect(() => {
+    //     if (loading) {
+    //         const timeout = setTimeout(() => {
+    //             setInitialLoading(false);
+    //         }, 2000); // small buffer to prevent flashing
+    //         return () => clearTimeout(timeout);
+    //     }
+    // }, [loading]);
+
     useEffect(() => {
         if(hotels && hotels.length > 0){
             const prices = hotels.map(h => h.price || 0).filter(p => p > 0);
@@ -96,6 +112,8 @@ export default function SearchResultsPage(){
     useEffect(() => {
         setVisibleCount(10);
     }, [displayedHotels]);
+
+    // if (initialLoading) return <FullScreenLoader />;
 
     return (
         <div className="min-h-screen bg-gray-100 w-screen m-0 p-0 box-border">
@@ -158,8 +176,7 @@ export default function SearchResultsPage(){
                                 
                                 <ul className="list-none p-0 m-0 flex flex-col gap-4"
                                     data-cy={'Loading'}
-                                    data-class={'HotelCardSkele'}
-                                    >
+                                    data-class={'HotelCardSkele'}>
                                     {[...Array(6)].map((_, index) => (
                                         <HotelCardSkeleton key={index} />
                                     ))}
@@ -291,8 +308,8 @@ export default function SearchResultsPage(){
                                                 <div className="flex items-center gap-2">
                                                     <label className="inline-flex items-center cursor-pointer">
                                                         <input
-                                                            type="checkbox"
                                                             data-cy={'toggle-stay-night'}
+                                                            type="checkbox"
                                                             checked={showTotalPrice}
                                                             onChange={(e) => setShowTotalPrice(e.target.checked)}
                                                             className="sr-only"
@@ -311,8 +328,7 @@ export default function SearchResultsPage(){
                                 </div>
                                 
                                 <ul className="list-none p-0 m-0 flex flex-col gap-4"
-                                    data-cy={'HotelListings'}
-                                >
+                                data-cy={'HotelListings'}>
                                     {displayedHotels.slice(0, visibleCount).map(h => (
                                         <HotelCard
                                             key={h.id}
@@ -336,7 +352,7 @@ export default function SearchResultsPage(){
                                 {visibleCount < displayedHotels.length && (
                                     <div className="text-center mt-8 p-5">
                                         <button 
-                                        data-cy={'LoadMoreHotels'}
+                                            data-cy={'LoadMoreHotels'}
                                             className="bg-blue-600 text-white border-none px-6 py-3 text-sm font-medium rounded cursor-pointer transition-colors duration-200 ease-in-out min-w-[160px] hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                                             onClick={() => setVisibleCount((prev) => prev + 10)}
                                             disabled={visibleCount >= displayedHotels.length}

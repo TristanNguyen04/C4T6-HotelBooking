@@ -9,9 +9,7 @@ describe("Component Testing for Guest Rating", () => {
       .each(($card) => {
         cy.wrap($card).within(() => {
           cy.get("[data-cy=rating-text]").each(($span) => {
-            cy.wrap($span)
-              .invoke("text")
-              .then((text) => {
+            cy.wrap($span).invoke("text").then((text) => {
                 const rating = text.split(/\d+/)[0];
                 cy.log("rate", rating);
                 if (guestRatingMap.has(rating)) {
@@ -29,15 +27,10 @@ describe("Component Testing for Guest Rating", () => {
 
     cy.get("[data-cy=rating-badge]").each(($badge) => {
       cy.wrap($badge).within(() => {
-        cy.get("[data-cy=guest-rate]")
-          .invoke("text")
-          .then((ratingText) => {
+        cy.get("[data-cy=guest-rate]").invoke("text").then((ratingText) => {
             const rating = ratingText.trim();
-            cy.get("[data-cy=guest-rating-count]")
-              .invoke("text")
-              .then((countText) => {
+            cy.get("[data-cy=guest-rating-count]").invoke("text").then((countText) => {
                 const count = parseInt(countText.replace(/[()]/g, ""));
-                cy.log("count", count);
                 cy.then(() => {
                   expect(guestRatingMap.get(rating)).to.equal(count);
                 });

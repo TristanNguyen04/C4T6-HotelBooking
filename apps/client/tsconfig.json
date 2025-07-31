@@ -8,10 +8,12 @@
     "cypress/e2e/**/*.ts",
     "cypress/e2e/**/*.tsx",
     "cypress/component/**/*.ts",
-    "cypress/component/**/*.tsx"
+    "cypress/component/**/*.tsx",
+    "cypress/helper/**/*.ts",
   ],
 
   "compilerOptions": {
+    "jsx": "react-jsx",
     "types": ["vite/client", "cypress"],
     "target": "ES2020",
     "module": "ESNext",
@@ -19,6 +21,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     "resolveJsonModule": true,
-    "declaration": false
+    "declaration": false,
+    "sourceMap": true,
   }
 }

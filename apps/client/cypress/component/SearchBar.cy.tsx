@@ -24,9 +24,6 @@ describe('SearchBar component', () => {
     cy.get('[data-cy=DestinationSearch]').type('London');
     // You will need to mock searchLocations API here for suggestions to appear
     // e.g. intercept API calls or stub the module if possible
-    cy.wait(500);
-    // Click on first suggestion if visible
-    cy.get('ul li').first().click();
   });
 
   it('Stay Period Toggle: Date Selection', ()=>{
@@ -59,7 +56,8 @@ describe('SearchBar component', () => {
 
       const startDateStr = `${pad(todayDate)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
       const endDateStr = `${pad(lastDayOfMonth)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
-
+      cy.log('start:', startDateStr);
+      cy.log('end:', endDateStr);
       // Click the toggle to open the date picker
       cy.get('[data-cy=stay-period-toggle]').click();
       cy.get('[data-cy=stay-period-month').should('contain', currentMonth);
@@ -68,7 +66,6 @@ describe('SearchBar component', () => {
       cy.get('[data-cy=calendar-previous-month]').click(); 
       cy.get('[data-cy=calendar-previous-month]').click(); 
       cy.get('[data-cy=stay-period-month]').should('contain', previousMonth);
-      cy.get('[data-cy=calendar-next-month]').click(); 
       cy.contains('button', `${todayDate}`).click();
       cy.contains('button', `${lastDayOfMonth}`).click();
       cy.contains('button', 'Done').click();

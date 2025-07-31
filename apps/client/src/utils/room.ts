@@ -4,10 +4,21 @@ import type { Room } from '../types/hotel';
 
 export function parseRoomJson(json: Room) {
     const html = json.long_description;
+    
+    if (!html || typeof html !== 'string') {
+        return {
+            roomDetails: {},
+            additionalInfo: {
+                checkInInstructions: [],
+                knowBeforeYouGo: [],
+                feesOptional: { items: [] }
+            }
+        };
+    }
+    
     const $ = cheerio.load(html);
 
-    // Initialize the result object with proper typing
-    const extracted: any = {};
+    const extracted: Record<string, string> = {};
 
     // 1. Extract Room Type (inside <p><strong>...</strong></p>)
     const strongText = $('p strong').first().text().trim();
@@ -39,7 +50,6 @@ export function parseRoomJson(json: Room) {
     const plainParagraphs = $('p').filter((_, el) => $(el).find('b').length === 0 && $(el).find('strong').length === 0);
     const smokingPolicy = plainParagraphs.eq(-1).text().trim();
     if (smokingPolicy.includes("Non-Smoking")) extracted.smokingPolicy = smokingPolicy;
-    console.log(extracted.smokingPolicy);
 
 
     const displayFields = json.roomAdditionalInfo?.displayFields;

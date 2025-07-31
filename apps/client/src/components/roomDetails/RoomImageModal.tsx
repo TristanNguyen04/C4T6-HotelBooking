@@ -35,12 +35,12 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
   showTotalStay = false,
   nights = 1
 }) => {
-  // Parse room data from the first room (assuming all rooms of same type have similar details)
+  // Parse room data from the first room 
   const parsedRoomData = useMemo(() => {
     if (rooms.length > 0) {
-      return parseRoomJson(rooms[0]);
+      return parseRoomJson(rooms[0]!);
     }
-    return null;
+    return {}; // Return empty object instead of null
   }, [rooms]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -63,18 +63,18 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
     }
   }, [onClose]);
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation - only for images when available
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isOpen) return;
     
     if (e.key === 'Escape') {
       onClose();
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === 'ArrowLeft' && images && images.length > 1) {
       onPrevious();
-    } else if (e.key === 'ArrowRight') {
+    } else if (e.key === 'ArrowRight' && images && images.length > 1) {
       onNext();
     }
-  }, [isOpen, onClose, onPrevious, onNext]);
+  }, [isOpen, onClose, onPrevious, onNext, images]);
 
   useEffect(() => {
     if (isOpen) {
@@ -95,6 +95,10 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
 
   const roomDetails = parsedRoomData?.roomDetails;
   const additionalInfo = parsedRoomData?.additionalInfo;
+  
+  // Check if we have actual images
+  const hasImages = images && images.length > 0;
+  const displayImage = hasImages ? images[currentIndex]?.url : assets.hotelNotFound;
 
   const modalContent = (
     <div 
@@ -113,28 +117,42 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
               <p className="text-sm text-gray-600 mt-1">{roomDetails.area}</p>
             )}
           </div>
-          {/* <button
+          <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Close gallery"
+            aria-label="Close"
           >
             ×
-          </button> */}
+          </button>
         </div>
 
-        {/* Image Display */}
+        {/* Image Display - Always show, even if it's just the fallback */}
         <div className="relative bg-gray-100">
           <div className="h-80 flex items-center justify-center">
             <img
-              src={images[currentIndex]?.url}
-              alt={`${roomName} - View ${currentIndex + 1}`}
+              src={displayImage}
+              alt={hasImages ? `${roomName} - View ${currentIndex + 1}` : 'Room image not available'}
               className="max-w-full h-full object-contain"
               onError={handleImageError}
             />
+            
+            {/* Show "No images" overlay when using fallback */}
+            {!hasImages && (
+              <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+                <div className="bg-white/90 px-6 py-3 rounded-lg text-gray-700">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M21,19V5c0-1.1-0.9-2-2-2H5c-1.1,0-2,0.9-2,2v14c0,1.1,0.9,2,2,2h14C20.1,21,21,20.1,21,19z M8.5,13.5l2.5,3.01L14.5,12l4.5,6H5L8.5,13.5z"/>
+                    </svg>
+                    <span>No photos available - showing room details below</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           
-          {/* Navigation arrows */}
-          {images.length > 1 && (
+          {/* Navigation arrows - only show if we have multiple actual images */}
+          {hasImages && images.length > 1 && (
             <>
               <button
                 onClick={onPrevious}
@@ -158,21 +176,26 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
           )}
         </div>
 
-        {/* Room Information Panel - Now scrollable */}
+        {/* Room Information Panel - Always show full details */}
         <div className="p-6 border-t bg-gray-50 overflow-y-auto max-h-96">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Room Details */}
+            {/* Room Details - Always visible */}
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-900 text-lg">Room Details</h3>
               
-              {roomDetails?.roomType && (
+              {roomDetails?.roomType ? (
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <h4 className="font-medium text-gray-900 mb-2">Room Configuration</h4>
                   <p className="text-sm text-gray-600">{roomDetails.roomType}</p>
                 </div>
+              ) : (
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-gray-900 mb-2">Room Configuration</h4>
+                  <p className="text-sm text-gray-600">Room details not available</p>
+                </div>
               )}
 
-              {/* Categorized Amenities */}
+              {/* Categorized Amenities - Show available ones or fallback message */}
               <div className="space-y-3">
                 {roomDetails?.internet && (
                   <div className="bg-white rounded-lg p-3 shadow-sm">
@@ -233,14 +256,23 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
                     <p className="text-sm text-gray-600">{roomDetails.comfort}</p>
                   </div>
                 )}
+
+                {/* Show message if no amenity details available */}
+                {!roomDetails?.internet && !roomDetails?.entertainment && !roomDetails?.foodDrink && 
+                 !roomDetails?.bathroom && !roomDetails?.comfort && (
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <h4 className="font-medium text-gray-900 mb-2">Amenities</h4>
+                    <p className="text-sm text-gray-600">Detailed amenity information not available. Please contact the hotel for more details.</p>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Pricing & Additional Info */}
+            {/* Pricing & Additional Info - Always visible */}
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-900 text-lg">Pricing & Information</h3>
               
-              {/* Pricing */}
+              {/* Pricing - Always show */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <h4 className="font-medium text-gray-900 mb-3">Pricing</h4>
                 <div className="space-y-2">
@@ -270,7 +302,7 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
               </div>
 
               {/* Important Information */}
-              {additionalInfo?.knowBeforeYouGo && additionalInfo.knowBeforeYouGo.length > 0 && (
+              {additionalInfo?.knowBeforeYouGo && additionalInfo.knowBeforeYouGo.length > 0 ? (
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <h4 className="font-medium text-gray-900 mb-3">Important Information</h4>
                   <ul className="space-y-2">
@@ -282,10 +314,17 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
                     ))}
                   </ul>
                 </div>
+              ) : (
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-gray-900 mb-3">Important Information</h4>
+                  <p className="text-sm text-gray-600">
+                    Please check with the hotel directly for specific policies and requirements.
+                  </p>
+                </div>
               )}
 
               {/* Optional Fees */}
-              {additionalInfo?.feesOptional && additionalInfo.feesOptional.items.length > 0 && (
+              {additionalInfo?.feesOptional && additionalInfo.feesOptional.items.length > 0 ? (
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <h4 className="font-medium text-gray-900 mb-3">Optional Fees</h4>
                   <ul className="space-y-2">
@@ -300,13 +339,27 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
                     <p className="text-xs text-gray-500 mt-2 italic">{additionalInfo.feesOptional.note}</p>
                   )}
                 </div>
+              ) : (
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-gray-900 mb-3">Additional Fees</h4>
+                  <p className="text-sm text-gray-600">
+                    Contact the hotel for information about additional fees or services.
+                  </p>
+                </div>
               )}
 
               {/* Policies */}
-              {roomDetails?.smokingPolicy && (
+              {roomDetails?.smokingPolicy ? (
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <h4 className="font-medium text-gray-900 mb-2">Smoking Policy</h4>
                   <p className="text-sm text-gray-600">{roomDetails.smokingPolicy}</p>
+                </div>
+              ) : (
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 className="font-medium text-gray-900 mb-2">Hotel Policies</h4>
+                  <p className="text-sm text-gray-600">
+                    Please contact the hotel directly for information about their policies.
+                  </p>
                 </div>
               )}
             </div>
@@ -317,13 +370,13 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
         <div className="p-4 border-t bg-gray-50">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-600">
-              {currentIndex + 1} of {images.length} photos
+              {hasImages ? `${currentIndex + 1} of ${images.length} photos` : 'Room information available'}
             </div>
             <button
               onClick={onClose}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
             >
-              Close Gallery
+              Close
             </button>
           </div>
         </div>

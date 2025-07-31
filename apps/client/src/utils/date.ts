@@ -25,3 +25,28 @@ export const calculateNights = (checkin: string, checkout: string): number => {
     
     return nightsDiff > 0 ? nightsDiff : 1;
 }
+
+export const generateDefaultSearchUrl = () => {
+    const today = new Date();
+    const checkinDate = new Date(today);
+    checkinDate.setDate(today.getDate() + 7);
+    
+    const checkoutDate = new Date(checkinDate);
+    checkoutDate.setDate(checkinDate.getDate() + 2); 
+    
+    const formatDate = (date: Date): string => {
+        return date.toISOString().split('T')[0] as string;
+    };
+    
+    const params = new URLSearchParams();
+    params.append('term', 'Singapore, Singapore');
+    params.append('destination_id', 'RsBU');
+    params.append('checkin', formatDate(checkinDate));
+    params.append('checkout', formatDate(checkoutDate));
+    params.append('guests', '2');
+    params.append('adults', '2');
+    params.append('children', '0');
+    params.append('rooms', '1');
+    
+    return `/search?${params.toString()}`;
+};
