@@ -39,9 +39,6 @@ export default function HotelCard({
     };
     const [showMapPopup, setShowMapPopup] = useState(false);
 
-    const handleToggleMapPopup = () => {
-        setShowMapPopup(prev => !prev);
-    };
 
       useEffect(() => {
     if (showMapPopup) {
@@ -233,7 +230,7 @@ export default function HotelCard({
                     &times;
                     </button>
                 </div>
-                <GoogleMapPage position={{ lat: parseFloat(hotel.latitude), lng: parseFloat(hotel.longitude) }} />
+                    <GoogleMapPage position={{ lat: hotel.latitude, lng: hotel.longitude }} />
                 </div>
             </>,
             document.body

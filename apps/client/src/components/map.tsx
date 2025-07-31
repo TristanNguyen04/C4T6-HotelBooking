@@ -1,7 +1,7 @@
 // src/pages/GoogleMapPage.tsx
 import { useEffect, useMemo, useState, type SetStateAction } from "react";
 import "../styles/map.css";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { APIProvider, Map as Gmap, AdvancedMarker, Pin} from "@vis.gl/react-google-maps";
 import type { Destination, SearchContext } from "../types/hotel";
 import HotelInfoWindow from "../components/mapCard";
@@ -157,7 +157,7 @@ const searchContext: SearchContext | null = useMemo(() => {
           zoom={zoom}
           mapId={import.meta.env.VITE_MAP_ID}
           onZoomChanged={(e: { detail: { zoom: SetStateAction<number>; }; })=> setZoom(e.detail.zoom)}
-          onCenterChanged={(e: { detail: { center: any; }; })=> {
+          onCenterChanged={(e: { detail: { center: { lat: number; lng: number; }; }; })=> {
             const newCenter=e.detail.center;
             setCenter({lat: newCenter.lat , lng: newCenter.lng})
           }}
@@ -178,21 +178,21 @@ const searchContext: SearchContext | null = useMemo(() => {
             if(hotel.rating <= 4){background = "orange"}
             if(hotel.rating <= 3){background = "red"}
             return (
-            <AdvancedMarker key={`${hotel.id}_${hotel.latitude}_${hotel.longitude}`}  position={{ lat: parseFloat(hotel.latitude), lng: parseFloat(hotel.longitude) }} 
+            <AdvancedMarker key={`${hotel.id}_${hotel.latitude}_${hotel.longitude}`}  position={{ lat: hotel.latitude, lng: hotel.longitude }} 
               onClick={()=> setSelectedHotelId(hotel.id)}>
               <Pin background={background} borderColor="orange" glyphColor="white" />
             </AdvancedMarker>
-          )})};
+          )})}
           {/* Map the info window to the markers and the info window at the hotel position */}
           {selectedHotelId !== null && (() => {
             const hotel = hotels.find(h => h.id === selectedHotelId);
-            if(!hotel){return};
+            if(!hotel){return}
             return hotel ? (
               <HotelInfoWindow
                 hotel={hotel}
                 onClose={() => setSelectedHotelId(null)}
               />
-            ) : null;
+            ) : null
           })()}
         </Gmap>
       </div>

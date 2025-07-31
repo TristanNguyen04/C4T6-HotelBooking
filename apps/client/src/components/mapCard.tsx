@@ -1,12 +1,12 @@
 import "../styles/map.css";
 import {InfoWindow} from "@vis.gl/react-google-maps";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel as RawCarousel} from "react-responsive-carousel";
+import { Carousel as RawCarousel, type CarouselProps} from "react-responsive-carousel";
 import type {Hotel} from "../types/hotel";
 import default_hotel_image from "../assets/default_hotel_image.png";
 import { useNavigate ,  useLocation } from "react-router-dom";
 
-const Carousel = RawCarousel as unknown as React.ComponentType<any>;
+const Carousel = RawCarousel as unknown as React.ComponentType<CarouselProps>;
 
 type HotelInfoWindowProps = {
   hotel: Hotel;
@@ -23,7 +23,7 @@ export default function HotelInfoWindow({ hotel, onClose }: HotelInfoWindowProps
   };
 
   return (
-    <InfoWindow position={{ lat:parseFloat(hotel.latitude), lng:parseFloat(hotel.longitude)}} onCloseClick={onClose}>
+    <InfoWindow position={{ lat: hotel.latitude, lng: hotel.longitude }} onCloseClick={onClose}>
       <div style={{ width: "300px"}}>
         <div className="hotel-name text-orange-600 hover:underline hover:text-blue-800 cursor-pointer font-semibold text-lg mb-2" 
         onClick={handleNavigateToDetails}>
@@ -56,7 +56,6 @@ export default function HotelInfoWindow({ hotel, onClose }: HotelInfoWindowProps
         <div
           dangerouslySetInnerHTML={{ __html: hotel.description }}
         />
-        {}
       </div>
     </InfoWindow>
   );
