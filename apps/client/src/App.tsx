@@ -1,5 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import SignInPage from './pages/SignInPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
@@ -12,11 +12,22 @@ import Map from '../src/pages/GoogleMap'
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import CheckoutPage from './pages/CheckoutPage';
 import BookingHistoryPage from './pages/BookingHistoryPage';
+import { useAuth } from './contexts/AuthContext';
+
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return <>{children}</>;
+};
 
 function App(){
   const navigate = useNavigate();
 
-  // Handle SearchBar at Home Page
   const handleSearchSubmit = ({ destination, checkin, checkout, guests, rooms, adults, children }: {
     destination: { uid: string; term: string };
     checkin: string;
@@ -55,18 +66,22 @@ function App(){
       }/>
 
       <Route path='/checkout' element={
-        <Layout showHero={false}>
-          <CheckoutPage/>
-        </Layout>
+        <ProtectedRoute>
+          <Layout showHero={false}>
+            <CheckoutPage/>
+          </Layout>
+        </ProtectedRoute>
       }/>
       <Route path='/profile' element={
-        <Layout showHero={false}>
-          <ProfilePage/>
-        </Layout>
+        <ProtectedRoute>
+          <Layout showHero={false}>
+            <ProfilePage/>
+          </Layout>
+        </ProtectedRoute>
       }/>
       <Route path='/login' element={
         <Layout showNavBar={true} showHero={false}>
-          <LoginPage/>
+          <SignInPage/>
         </Layout>
       }/>
       <Route path='/register' element={
@@ -75,9 +90,11 @@ function App(){
         </Layout>
       }/>
       <Route path='/bookings' element={
-        <Layout showHero={false}>
-          <BookingHistoryPage/>
-        </Layout>
+        <ProtectedRoute>
+          <Layout showHero={false}>
+            <BookingHistoryPage/>
+          </Layout>
+        </ProtectedRoute>
       }/>
     </Routes>
   );
