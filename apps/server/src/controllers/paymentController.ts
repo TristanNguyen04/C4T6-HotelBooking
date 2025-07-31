@@ -86,19 +86,6 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
             return res.status(200).json({ message: "Bookings for this session already exist, skipping creation." });
         }
 
-        // used for testing only, to create user in the db
-        let user = await prisma.user.findUnique({ where: { id: userId } });
-        if (!user) {
-            user = await prisma.user.create({
-                data: {
-                    id: userId,
-                    email: 'fallback_email@example.com',  // replace or get from metadata/auth
-                    password: 'hashed_password_here',     // always hash passwords in real apps
-                    name: 'New User',
-                },
-            });
-        }
-
         // create booking using metadata passed with all new fields
         const bookingsMade = JSON.parse(bookingsJSON);
         const createdBookings = [];
