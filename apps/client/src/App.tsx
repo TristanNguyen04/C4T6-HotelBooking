@@ -25,7 +25,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-function App(){
+function App() {
   const navigate = useNavigate();
 
   const handleSearchSubmit = ({ destination, checkin, checkout, guests, rooms, adults, children }: {
@@ -35,11 +35,11 @@ function App(){
     guests: string;
     rooms: number;
     adults: number;
-    children: number
+    children: number;
   }) => {
     navigate(
-      `/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}
-    `);
+      `/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`
+    );
   };
 
   return (
@@ -100,4 +100,4 @@ function App(){
   );
 }
 
-export default App
+export default App;

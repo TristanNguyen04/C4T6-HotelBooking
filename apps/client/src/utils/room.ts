@@ -50,7 +50,6 @@ export function parseRoomJson(json: Room) {
     const plainParagraphs = $('p').filter((_, el) => $(el).find('b').length === 0 && $(el).find('strong').length === 0);
     const smokingPolicy = plainParagraphs.eq(-1).text().trim();
     if (smokingPolicy.includes("Non-Smoking")) extracted.smokingPolicy = smokingPolicy;
-    console.log(extracted.smokingPolicy);
 
 
     const displayFields = json.roomAdditionalInfo?.displayFields;
