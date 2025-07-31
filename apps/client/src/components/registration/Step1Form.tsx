@@ -14,6 +14,7 @@ export default function Step1Form({ email, onEmailChange }: Step1FormProps) {
           Email Address
         </label>
         <input
+          data-cy={'input-email'}
           type="email"
           id="email"
           name="email"

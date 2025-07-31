@@ -2,7 +2,7 @@
 import { useEffect, useState, type SetStateAction } from "react";
 import "../styles/map.css";
 import { APIProvider, Map as Gmap, AdvancedMarker, Pin} from "@vis.gl/react-google-maps";
-import type { Destination } from "../../../server/src/models/Destination";
+import type { Destination } from "../types/hotel";
 import HotelInfoWindow from "../components/mapCard";
 import {searchHotelwithDest, searchDestinationNearby} from '../api/hotels';
 import type {Hotel} from "../types/hotel";
@@ -48,7 +48,6 @@ async function fetchNearbyDestination(lat: number, lng:number, radius: number){
     }
   }
   catch{
-    console.log("die")
     return [];
   }
 };
@@ -64,17 +63,14 @@ const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: numb
   return EARTH_RADIUS_KM * c;
 };
 
-// type positionParam = {
-//   position: {
-//   lat: number,
-//   lng: number,
-//   }
-// }
-// export default function GoogleMapPage({position}:positionParam) {
-// either use hotel type from types/hotel.tx or use lat lng only
-export default function GoogleMapPage() {
-  const [center , setCenter] = useState({ lat: 1.2800945, lng: 103.8509491 });
-  // const [center , setCenter] = useState({ lat: position.lat, lng: position.lng });
+type positionParam = {
+  position: {
+  lat: number,
+  lng: number,
+  }
+}
+export default function GoogleMapPage({position}:positionParam) {
+  const [center , setCenter] = useState({ lat: position.lat, lng: position.lng });
   const [zoom , setZoom] = useState(18);
   const [selectedHotelId , setSelectedHotelId] = useState<string | null> (null);
   const [hotels, setHotels] = useState<Hotel[]>([])
@@ -164,11 +160,6 @@ export default function GoogleMapPage() {
           {selectedHotelId !== null && (() => {
             const hotel = hotels.find(h => h.id === selectedHotelId);
             if(!hotel){return};
-            // console.log(hotel.);
-            // const imageUrl = calculateDistance(center.lat,center.lng,hotel.position.lat, hotel.position.lng) <= 2 && hotel.imageUrl.count !== 0
-            // ? `${hotel.imageUrl.prefix}0${hotel.imageUrl.suffix}`
-            // : luggageFallback;
-
             return hotel ? (
               <HotelInfoWindow
                 hotel={hotel}

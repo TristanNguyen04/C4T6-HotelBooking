@@ -27,3 +27,14 @@ export const createBookingRecord = async (booking: BookingInput) => {
     }
   });
 };
+
+export const retrieveBookingRecord = async (userId: string) => {
+  return prisma.booking.findMany({
+    where: {
+      userId: userId
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+};

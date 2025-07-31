@@ -9,6 +9,7 @@ import destinationRoutes from "./routes/destinationRoutes";
 import hotelRoutes from "./routes/hotelRoutes";
 import authRoutes from "./routes/authRoutes";
 import bookingRoutes from "./routes/bookingRoutes";
+import dbUtilRoutes from "./routes/dbUtilRoutes";
 
 const app: Application = express();
 const PORT: number = 3000;
@@ -28,7 +29,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, paymentRoutes);
 
 // only start server if not in test environment (jest)
-if(process.env.NODE_ENV !== 'test'){
+if(process.env.NODE_ENV !== 'jest'){
   app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
   });

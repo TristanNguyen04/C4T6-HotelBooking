@@ -43,6 +43,7 @@ export default function Step4Success({ email, loading, onResendVerification }: S
       {/* Action Buttons */}
       <div className="space-y-3">
         <button
+          data-cy={'go-to-login'}
           onClick={() => navigate('/login')}
           className="w-full bg-red-400 text-white py-3 rounded-md font-medium text-sm hover:bg-red-500 transition"
         >

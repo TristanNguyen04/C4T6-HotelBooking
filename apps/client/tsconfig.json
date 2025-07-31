@@ -1,10 +1,27 @@
 {
-  "files": [],
+  "files": ["cypress.config.ts"],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
+  "include": [
+    "cypress/e2e/**/*.ts",
+    "cypress/e2e/**/*.tsx",
+    "cypress/component/**/*.ts",
+    "cypress/component/**/*.tsx",
+    "cypress/helper/**/*.ts",
+  ],
+
   "compilerOptions": {
-    "types": ["vite/client"]
+    "jsx": "react-jsx",
+    "types": ["vite/client", "cypress"],
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": true,
   }
 }

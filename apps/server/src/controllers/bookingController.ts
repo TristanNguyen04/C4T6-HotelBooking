@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest, } from '../middleware/auth';
 import { Response } from 'express';
+import { createBookingRecord, retrieveBookingRecord } from '../services/bookingService';
 
 const prisma = new PrismaClient();
 
@@ -62,14 +63,7 @@ export const getMyBookings = async(req: AuthRequest, res: Response) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const bookings = await prisma.booking.findMany({
-        where: {
-            userId: req.userId
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    });
+    const bookings = await retrieveBookingRecord(req.userId);
 
     res.json(bookings);
 }

@@ -50,7 +50,7 @@ function App(){
 
       {/* Routes with layout */}
       <Route path='/' element={
-        <Layout showHero={true} heroContent={<SearchBar onSubmit={handleSearchSubmit} />}>
+        <Layout showHero={true} showNavBar={true} heroContent={<SearchBar onSubmit={handleSearchSubmit} />}>
           <HomePage/>
         </Layout>
       }/>

@@ -7,7 +7,6 @@ import { generateDefaultSearchUrl } from '../utils/date';
 const NavBar = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
-
     const navLinks = [
         { name: 'Destinations', path: generateDefaultSearchUrl() },
         { name: 'About Us', path: '/' },
@@ -206,6 +205,7 @@ const NavBar = () => {
                             Sign In
                         </button>
                         <button 
+                            data-cy={'register-button'}
                             onClick={() => navigate('/register')}
                             className={`px-4 py-2.5 rounded-xl ml-3 transition-all duration-500 bg-[#FF6B6B] text-white hover:bg-[#ff5a5a]`}
                         >

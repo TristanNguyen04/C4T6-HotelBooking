@@ -3,6 +3,8 @@ export type Hotel = {
     name: string;
     address: string;
     currency: string;
+    latitude: number;
+    longitude: number;
     price?: number;
     totalPrice?: number;
     nights?: number;
@@ -377,4 +379,13 @@ export interface BookingHistory {
   includedTaxesAndFeesInCurrency: number;
   createdAt: string;
   stripeSessionId: string;
+}
+
+export interface Destination{
+    uid: string;
+    term: string;
+    lat: number;
+    lng: number;
+    state?: string;
+    type: 'city' | 'hotel' | 'airport';
 }

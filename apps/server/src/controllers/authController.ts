@@ -5,8 +5,8 @@ import crypto from 'crypto';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import { PrismaClient } from '@prisma/client'; // ORM
 import { AuthRequest } from '../middleware/auth';
+import prisma from '../utils/prismaClient'; // ORM
 
-const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
 export const register = async (req: Request, res: Response) => {
@@ -257,3 +257,17 @@ export const deleteAccount = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ error: 'Failed to delete account' });
     }
 };
+
+export const getUID = async (req: Request, res: Response)=>{
+    console.log("Query received:", req.query);
+    const { email } = req.query;
+    if(!email || typeof email !== 'string'){
+        return res.status(400).json({error: 'Email not in use'});
+    }
+
+    const user = await prisma.user.findFirst({
+        where: {email : email}
+    })
+    console.log(JSON.stringify(user));
+    res.json({token: user?.verificationToken});
+}
