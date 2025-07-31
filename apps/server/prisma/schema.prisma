@@ -13,7 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id                String    @id @default(uuid())
   email             String    @unique
@@ -35,7 +34,7 @@ model Booking {
   roomImage                      String?
   request                        String?
   guestName                      String
-  guestNumber               String
+  guestNumber                    String
   checkin                        DateTime
   checkout                       DateTime
   guests                         String
