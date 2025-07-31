@@ -64,6 +64,7 @@ export default function SignInPage() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Email</label>
                             <input
+                                data-cy={'login-email'}
                                 type="email"
                                 placeholder="Enter your email"
                                 value={email}
@@ -82,6 +83,7 @@ export default function SignInPage() {
                             </div>
                             <div className="relative">
                                 <input
+                                    data-cy={'login-password'}
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Enter your password"
                                     value={password}
@@ -111,6 +113,7 @@ export default function SignInPage() {
                         </div>
 
                         <button 
+                            data-cy={'login-submit'}
                             type="submit" 
                             disabled={loading}
                             className="w-full bg-[#FF6B6B] hover:bg-[#ff5a5a] text-white py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
