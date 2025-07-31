@@ -3,9 +3,8 @@ import app from '../../src/index';
 import prisma from '../../src/utils/prismaClient';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PassThrough } from 'stream';
-import { sendVerificationEmail } from '../../src/utils/sendEmail';
-import { setupTest } from '../helper/setup';
+import { setupTest, tearDown } from '../helper/setup';
+
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 const testUserData = {
   email: 'testuser@example.com',
@@ -204,6 +203,136 @@ describe('Check Verification Status', ()=>{
   });
 });
 
+describe('Get Profile', ()=>{
+  let userId: string;
+  let token: string;
+  beforeAll(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
+  });
+  
+  afterAll(async()=>{
+    await tearDown();
+  });
+
+  test('Get Profile Successfully', async()=>{
+    const res = await request(app)
+      .get('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('user');
+    expect(res.body.user).toMatchObject({
+      id: userId,
+      email: '123@gmail.com',
+      name: null,
+      createdAt: expect.any(String), // may be ISO string, not Date
+      isVerified: true
+    });
+  });
+
+  test('Get Profile : User not found', async()=>{
+    const fakeUserId = 'non-existent-user-id';
+    const token = jwt.sign({ id: fakeUserId }, JWT_SECRET!, {
+      expiresIn: '1h'
+    });
+    const res = await request(app)
+      .get('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toBe('User not found');
+  });
+
+  test('Get Profile : Unexpected Error', async()=>{
+    const spy = jest.spyOn(prisma.user, 'findUnique').mockRejectedValue(new Error('Error'));
+    const res = await request(app)
+      .get('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.statusCode).toBe(500);
+    expect(res.body.error).toBe('Failed to fetch profile');
+  });
+})
+
+describe('Update Profile', ()=>{
+  let userId: string;
+  let token: string;
+  beforeAll(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
+  });
+  
+  afterAll(async()=>{
+    await tearDown();
+  });
+  test('Update Profile Successfully', async ()=>{
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)  // add valid token
+      .send({ name: 'New Name' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({
+      message: 'Profile updated successfully',
+      user: {
+        id: userId,
+        email: '123@gmail.com',
+        name: 'New Name',
+        isVerified: true,
+      },
+    });
+  });
+  test('Update Profile : Name is required', async ()=>{
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: '      ' });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ error: 'Name is required' });
+  });
+  test('Update Profile : Unexpected Error', async ()=>{
+    const spy = jest.spyOn(prisma.user, 'update').mockRejectedValue(new Error('error'));
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: '123' });
+
+    expect(res.statusCode).toBe(500);
+    expect(res.body).toEqual({ error: 'Failed to update profile' });
+    spy.mockRestore();
+  });
+})
+
+// describe('Change Password', ()=>{
+//   let userId: string;
+//   let token: string;
+//   beforeAll(async () => {
+//     const user = await setupTest();
+//     userId = user.userId;
+//     token = user.token;
+//   });
+  
+//   afterAll(async()=>{
+//     await tearDown();
+//   });
+
+//   test('Update Password Successfully', async () => {
+//     const res = await request(app)
+//       .patch('/api/auth/change-password')
+//       .set('Authorization', `Bearer ${token}`)
+//       .send({
+//         currentPassword: 'hashedpassword',
+//         newPassword: 'newHashedPassword'
+//       });
+
+//       expect(res.body).toEqual({ message: 'Password changed successfully' });
+//       expect(res.statusCode).toBe(200);
+//   });
+// })
 // describe('Test getUID', ()=>{
 //   let userId: string;
 //   let token: string;

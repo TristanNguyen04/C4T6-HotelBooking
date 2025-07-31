@@ -30,9 +30,9 @@ describe("Test Booking API: /api/bookings", () => {
     token = user.token;
   });
   
-    afterAll(async()=>{
-      tearDown();
-    })
+  afterAll(async()=>{
+    tearDown();
+  })
 
   // Test 1
   test("Test createBooking", async () => {

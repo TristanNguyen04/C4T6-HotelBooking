@@ -27,36 +27,38 @@ export const fetchHotelRoomPrices = async (id: string, params: Record<string, an
     }
 }
 
-export const searchRoomsByHotel = async (
-    hotelId: string,
-    checkin: string,
-    checkout: string,
-    adults: number,
-    children: number,
-    rooms: number
-) => {
-    const params = {
-        checkin,
-        checkout,
-        guests: adults + children,
-        adults,
-        children,
-        rooms,
-        currency: 'SGD',
-        lang: 'en_US',
-        partner_id: '1'
-    };
+// export const searchRoomsByHotel = async (
+//     hotelId: string,
+//     checkin: string,
+//     checkout: string,
+//     adults: number,
+//     children: number,
+//     rooms: number
+// ) => {
+//     const params = {
+//         checkin,
+//         checkout,
+//         guests: adults + children,
+//         adults,
+//         children,
+//         rooms,
+//         currency: 'SGD',
+//         lang: 'en_US',
+//         landing_page: 'wl-acme-earn',
+//         product_type: 'earn',
+//         partner_id: '1089'
+//     };
     
-    try {
-        const res = await axios.get(`${BASE_URL}/hotels/${hotelId}/price`, { params });
-        return {
-            rooms: res.data.rooms || [],
-            completed: res.data.completed || false
-        };
-    } catch (error) {
-        console.error('Error searching rooms for hotel:', error);
-        throw error;
-    }
-}
+//     try {
+//         const res = await axios.get(`${BASE_URL}/hotels/${hotelId}/price`, { params });
+//         return {
+//             rooms: res.data.rooms || [],
+//             completed: res.data.completed || false
+//         };
+//     } catch (error) {
+//         console.error('Error searching rooms for hotel:', error);
+//         throw error;
+//     }
+// }
 
 
