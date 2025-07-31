@@ -33,22 +33,22 @@ export default function Footer() {
         <div>
           <h3 className="text-white text-lg font-semibold mb-2">Company</h3>
           <ul className="space-y-2 text-sm">
-            <li>About Us</li>
-            <li>Careers</li>
-            <li>Blog</li>
-            <li>Press</li>
-            <li>Gift Cards</li>
+            <li><a href="/about" className="hover:text-white">About Us</a></li>
+            <li className="hover:text-white">Careers</li>
+            <li className="hover:text-white">Blog</li>
+            <li className="hover:text-white">Press</li>
+            <li className="hover:text-white">Gift Cards</li>
           </ul>
         </div>
 
         <div>
           <h3 className="text-white text-lg font-semibold mb-2">Support</h3>
           <ul className="space-y-2 text-sm">
-            <li>Contact Us</li>
-            <li>Help Center</li>
-            <li>Safety Information</li>
-            <li>Cancellation Options</li>
-            <li>COVID-19 Resources</li>
+            <li><a href="/contact" className="hover:text-white">Contact Us</a></li>
+            <li className="hover:text-white">Help Center</li>
+            <li className="hover:text-white">Safety Information</li>
+            <li className="hover:text-white">Cancellation Options</li>
+            <li className="hover:text-white">COVID-19 Resources</li>
           </ul>
         </div>
 
@@ -78,18 +78,10 @@ export default function Footer() {
       <div className="border-t border-gray-700 mt-10 pt-6 text-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <p>© {new Date().getFullYear()} StayEase. All rights reserved.</p>
         <div className="flex space-x-6">
-          <a href="#" className="hover:text-white">
-            Privacy Policy
-          </a>
-          <a href="#" className="hover:text-white">
-            Terms of Service
-          </a>
-          <a href="#" className="hover:text-white">
-            Cookie Settings
-          </a>
-          <a href="#" className="hover:text-white">
-            Sitemap
-          </a>
+          <div className="hover:text-white">Privacy Policy</div>
+          <div className="hover:text-white">Terms of Service</div>
+          <div className="hover:text-white">Cookie Settings</div>
+          <div className="hover:text-white">Sitemap</div>
         </div>
       </div>
     </footer>
