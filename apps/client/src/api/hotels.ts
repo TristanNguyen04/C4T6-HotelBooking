@@ -20,7 +20,7 @@ export const searchDestinationNearby = (
     }
 ) => API.get(`/destinations/nearby`, {params});
 
-export const searchHotelwithDest = (
-    uid: string
-) => API.get(`/destinations/hotel`,{params: {destination_id:uid}});
+export const searchHotelwithDest = (params:
+    HotelSearchParams
+) => API.get(`/destinations/hotel`,{params});
 

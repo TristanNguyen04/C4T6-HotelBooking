@@ -258,16 +258,23 @@ export const deleteAccount = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const getUID = async (req: Request, res: Response)=>{
-    console.log("Query received:", req.query);
-    const { email } = req.query;
-    if(!email || typeof email !== 'string'){
-        return res.status(400).json({error: 'Email not in use'});
-    }
+// export const getUID = async (req: Request, res: Response)=>{
+//     const { email } = req.query;
+//     if(!email || typeof email !== 'string'){
+//         return res.status(400).json({error: 'Invalid Parameter'});
+//     }
 
-    const user = await prisma.user.findFirst({
-        where: {email : email}
-    })
-    console.log(JSON.stringify(user));
-    res.json({token: user?.verificationToken});
-}
+//     const user = await prisma.user.findFirst({
+//         where: {email : email}
+//     })
+//     console.log(JSON.stringify(user));
+//     res.json({token: user?.verificationToken});
+// }
+//     const user = await prisma.user.findFirst({
+//         where: {email : email}
+//     })
+//     if(!user){
+//         return res.status(400).json({error: 'User not found'});
+//     }
+//     res.json({token: user?.verificationToken});
+// }

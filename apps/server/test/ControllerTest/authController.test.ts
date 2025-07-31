@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PassThrough } from 'stream';
 import { sendVerificationEmail } from '../../src/utils/sendEmail';
+import { setupTest } from '../helper/setup';
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 const testUserData = {
   email: 'testuser@example.com',
@@ -202,3 +203,20 @@ describe('Check Verification Status', ()=>{
     expect(res.statusCode).toBe(404);
   });
 });
+
+// describe('Test getUID', ()=>{
+//   let userId: string;
+//   let token: string;
+//   beforeAll(async () => {
+//     const user = await setupTest();
+//     userId = user.userId;
+//     token = user.token;
+//   });
+
+//   test('getUID successfully', async()=>{
+//     const res = await request(app).get('/api/auth/get-uid').query('123@gmail.com');
+//     expect(res.statusCode).toBe(200);
+//     expect(res.body).toHaveProperty('token');
+//     expect(typeof res.body.token).toBe('string');
+//   })
+// })
