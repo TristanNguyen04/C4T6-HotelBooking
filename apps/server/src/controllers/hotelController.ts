@@ -127,7 +127,7 @@ export const searchHotelUsingDest = async (req: Request, res: Response) => {
         }
 
         const baseParams = {
-            destination_id,
+            destination_id: destination_id,
             checkin: checkin,
             checkout: checkout,
             guests: guest,
