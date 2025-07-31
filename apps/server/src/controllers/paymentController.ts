@@ -17,29 +17,35 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
                 currency: item.currency,
                 product_data: {
                     name: item.name,
-                    images: [item.image],
                 },
                 unit_amount: item.price,
             },
             quantity: item.quantity
         }));
+
         const session = await stripe.checkout.sessions.create({
-        success_url: 'http://localhost:5173/paymentSuccess?session_id={CHECKOUT_SESSION_ID}', // this should be routed to a confirmation page/ homepage
-        cancel_url: 'http://localhost:5173/payment', // routed to homepage or the page before or something
-        mode: "payment",
-        line_items,
-        metadata: {
-            userId,
-            bookings: JSON.stringify(items.map((item: { hotelId: any; hotelName: any; checkin: any; checkout: any; guests: { toString: () => any; }; price: any; currency: any; }) => ({
-                hotelId: item.hotelId,
-                hotelName: item.hotelName,
-                checkin: item.checkin,
-                checkout: item.checkout,
-                guests: item.guests.toString(),
-                price: item.price,
-                currency: item.currency,
-            })))
-        },
+            success_url: 'http://localhost:5173/paymentSuccess?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url: 'http://localhost:5173/payment',
+            mode: "payment",
+            line_items,
+            metadata: {
+                userId,
+                bookings: JSON.stringify(items.map((item: any) => ({
+                    hotelId: item.hotelId,
+                    hotelName: item.hotelName,
+                    roomKey: item.roomKey,
+                    roomDescription: item.roomDescription,
+                    roomImage: item.roomImage || null,
+                    request: item.specialRequest || null,
+                    guestName: item.primaryGuestFirstName + " " + item.primaryGuestLastName,
+                    guestNumber: item.primaryGuestPhoneNumber,
+                    checkin: item.checkin,
+                    checkout: item.checkout,
+                    guests: item.guests.toString(),
+                    baseRateInCurrency: item.baseRateInCurrency,
+                    includedTaxesAndFeesInCurrency: item.includedTaxesAndFeesInCurrency,
+                })))
+            },
         });
 
         res.json({ url: session.url });
@@ -48,14 +54,11 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
     }
 };
 
-
-
 export const handlePaymentSuccess = async (req: Request, res: Response) => {
-    // retrieve session id
     const { sessionId } = req.body;
     
     try {
-        // retrieve stripe 
+        // retrieve stripe session
         const session = await stripe.checkout.sessions.retrieve(sessionId);
         
         if (session.payment_status != "paid") {
@@ -80,40 +83,42 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
             return res.status(200).json({ message: "Bookings for this session already exist, skipping creation." });
         }
 
-
-        // used for testing only, to create user in the db
-        let user = await prisma.user.findUnique({ where: { id: userId } });
-            if (!user) {
-            user = await prisma.user.create({
-                data: {
-                id: userId,
-                email: 'fallback_email@example.com',  // replace or get from metadata/auth
-                password: 'hashed_password_here',     // always hash passwords in real apps
-                name: 'New User',
-                },
-            });
-            }
-        // create booking using metadata passed
+        // create booking using metadata passed with all new fields
         const bookingsMade = JSON.parse(bookingsJSON);
         const createdBookings = [];
+        
         for (const booking of bookingsMade) {
-            await prisma.booking.create({
+            const createdBooking = await prisma.booking.create({
                 data: {
-                userId,
-                hotelId: booking.hotelId,
-                hotelName: booking.hotelName,
-                checkin: new Date(booking.checkin),
-                checkout: new Date(booking.checkout),
-                guests: booking.guests.toString(),
-                price: booking.price,
-                currency: booking.currency,
-                stripeSessionId: sessionId, // used to check for duplicated entries using session id
+                    hotelId: booking.hotelId,
+                    hotelName: booking.hotelName,
+                    roomKey: booking.roomKey,
+                    roomDescription: booking.roomDescription,
+                    roomImage: booking.roomImage,
+                    request: booking.specialRequest,
+                    guestName: booking.guestName,
+                    guestNumber: booking.guestNumber,
+                    checkin: new Date(booking.checkin),
+                    checkout: new Date(booking.checkout),
+                    guests: booking.guests.toString(),
+                    baseRateInCurrency: parseFloat(booking.baseRateInCurrency),
+                    includedTaxesAndFeesInCurrency: parseFloat(booking.includedTaxesAndFeesInCurrency),
+                    stripeSessionId: sessionId,
+                    User: {
+                        connect: { id: userId }
+                    }
                 },
             });
+            createdBookings.push(createdBooking);
         }
-        res.status(201).json({ message: "Booking created successfully" }); // signal success
+        
+        res.status(201).json({ 
+            message: "Booking created successfully", 
+            bookings: createdBookings 
+        });
 
-  } catch (error) {
-    res.status(500).json({ error: "Failed to verify payment" });
-  }
+    } catch (error) {
+        console.error("Payment verification error:", error);
+        res.status(500).json({ error: "Failed to verify payment" });
+    }
 };

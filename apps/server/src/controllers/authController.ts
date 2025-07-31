@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { sendVerificationEmail } from '../utils/sendEmail';
+import { PrismaClient } from '@prisma/client'; // ORM
+import { AuthRequest } from '../middleware/auth';
 import prisma from '../utils/prismaClient'; // ORM
 
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
@@ -77,7 +79,15 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token, user: { id: user.id, email: user.email, name: user.name}});
+    res.json({ 
+        token, 
+        user: { 
+            id: user.id, 
+            email: user.email, 
+            name: user.name,
+            isVerified: user.isVerified 
+        }
+    });
 }
 
 export const resendVerificationEmail = async (req: Request, res: Response) => {
@@ -126,6 +136,127 @@ export const checkVerificationStatus = async (req: Request, res: Response) => {
     res.json({ isVerified: user.isVerified });
 }
 
+export const getProfile = async (req: AuthRequest, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                createdAt: true,
+                isVerified: true
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ user });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch profile' });
+    }
+};
+
+export const updateProfile = async (req: AuthRequest, res: Response) => {
+    try {
+        const { name } = req.body;
+
+        if (!name || name.trim().length === 0) {
+            return res.status(400).json({ error: 'Name is required' });
+        }
+
+        const user = await prisma.user.update({
+            where: { id: req.userId },
+            data: { name: name.trim() },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                isVerified: true
+            }
+        });
+
+        res.json({ 
+            message: 'Profile updated successfully',
+            user 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+};
+
+export const changePassword = async (req: AuthRequest, res: Response) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Current password and new password are required' });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isCurrentPasswordValid) {
+            return res.status(400).json({ error: 'Current password is incorrect' });
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        await prisma.user.update({
+            where: { id: req.userId },
+            data: { password: hashedNewPassword }
+        });
+
+        res.json({ message: 'Password changed successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to change password' });
+    }
+};
+
+export const deleteAccount = async (req: AuthRequest, res: Response) => {
+    try {
+        const { password } = req.body;
+
+        if (!password) {
+            return res.status(400).json({ error: 'Password is required to delete account' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId }
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: 'Invalid password' });
+        }
+
+        // Delete the user (bookings will be cascade deleted due to schema)
+        await prisma.user.delete({
+            where: { id: req.userId }
+        });
+
+        res.json({ message: 'Account deleted successfully' });
+    } catch (error) {
+        console.error('Delete account error:', error);
+        res.status(500).json({ error: 'Failed to delete account' });
+    }
+};
 
 // export const getUID = async (req: Request, res: Response)=>{
 //     const { email } = req.query;
@@ -133,6 +264,12 @@ export const checkVerificationStatus = async (req: Request, res: Response) => {
 //         return res.status(400).json({error: 'Invalid Parameter'});
 //     }
 
+//     const user = await prisma.user.findFirst({
+//         where: {email : email}
+//     })
+//     console.log(JSON.stringify(user));
+//     res.json({token: user?.verificationToken});
+// }
 //     const user = await prisma.user.findFirst({
 //         where: {email : email}
 //     })

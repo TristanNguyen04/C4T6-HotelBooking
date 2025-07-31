@@ -35,12 +35,12 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
   showTotalStay = false,
   nights = 1
 }) => {
-  // Parse room data from the first room (assuming all rooms of same type have similar details)
+  // Parse room data from the first room 
   const parsedRoomData = useMemo(() => {
     if (rooms.length > 0) {
       return parseRoomJson(rooms[0]!);
     }
-    return null;
+    return {}; // Return empty object instead of null
   }, [rooms]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {

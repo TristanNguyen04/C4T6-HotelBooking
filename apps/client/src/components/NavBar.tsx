@@ -2,20 +2,34 @@ import React, { useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { useAuth } from '../contexts/AuthContext';
+import { generateDefaultSearchUrl } from '../utils/date';
 
 const NavBar = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
     const navLinks = [
-        { name: 'Destinations', path: '/search' },
+        { name: 'Destinations', path: generateDefaultSearchUrl() },
         { name: 'About Us', path: '/' },
         { name: 'Contact', path: '/' },
     ];
 
     const location = useLocation();
     const isHomePage = location.pathname === '/';
-    const isCheckoutPage = location.pathname === '/checkout';
-    const isProfilePage = location.pathname === '/profile';
+    const isSearchPage = location.pathname === '/search';
+    
+    // Function to determine if a nav link is active based on current page
+    const isNavLinkActive = (linkName: string) => {
+        switch (linkName) {
+            case 'Destinations':
+                return isSearchPage;
+            case 'About Us':
+                return location.pathname === '/about' || location.pathname === '/about-us';
+            case 'Contact':
+                return location.pathname === '/contact';
+            default:
+                return false;
+        }
+    };
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -73,12 +87,11 @@ const NavBar = () => {
 
     const handleBookingClick = () => {
         setIsDropdownOpen(false);
-        // TODO: Navigate to booking history page when it's created
-        console.log('Navigate to booking history page');
+        navigate('/bookings');
     };
 
     return (
-        <nav className={`fixed top-0 left-0 w-full flex items-center bg-white justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${
+        <nav className={`fixed top-0 left-0 w-full flex items-center bg-white justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-[1100] ${
             isHomePage
                 ? (isScrolled ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4" : "py-4 md:py-6")
                 : "bg-gray-500 shadow-md py-4 md:py-6"
@@ -99,12 +112,29 @@ const NavBar = () => {
 
             {/* Desktop Nav - Centered */}
             <div className="hidden md:flex items-center gap-4 lg:gap-8 absolute left-1/2 transform -translate-x-1/2">
-                {navLinks.map((link, i) => (
-                    <Link key={i} to={link.path} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-black"} font-normal`}>
-                        {link.name}
-                        <div className={`${isScrolled ? "bg-gray-700" : "bg-white"} h-0.5 w-0 group-hover:w-full transition-all duration-300`} />
-                    </Link>
-                ))}
+                {navLinks.map((link, i) => {
+                    const isDestinationsLink = link.name === 'Destinations';
+                    const isDisabled = isDestinationsLink && isSearchPage;
+                    const isActive = isNavLinkActive(link.name);
+                    
+                    if (isDisabled) {
+                        return (
+                            <span key={i} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-black"} font-normal cursor-not-allowed`}>
+                                {link.name}
+                                <div className={`${isScrolled ? "bg-gray-700" : "bg-black"} h-0.5 w-full transition-all duration-300`} />
+                            </span>
+                        );
+                    }
+                    
+                    return (
+                        <Link key={i} to={link.path} className={`group flex flex-col gap-0.5 ${isScrolled ? "text-gray-700" : "text-black"} font-normal`}>
+                            {link.name}
+                            <div className={`${isScrolled ? "bg-gray-700" : "bg-black"} h-0.5 transition-all duration-300 ${
+                                isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                            }`} />
+                        </Link>
+                    );
+                })}
             </div>
 
             {/* Desktop Right */}
@@ -121,7 +151,7 @@ const NavBar = () => {
                         
                         {/* Dropdown Menu */}
                         {isDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[1000]">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[1100]">
                                 <div className="px-4 py-2 border-b border-gray-100">
                                     <p className="text-sm font-medium text-gray-900 truncate">
                                         {user.name || user.email}
@@ -200,11 +230,30 @@ const NavBar = () => {
                     <img src={assets.closeIcon} alt="close-menu" className='h-6.5' />
                 </button>
 
-                {navLinks.map((link, i) => (
-                    <Link key={i} to={link.path} onClick={() => setIsMenuOpen(false)}>
-                        {link.name}
-                    </Link>
-                ))}
+                {navLinks.map((link, i) => {
+                    const isDestinationsLink = link.name === 'Destinations';
+                    const isDisabled = isDestinationsLink && isSearchPage;
+                    const isActive = isNavLinkActive(link.name);
+                    
+                    if (isDisabled) {
+                        return (
+                            <span key={i} className="text-gray-800 cursor-not-allowed font-bold underline underline-offset-4">
+                                {link.name}
+                            </span>
+                        );
+                    }
+                    
+                    return (
+                        <Link 
+                            key={i} 
+                            to={link.path} 
+                            onClick={() => setIsMenuOpen(false)}
+                            className={isActive ? 'font-bold underline underline-offset-4' : ''}
+                        >
+                            {link.name}
+                        </Link>
+                    );
+                })}
 
                 {user ? (
                     // Mobile logged in state

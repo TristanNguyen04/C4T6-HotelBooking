@@ -3,8 +3,8 @@ export type Hotel = {
     name: string;
     address: string;
     currency: string;
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
     price?: number;
     totalPrice?: number;
     nights?: number;
@@ -360,6 +360,25 @@ export interface PaymentItem {
   primaryGuestLastName: string;
   primaryGuestPhoneNumber: string;
   specialRequest?: string;
+}
+
+export interface BookingHistory {
+  id: string;
+  hotelId: string;
+  hotelName: string;
+  roomKey: string;
+  roomDescription: string;
+  roomImage?: string;
+  request?: string;
+  guestName: string;
+  guestNumber: string;
+  checkin: string;
+  checkout: string;
+  guests: string;
+  baseRateInCurrency: number;
+  includedTaxesAndFeesInCurrency: number;
+  createdAt: string;
+  stripeSessionId: string;
 }
 
 export interface Destination{

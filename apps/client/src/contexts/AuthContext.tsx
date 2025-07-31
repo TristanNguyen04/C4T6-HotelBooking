@@ -1,4 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import Cookies from 'js-cookie';
 
 type User = {
     id: string;
@@ -20,24 +22,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
 
     useEffect(() => {
-        const stored = localStorage.getItem('auth');
-        if(stored){
-            const parsed = JSON.parse(stored);
-            setUser(parsed.user);
-            setToken(parsed.token);
+        const userCookie = Cookies.get('auth_user');
+        const tokenCookie = Cookies.get('auth_token');
+        
+        if(userCookie && tokenCookie){
+            try {
+                const parsed = JSON.parse(userCookie);
+                setUser(parsed);
+                setToken(tokenCookie);
+            } catch (error) {
+                console.error('Error parsing user cookie:', error);
+                // Clear invalid cookies
+                Cookies.remove('auth_user');
+                Cookies.remove('auth_token');
+            }
         }
     }, []);
 
     const login = (user: User, token: string) => {
         setUser(user);
         setToken(token);
-        localStorage.setItem('auth', JSON.stringify({ user, token }));
+        
+        // Set cookies with security options
+        const cookieOptions = {
+            expires: 7, // 7 days
+            secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+            sameSite: 'strict' as const, // CSRF protection
+            path: '/'
+        };
+        
+        Cookies.set('auth_user', JSON.stringify(user), cookieOptions);
+        Cookies.set('auth_token', token, cookieOptions);
     }
 
     const logout = () => {
         setUser(null);
         setToken(null);
-        localStorage.removeItem('auth');
+        
+        Cookies.remove('auth_user', { path: '/' });
+        Cookies.remove('auth_token', { path: '/' });
     }
 
     return (<AuthContext.Provider value = {{ user, token, login, logout }}>

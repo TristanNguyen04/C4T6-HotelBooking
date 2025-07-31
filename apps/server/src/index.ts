@@ -14,10 +14,9 @@ import dbUtilRoutes from "./routes/dbUtilRoutes";
 const app: Application = express();
 const PORT: number = 3000;
 
-
 app.use(cors({
   origin: "http://localhost:5173", // allow Vite frontend
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 }));
 
@@ -27,8 +26,7 @@ app.use(express.json()); // make sure body parsing works
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, Express with TypeScript!');
 });
-app.use("/payment", paymentRoutes);
-app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, dbUtilRoutes);
+app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, paymentRoutes);
 
 // only start server if not in test environment (jest)
 if(process.env.NODE_ENV !== 'jest'){

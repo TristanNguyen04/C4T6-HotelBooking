@@ -151,6 +151,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
                         <input
                             type="text"
+                            autoComplete="off"
                             value={minInputValue}
                             onChange={handleMinInputChange}
                             onBlur={handleMinInputBlur}
@@ -173,6 +174,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
                         <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
                         <input
                             type="text"
+                            autoComplete="off"
                             value={maxInputValue}
                             onChange={handleMaxInputChange}
                             onBlur={handleMaxInputBlur}

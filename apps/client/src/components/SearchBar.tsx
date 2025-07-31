@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { searchLocations } from '../api/hotels';
 import { parseDate, convertDateFormat } from '../utils/date';
 import DateRangePicker, { type DateRange } from './DateRangePicker';
@@ -50,6 +50,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [adults, setAdults] = useState(initialValues?.adults || 2);
     const [children, setChildren] = useState(initialValues?.children || 0);
     const [childrenAges, setChildrenAges] = useState<number[]>(initialValues?.childrenAges || []);
+    
+    const occupancyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (term.length < 1) {
@@ -67,6 +69,22 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
         return () => clearTimeout(delay);
     }, [term]);
+    
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (occupancyRef.current && !occupancyRef.current.contains(event.target as Node)) {
+                setShowOccupancy(false);
+            }
+        }
+        
+        if (showOccupancy) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showOccupancy]);
 
     useEffect(() => {
         const guestsReq = adults;
@@ -97,14 +115,12 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     // Update childrenAges array when children count changes
     useEffect(() => {
         if (children > childrenAges.length) {
-            // Add default ages (e.g., 5 years old) for new children
             const newAges = [...childrenAges];
             for (let i = childrenAges.length; i < children; i++) {
                 newAges.push(5);
             }
             setChildrenAges(newAges);
         } else if (children < childrenAges.length) {
-            // Remove extra ages when children count decreases
             setChildrenAges(childrenAges.slice(0, children));
         }
     }, [children, childrenAges]);
@@ -131,9 +147,13 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
         setChildrenAges(newAges);
     };
 
+    const threeDaysFromNow = new Date();
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+
     return (
         <form
             onSubmit={handleSubmit} 
+            autoComplete="off"
             className='bg-white text-gray-800 shadow-2xl rounded-xl px-4 py-6 md:px-6 md:py-4 
             flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-4 w-full max-w-none'>
             
@@ -151,6 +171,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         id="destinationInput" 
                         data-cy={"DestinationSearch"}
                         type="text" 
+                        autoComplete="off"
                         className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
                         focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors" 
                         placeholder="Where are you going?" 
@@ -158,6 +179,16 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         onChange={e => {
                             setTerm(e.target.value);
                             setSelected(null);
+                        }}
+                        onFocus={() => {
+                            // Re-fetch suggestions if there's text in the input
+                            if (term.length >= 1) {
+                                searchLocations(term)
+                                    .then(res => {
+                                        setSuggestions(res.data);
+                                    })
+                                    .catch(() => setSuggestions([]));
+                            }
                         }}
                         onBlur={() => setTimeout(() => setSuggestions([]), 100)}
                         required />
@@ -238,6 +269,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                     onChange={setDateRange}
                     isOpen={showDatePicker}
                     onToggle={() => setShowDatePicker(prev => !prev)}
+                    minDate={threeDaysFromNow}
                 />
             </div>
 
@@ -259,8 +291,8 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
 
                 {showOccupancy && (
                     <div 
+                        ref={occupancyRef}
                         className="absolute z-30 bg-white border border-gray-300 rounded-lg shadow-lg mt-2 p-6 w-80 right-0 lg:right-auto lg:left-0"
-                        onBlur={() => setShowOccupancy(false)}
                         tabIndex={0}
                     >
                         {[
@@ -320,6 +352,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                                                     type="number"
                                                     min="0"
                                                     max="17"
+                                                    autoComplete="off"
                                                     data-cy={`children-${index + 1}`}
                                                     value={childrenAges[index] ?? ''}
                                                     onChange={(e) => {
@@ -350,16 +383,15 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                 )}
             </div>
 
-            <button 
-                type="submit"
-                data-cy={'submitButton'}
-                className='flex items-center justify-center gap-2 rounded-lg bg-[#FF6B6B] hover:bg-[#e56060] 
-                py-3 px-6 text-white font-medium cursor-pointer transition-colors lg:flex-shrink-0 lg:self-end'>
-                <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
-                </svg>
-                <span>Search</span>
+            <button type="submit" className="CartBtn lg:self-end">
+                <span className="IconContainer">
+                    <svg className="icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                    </svg>
+                </span>
+                <span className="text">Search</span>
             </button>
+
         </form>
     )
 }

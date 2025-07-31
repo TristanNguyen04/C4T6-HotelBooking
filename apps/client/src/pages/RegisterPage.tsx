@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import luggageImg from "../assets/luggage.png";
 import { register, resendVerificationEmail } from "../api/auth";
 import Layout from "../layouts/Layout";
+import { 
+  Step1Form, 
+  Step2Form, 
+  Step3Form, 
+  Step4Success, 
+  Stepper, 
+  RegistrationSidebar 
+} from "../components/registration";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -17,11 +24,21 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+  // Individual field handlers for component props
+  const handleEmailChange = (value: string) => {
+    setFormData(prev => ({ ...prev, email: value }));
+  };
+
+  const handleNameChange = (value: string) => {
+    setFormData(prev => ({ ...prev, name: value }));
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setFormData(prev => ({ ...prev, password: value }));
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setFormData(prev => ({ ...prev, confirmPassword: value }));
   };
 
   const handleContinue = async (e: React.FormEvent) => {
@@ -91,166 +108,41 @@ export default function RegisterPage() {
     switch (step) {
       case 1:
         return (
-          <>
-            <p className="text-xs text-gray-500">Step 1: Email Address</p>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                Email Address
-              </label>
-              <input
-                data-cy={'input-email'}
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="yourname@example.com"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-                required
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                We'll send a verification code to this email
-              </p>
-            </div>
-          </>
+          <Step1Form
+            email={formData.email}
+            onEmailChange={handleEmailChange}
+          />
         );
       
       case 2:
         return (
-          <>
-            <p className="text-xs text-gray-500">Step 2: Personal Information</p>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <label htmlFor="name" className="text-sm font-medium text-gray-700">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-                  required
-                />
-              </div>
-              
-              <div className="flex flex-col gap-1">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Create a password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-                  required
-                />
-              </div>
-              
-              <div className="flex flex-col gap-1">
-                <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  placeholder="Confirm your password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-                  required
-                />
-              </div>
-            </div>
-          </>
+          <Step2Form
+            name={formData.name}
+            password={formData.password}
+            confirmPassword={formData.confirmPassword}
+            onNameChange={handleNameChange}
+            onPasswordChange={handlePasswordChange}
+            onConfirmPasswordChange={handleConfirmPasswordChange}
+          />
         );
       
       case 3:
         return (
-          <>
-            <p className="text-xs text-gray-500">Step 3: Preferences</p>
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h3 className="font-medium text-gray-700 mb-2">Account Summary</h3>
-              <p className="text-sm text-gray-600">Email: {formData.email}</p>
-              <p className="text-sm text-gray-600">Name: {formData.name}</p>
-            </div>
-            
-            <label className="flex items-start gap-2 text-sm text-gray-700">
-              <input
-                id="deals"
-                type="checkbox"
-                checked={acceptsDeals}
-                onChange={(e) => setAcceptsDeals(e.target.checked)}
-                className="mt-1 h-4 w-4 text-red-500 border-gray-300 rounded"
-              />
-              I'd like to receive exclusive deals, travel inspiration and updates from StayEase
-            </label>
-          </>
+          <Step3Form
+            email={formData.email}
+            name={formData.name}
+            acceptsDeals={acceptsDeals}
+            onAcceptsDealsChange={setAcceptsDeals}
+          />
         );
       
       case 4:
         return (
-          <>
-            <div className="text-center space-y-6">
-              {/* Success Icon */}
-              <div className="mx-auto flex items-center justify-center w-16 h-16 bg-green-100 rounded-full">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-              </div>
-              
-              {/* Success Message */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Registration Successful!</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  We've sent a verification email to:
-                </p>
-                <p className="text-sm font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded border">
-                  {formData.email}
-                </p>
-              </div>
-
-              {/* Instructions */}
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-4 text-left">
-                <h4 className="text-sm font-medium text-blue-900 mb-2">Next Steps:</h4>
-                <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
-                  <li>Check your email inbox (and spam folder)</li>
-                  <li>Click the verification link in the email</li>
-                  <li>Return here and sign in to your account</li>
-                </ol>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                <button
-                  data-cy={'go-to-login'}
-                  onClick={() => navigate('/login')}
-                  className="w-full bg-red-400 text-white py-3 rounded-md font-medium text-sm hover:bg-red-500 transition"
-                >
-                  Go to Sign In
-                </button>
-                
-                <button
-                  onClick={handleResendVerification}
-                  disabled={loading}
-                  className="w-full bg-gray-100 text-gray-700 py-2 rounded-md font-medium text-sm hover:bg-gray-200 transition disabled:opacity-50"
-                >
-                  {loading ? 'Sending...' : 'Resend Verification Email'}
-                </button>
-              </div>
-
-              {/* Help Text */}
-              <p className="text-xs text-gray-500">
-                Didn't receive the email? Check your spam folder or try resending.
-              </p>
-            </div>
-          </>
+          <Step4Success
+            email={formData.email}
+            loading={loading}
+            onResendVerification={handleResendVerification}
+          />
         );
       
       default:
@@ -281,21 +173,7 @@ export default function RegisterPage() {
 
             {/* Stepper - Only show for steps 1-3 */}
             {step <= 3 && (
-              <>
-                <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm ${
-                    step >= 1 ? 'bg-red-400 text-white' : 'bg-gray-200 text-gray-500'
-                  }`}>1</div>
-                  <div className={`h-1 flex-1 ${step >= 2 ? 'bg-red-400' : 'bg-gray-300'}`}></div>
-                  <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm ${
-                    step >= 2 ? 'bg-red-400 text-white' : 'bg-gray-200 text-gray-500'
-                  }`}>2</div>
-                  <div className={`h-1 flex-1 ${step >= 3 ? 'bg-red-400' : 'bg-gray-300'}`}></div>
-                  <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm ${
-                    step >= 3 ? 'bg-red-400 text-white' : 'bg-gray-200 text-gray-500'
-                  }`}>3</div>
-                </div>
-              </>
+              <Stepper currentStep={step} totalSteps={3} />
             )}
 
             {error && (
@@ -359,23 +237,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Right side: Image and Benefits */}
-          <div className="w-full md:w-1/2 bg-gradient-to-br from-orange-300 to-pink-400 px-10 py-12 flex flex-col justify-center items-center text-center gap-4">
-            <img src={luggageImg} alt="Luggage" className="w-50 h-auto" />
-            <h2 className="text-white text-xl font-semibold">
-              {step === 4 ? 'Almost there!' : 'Your journey begins here'}
-            </h2>
-            <p className="text-white text-sm max-w-sm">
-              {step === 4 
-                ? 'Just one more step - verify your email and start exploring amazing destinations with exclusive member benefits.'
-                : 'Join thousands of travelers who book their perfect stays with StayEase. Unlock exclusive member rates and collect rewards with every booking.'
-              }
-            </p>
-            <div className="flex flex-col gap-3 w-full max-w-xs">
-              <button className="bg-white text-orange-500 py-2 rounded font-semibold">Member-only deals</button>
-              <button className="bg-white text-orange-500 py-2 rounded font-semibold">Reward points</button>
-              <button className="bg-white text-orange-500 py-2 rounded font-semibold">Save favorites</button>
-            </div>
-          </div>
+          <RegistrationSidebar step={step} />
         </div>
       </main>
       </div>

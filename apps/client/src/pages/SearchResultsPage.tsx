@@ -14,10 +14,17 @@ import FilterBarSkeleton from "../components/FilterBarSkeleton";
 import { assets } from "../assets/assets";
 import { parseChildrenAges } from "../utils/age";
 
+// import FullScreenLoader from "../components/ScreenLoader"; 
+
+
 export default function SearchResultsPage(){
     const navigate = useNavigate();
 
     const [params] = useSearchParams();
+
+    //Preload state
+    // const [initialLoading, setInitialLoading] = useState(true);
+
     const [displayedHotels, setDisplayedHotels] = useState<Hotel[]>([]);
 
     const [sortOption, setSortOption] = useState<SortOption>("Relevance (Default)");
@@ -58,6 +65,15 @@ export default function SearchResultsPage(){
         }
     )
 
+    // useEffect(() => {
+    //     if (loading) {
+    //         const timeout = setTimeout(() => {
+    //             setInitialLoading(false);
+    //         }, 2000); // small buffer to prevent flashing
+    //         return () => clearTimeout(timeout);
+    //     }
+    // }, [loading]);
+
     useEffect(() => {
         if(hotels && hotels.length > 0){
             const prices = hotels.map(h => h.price || 0).filter(p => p > 0);
@@ -96,6 +112,8 @@ export default function SearchResultsPage(){
     useEffect(() => {
         setVisibleCount(10);
     }, [displayedHotels]);
+
+    // if (initialLoading) return <FullScreenLoader />;
 
     return (
         <div className="min-h-screen bg-gray-100 w-screen m-0 p-0 box-border">
