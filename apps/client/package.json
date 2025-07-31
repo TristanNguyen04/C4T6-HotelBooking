@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
-    "start:test": "vite --mode test"
+    "start:test": "vite --mode test",
+    "test:e2e": "cypress run --e2e",
+    "test:component": "cypress run --component"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.1",
