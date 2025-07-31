@@ -42,6 +42,9 @@
         - name: Generate Prisma
           run: cd apps/server && npx prisma generate
 
+        - name: Run DB migrations
+          run: cd apps/server && npx prisma migrate deploy
+
         - name: Start Server
           run: |
             npm run start:test &
