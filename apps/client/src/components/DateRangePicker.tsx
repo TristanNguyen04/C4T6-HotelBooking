@@ -10,17 +10,26 @@ interface DateRangePickerProps {
     onChange: (range: DateRange) => void;
     isOpen: boolean;
     onToggle: () => void;
+    minDate?: Date; // Optional minimum selectable date
 }
 
 export default function DateRangePicker({ 
     dateRange, 
     onChange, 
     isOpen, 
-    onToggle 
+    onToggle,
+    minDate 
 }: DateRangePickerProps) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectingEnd, setSelectingEnd] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Get the effective minimum date (use minDate prop or default to today)
+    const getMinDate = () => {
+        const effectiveMinDate = minDate || new Date();
+        effectiveMinDate.setHours(0, 0, 0, 0);
+        return effectiveMinDate;
+    };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -66,12 +75,10 @@ export default function DateRangePicker({
         
         const days = [];
         
-        // Add empty cells for days before the first day of the month
         for (let i = 0; i < startingDayOfWeek; i++) {
             days.push(null);
         }
         
-        // Add all days of the month
         for (let day = 1; day <= lastDay.getDate(); day++) {
             days.push(new Date(year, month, day));
         }
@@ -80,10 +87,9 @@ export default function DateRangePicker({
     };
 
     const handleDateClick = (date: Date) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const minSelectableDate = getMinDate();
         
-        if (date < today) return; // Don't allow past dates
+        if (date < minSelectableDate) return;
 
         if (!dateRange.startDate || selectingEnd) {
             if (!dateRange.startDate) {
@@ -120,9 +126,8 @@ export default function DateRangePicker({
     };
 
     const isPastDate = (date: Date) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return date < today;
+        const minSelectableDate = getMinDate();
+        return date < minSelectableDate;
     };
 
     const navigateMonth = (direction: 'prev' | 'next') => {

@@ -131,6 +131,9 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
         setChildrenAges(newAges);
     };
 
+    const threeDaysFromNow = new Date();
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+
     return (
         <form
             onSubmit={handleSubmit} 
@@ -236,6 +239,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                     onChange={setDateRange}
                     isOpen={showDatePicker}
                     onToggle={() => setShowDatePicker(prev => !prev)}
+                    minDate={threeDaysFromNow}
                 />
             </div>
 
