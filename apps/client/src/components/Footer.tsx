@@ -13,7 +13,7 @@ export default function Footer() {
         <div>
             <div className='flex items-center space-x-2 mb-5'>
                 <span className="font-bold text-[24px] leading-[36px] text-[#FF6B6B]">
-                    Ascenda
+                    StayEase
                 </span>
                 <span className="font-extralight text-[14px] leading-[20px] text-white">
                     Comfort wherever you go
@@ -76,7 +76,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-gray-700 mt-10 pt-6 text-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <p>© 2025 Ascenda. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} StayEase. All rights reserved.</p>
         <div className="flex space-x-6">
           <a href="#" className="hover:text-white">
             Privacy Policy

@@ -8,7 +8,7 @@ const NavBar = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
     const navLinks = [
-        { name: 'Destinations', path: generateDefaultSearchUrl() },
+        { name: 'Destinations', path: generateDefaultSearchUrl('Singapore, Singapore', 'RsBU') },
         { name: 'About Us', path: '/' },
         { name: 'Contact', path: '/' },
     ];
