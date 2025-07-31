@@ -122,7 +122,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking }) => {
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-4 space-y-2">
+            {/* <div className="mt-4 space-y-2">
               <button
                 onClick={() => {
                   // TODO: Implement view details functionality
@@ -132,7 +132,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking }) => {
               >
                 View Details
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
