@@ -85,8 +85,6 @@ export const getHotelDetails = async (req: Request, res: Response) => {
             partner_id: '1089'
         };
 
-        console.log(queryParams)
-
         const [hotelInfo, roomPricing] = await Promise.all([
             fetchHotelDetails(id),
             fetchHotelRoomPrices(id, queryParams),

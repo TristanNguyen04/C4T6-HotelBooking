@@ -36,18 +36,12 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
                     roomKey: item.roomKey,
                     roomDescription: item.roomDescription,
                     roomImage: item.roomImage || null,
-                    specialRequest: item.specialRequest || null,
-                    primaryGuestFirstName: item.primaryGuestFirstName,
-                    primaryGuestLastName: item.primaryGuestLastName,
-                    primaryGuestPhoneNumber: item.primaryGuestPhoneNumber,
+                    request: item.specialRequest || null,
+                    guestName: item.primaryGuestFirstName + " " + item.primaryGuestLastName,
+                    guestNumber: item.primaryGuestPhoneNumber,
                     checkin: item.checkin,
                     checkout: item.checkout,
                     guests: item.guests.toString(),
-                    adults: item.adults,
-                    rooms: item.rooms,
-                    children: item.children,
-                    childrenAges: item.childrenAges || [],
-                    currency: item.currency,
                     baseRateInCurrency: item.baseRateInCurrency,
                     includedTaxesAndFeesInCurrency: item.includedTaxesAndFeesInCurrency,
                 })))
@@ -112,27 +106,23 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
         for (const booking of bookingsMade) {
             const createdBooking = await prisma.booking.create({
                 data: {
-                    userId,
                     hotelId: booking.hotelId,
                     hotelName: booking.hotelName,
                     roomKey: booking.roomKey,
                     roomDescription: booking.roomDescription,
                     roomImage: booking.roomImage,
-                    specialRequest: booking.specialRequest,
-                    primaryGuestFirstName: booking.primaryGuestFirstName,
-                    primaryGuestLastName: booking.primaryGuestLastName,
-                    primaryGuestPhoneNumber: booking.primaryGuestPhoneNumber,
+                    request: booking.specialRequest,
+                    guestName: booking.guestName,
+                    guestNumber: booking.guestNumber,
                     checkin: new Date(booking.checkin),
                     checkout: new Date(booking.checkout),
                     guests: booking.guests.toString(),
-                    adults: parseInt(booking.adults),
-                    rooms: parseInt(booking.rooms),
-                    children: parseInt(booking.children),
-                    childrenAges: booking.childrenAges || [],
-                    currency: booking.currency,
                     baseRateInCurrency: parseFloat(booking.baseRateInCurrency),
                     includedTaxesAndFeesInCurrency: parseFloat(booking.includedTaxesAndFeesInCurrency),
                     stripeSessionId: sessionId,
+                    User: {
+                        connect: { id: userId }
+                    }
                 },
             });
             createdBookings.push(createdBooking);

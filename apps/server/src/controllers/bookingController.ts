@@ -16,17 +16,11 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
         roomDescription,
         roomImage,
         specialRequest,
-        primaryGuestFirstName,
-        primaryGuestLastName,
+        primaryGuestFullName,
         primaryGuestPhoneNumber,
         checkin,
         checkout,
         guests,
-        adults,
-        rooms,
-        children,
-        childrenAges,
-        currency,
         baseRateInCurrency,
         includedTaxesAndFeesInCurrency,
         sessionId,
@@ -35,27 +29,23 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
     try {
         const booking = await prisma.booking.create({
             data: {
-                userId: req.userId,
                 hotelId,
                 hotelName,
                 roomKey,
                 roomDescription,
                 roomImage: roomImage || '',
-                specialRequest: specialRequest || '',
-                primaryGuestFirstName,
-                primaryGuestLastName,
-                primaryGuestPhoneNumber,
+                request: specialRequest || '',
+                guestName: primaryGuestFullName || '',
+                guestNumber: primaryGuestPhoneNumber || '',
                 checkin: new Date(checkin),
                 checkout: new Date(checkout),
                 guests,
-                adults: parseInt(adults),
-                rooms: parseInt(rooms),
-                children: parseInt(children),
-                childrenAges: childrenAges || [],
-                currency,
                 baseRateInCurrency: parseFloat(baseRateInCurrency),
                 includedTaxesAndFeesInCurrency: parseFloat(includedTaxesAndFeesInCurrency),
                 stripeSessionId: sessionId,
+                User: {
+                    connect: { id: req.userId }
+                }
             }
         });
 
