@@ -8,9 +8,9 @@ const NavBar = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
     const navLinks = [
-        { name: 'Destinations', path: generateDefaultSearchUrl() },
-        { name: 'About Us', path: '/' },
-        { name: 'Contact', path: '/' },
+        { name: 'Destinations', path: generateDefaultSearchUrl('Singapore, Singapore', 'RsBU') },
+        { name: 'About Us', path: '/about' },
+        { name: 'Contact', path: '/contact' },
     ];
 
     const location = useLocation();
@@ -23,7 +23,7 @@ const NavBar = () => {
             case 'Destinations':
                 return isSearchPage;
             case 'About Us':
-                return location.pathname === '/about' || location.pathname === '/about-us';
+                return location.pathname === '/about';
             case 'Contact':
                 return location.pathname === '/contact';
             default:

@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import HotelDetailsPage from './pages/HotelDetailsPage';
 import ProfilePage from './pages/ProfilePage';
+import AboutUsPage from './pages/AboutUsPage';
+import ContactPage from './pages/ContactPage';
 import Layout from './layouts/Layout';
 import SearchBar from './components/SearchBar';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +15,6 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import CheckoutPage from './pages/CheckoutPage';
 import BookingHistoryPage from './pages/BookingHistoryPage';
 import { useAuth } from './contexts/AuthContext';
-
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -52,6 +53,16 @@ function App() {
       <Route path='/' element={
         <Layout showHero={true} showNavBar={true} heroContent={<SearchBar onSubmit={handleSearchSubmit} />}>
           <HomePage/>
+        </Layout>
+      }/>
+      <Route path='/about' element={
+        <Layout showHero={false}>
+          <AboutUsPage/>
+        </Layout>
+      }/>
+      <Route path='/contact' element={
+        <Layout showHero={false}>
+          <ContactPage/>
         </Layout>
       }/>
       <Route path='/search' element={
