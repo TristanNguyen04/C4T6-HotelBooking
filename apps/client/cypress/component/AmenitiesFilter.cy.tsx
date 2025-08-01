@@ -1,7 +1,5 @@
-import AmenityFilter from "../../src/components/filters/AmenityFilter";
+import { AmenityFilter } from "../../src/components/filters";
 import { mount } from "cypress/react";
-import type { Hotel } from "../../src/types/hotel";
-import React from "react";
 import { mockHotels } from "../helper/hotelTest";
 
 describe("AmenityFilter Component Test", () => {

@@ -10,7 +10,9 @@ export default defineConfig({
     devServer: {
       framework: 'react',
       bundler: 'vite',
-      viteConfig: path.resolve('apps/client/vite.config.ts'),
+      viteConfig: {
+        configFile: path.resolve('apps/client/vite.config.ts'),
+      },
     },
     specPattern: 'cypress/component/**/*.cy.{ts,tsx,js,jsx}',
   },

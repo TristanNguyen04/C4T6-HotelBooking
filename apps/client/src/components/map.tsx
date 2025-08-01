@@ -40,8 +40,8 @@ const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: numb
 
 type positionParam = {
   position: {
-  lat: number,
-  lng: number,
+    lat: number,
+    lng: number,
   }
 }
 export default function GoogleMapPage({position}:positionParam) {
@@ -49,7 +49,7 @@ export default function GoogleMapPage({position}:positionParam) {
   const [zoom , setZoom] = useState(18);
   const [selectedHotelId , setSelectedHotelId] = useState<string | null> (null);
   const [hotels, setHotels] = useState<Hotel[]>([])
-  const [destinations, setDestinations] = useState<Destination[]>([]);
+  // const [destinations, setDestinations] = useState<Destination[]>([]);
   const [lastFetch, setLastFetch] = useState<{lat: number, lng:number} | null>(null);
   const [debounce,setDebounce] = useState(center);
   const [searchParams] = useSearchParams();
@@ -88,9 +88,9 @@ const searchContext: SearchContext | null = useMemo(() => {
     if (lastFetch && calculateDistance(center.lat, center.lng, lastFetch.lat, lastFetch.lng) < radiusKm / 2) {return;}
     fetchNearbyDestination(center.lat, center.lng, radiusKm, searchContext).then(data => {
       if(!data)return;
-      const hotelsData = (data as any).hotelsData;
-      const destinations = {...data} as Destination;
-      const hotelWithRadius = hotelsData.filter((hotel: any) => {
+      const hotelsData = (data as {hotelsData: Hotel[]}).hotelsData;
+      //const destinations = {...data} as Destination;
+      const hotelWithRadius = hotelsData.filter((hotel: Hotel) => {
       const lat = hotel.latitude;
       const lng = hotel.longitude;
       return calculateDistance(center.lat, center.lng, lat, lng) <= radiusKm;
@@ -112,7 +112,7 @@ const searchContext: SearchContext | null = useMemo(() => {
 
       const uniqueHotels = Array.from(uniqueHotelsMap.values());
       setHotels(uniqueHotels as Hotel[]);
-      setDestinations([destinations]);
+      // setDestinations([destinations]);
       setLastFetch(debounce);
     });
   }, [debounce,zoom]);
@@ -161,13 +161,11 @@ const searchContext: SearchContext | null = useMemo(() => {
             const newCenter=e.detail.center;
             setCenter({lat: newCenter.lat , lng: newCenter.lng})
           }}
-          mapOptions={{
-            gestureHandling: "greedy",
-            scrollwheel: true,
-            zoomControl: true,
-            disableDefaultUI: false,
-            draggable: true,
-          }}
+          gestureHandling="greedy"
+          scrollwheel={true}
+          zoomControl={true}
+          disableDefaultUI={false}
+          draggable={true}
           style={{ height: "100%", width: "100%" }}
         > 
         
