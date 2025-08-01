@@ -1,4 +1,4 @@
-import AmenityFilter from "../../src/components/filters/AmenityFilter";
+import { AmenityFilter } from "../../src/components/filters";
 import { mount } from "cypress/react";
 import { mockHotels } from "../helper/hotelTest";
 
