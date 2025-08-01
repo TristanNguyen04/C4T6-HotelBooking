@@ -17,7 +17,8 @@
     "build:client": "cd apps/client && npm run build",
     "build:server": "cd apps/server && npm run build",
     "install:all": "npm install && cd apps/client && npm install && cd ../server && npm install",
-    "start:test": "concurrently \"npm run start:test --prefix apps/server\" \"npm run start:test --prefix apps/client\""
+    "start:test": "concurrently \"npm run start:test --prefix apps/server\" \"npm run start:test --prefix apps/client\"",
+    "clean": "find apps -name '*.js' -path '*/src/*' -delete && find apps -name '*.d.ts' -path '*/src/*' -delete && find apps -name '*.js.map' -path '*/src/*' -delete && rm -rf apps/server/dist"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
