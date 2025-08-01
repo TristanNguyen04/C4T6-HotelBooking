@@ -9,7 +9,7 @@ describe("Guest Rating Filter", () => {
         const defaultProps = {
             hotels: mockHotels,
             selectedGuestRatings: [],
-            setSelectedGuestRatings: cy.stub().as("setSelectedGuestRatings"),
+            setSelectedGuestRatings: setSelectedGuestRatings,
         };
         mount(_jsx(GuestRatingFilter, { ...defaultProps }));
     });
