@@ -366,7 +366,101 @@ describe('Change Password', ()=>{
       });
     expect(res.body.error).toBe('Current password is incorrect');
     expect(res.statusCode).toBe(400);
-  })
+  });
+
+  test('Update Password: Unexpected Error', async ()=>{
+    const spy = jest.spyOn(prisma.user, 'findFirst').mockRejectedValue(new Error('Error'));
+    const res = await request(app)
+      .patch('/api/auth/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'wrongPassword',
+        newPassword: 'newHashedPassword'
+      });
+    expect(res.body.error).toBe('Failed to change password');
+    expect(res.statusCode).toBe(500);
+    spy.mockRestore()
+  });
+
+  test('Update Password: User not found', async ()=>{
+    const spy = jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(null);
+    const res = await request(app)
+      .patch('/api/auth/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'wrongPassword',
+        newPassword: 'newHashedPassword'
+      });
+    expect(res.body.error).toBe('User not found');
+    expect(res.statusCode).toBe(404);
+    spy.mockRestore()
+  });
+})
+
+describe('Delete Account Test', ()=>{
+  let userId: string;
+  let token: string;
+  beforeEach(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
+  });
+  
+  afterEach(async()=>{
+    await tearDown();
+  });
+
+  test('Delete Account successfully', async ()=>{
+    const res =  await request(app)
+      .delete('/api/auth/delete-account')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        password: 'hashedpassword'
+      })
+    expect(res.body.message).toBe('Account deleted successfully');
+  });
+
+  test('Delete Account : Wrong password', async ()=>{
+    const res =  await request(app)
+      .delete('/api/auth/delete-account')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        password: 'wrongpassword'
+      })
+    expect(res.body.error).toBe('Invalid password');
+  });
+
+  test('Delete Account : No password', async ()=>{
+    const res =  await request(app)
+      .delete('/api/auth/delete-account')
+      .set('Authorization', `Bearer ${token}`)
+      .send({})
+    expect(res.body.error).toBe('Password is required to delete account');
+    expect(res.statusCode).toBe(400);
+  });
+
+  test('Delete Account : User not found', async ()=>{
+    const spy = jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(null);
+    const res =  await request(app)
+      .delete('/api/auth/delete-account')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        password: 'hashedpassword'
+      })
+    expect(res.body.error).toBe('User not found');
+    expect(res.statusCode).toBe(404);
+  });
+  test('Delete Account : Unexpected Error', async ()=>{
+    const spy = jest.spyOn(prisma.user, 'findFirst').mockRejectedValue(new Error('Error'));
+    const res =  await request(app)
+      .delete('/api/auth/delete-account')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        password: 'hashedpassword'
+      })
+    expect(res.body.error).toBe('Failed to delete account');
+    expect(res.statusCode).toBe(500);
+  });
 })
 // describe('Test getUID', ()=>{
 //   let userId: string;
