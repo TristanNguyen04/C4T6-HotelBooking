@@ -67,6 +67,8 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
 
         // retrieve metadata
         const{ userId, bookings: bookingsJSON} = session.metadata || {};
+        console.log(userId);
+        console.log(bookingsJSON);
         if (!userId || !bookingsJSON) {
             return res.status(400).json({ error: "Missing booking information in session metadata" });
         }

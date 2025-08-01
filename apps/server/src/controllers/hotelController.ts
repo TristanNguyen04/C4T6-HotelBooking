@@ -127,7 +127,7 @@ export const searchHotelUsingDest = async (req: Request, res: Response) => {
         }
 
         const baseParams = {
-            destination_id,
+            destination_id: destination_id,
             checkin: checkin,
             checkout: checkout,
             guests: guest,
@@ -146,4 +146,15 @@ export const searchHotelUsingDest = async (req: Request, res: Response) => {
     }
 };
 
+    // const baseParams = {
+    //   destination_id,
+    //   checkin: '2025-07-20', // dummy values
+    //   checkout: '2025-07-22',
+    //   guests: '1',
+    //   currency: 'SGD',
+    //   lang: 'en_US',
+    //   landing_page: 'wl-acme-earn',
+    //   product_type: 'earn',
+    //   partner_id: '1089'
+    // };
 

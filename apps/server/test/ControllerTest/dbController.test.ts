@@ -3,6 +3,38 @@ import request from "supertest";
 import { setupTest , tearDown } from "../helper/setup";
 import prisma from '../../src/utils/prismaClient';
 
+const item = {
+  hotelId: "h123",
+  hotelName: "Grand Hotel",
+  roomKey: "R1",
+  roomDescription: "Sea View",
+  roomImage: "https://example.com/image.jpg",
+  request: "Late check-in",
+  guestName: "John Doe",
+  guestNumber: "12345678",
+  checkin: new Date().toISOString(),
+  checkout: new Date(Date.now() + 86400000).toISOString(),
+  guests: "2",
+  baseRateInCurrency: 100,
+  includedTaxesAndFeesInCurrency: 120
+};
+
+const booking = 
+    {
+      hotelId: item.hotelId,
+      hotelName: item.hotelName,
+      roomKey: item.roomKey,
+      roomDescription: item.roomDescription,
+      roomImage: item.roomImage,
+      specialRequest: item.request, // key should match controller code
+      guestName: item.guestName,
+      guestNumber: item.guestNumber,
+      checkin: new Date(item.checkin).toISOString(),
+      checkout: new Date(item.checkout).toISOString(),
+      guests: item.guests,
+      baseRateInCurrency: item.baseRateInCurrency,
+      includedTaxesAndFeesInCurrency: item.includedTaxesAndFeesInCurrency,
+    }
 describe('Testing Database util functions: Clear Booking Table', ()=>{
     let id: string;
     const originalEnv = process.env.NODE_ENV;
@@ -17,17 +49,25 @@ describe('Testing Database util functions: Clear Booking Table', ()=>{
 
     test('Clear Booking Table: In Test Env', async ()=>{
         await prisma.booking.create({
-            data:{
-                userId: id,
-                hotelId: "testHotel456",
-                hotelName: "TestHotel2",
-                checkin: new Date('2025-08-01'),
-                checkout: new Date('2025-08-05'),
-                guests: "2",
-                price: 5432,
-                currency: "SGD",
-                stripeSessionId: "stripeSession456"
-            }
+            data: {
+                hotelId: booking.hotelId,
+                hotelName: booking.hotelName,
+                roomKey: booking.roomKey,
+                roomDescription: booking.roomDescription,
+                roomImage: booking.roomImage,
+                request: booking.specialRequest,
+                guestName: booking.guestName,
+                guestNumber: booking.guestNumber,
+                checkin: new Date(booking.checkin),
+                checkout: new Date(booking.checkout),
+                guests: booking.guests.toString(),
+                baseRateInCurrency: booking.baseRateInCurrency,
+                includedTaxesAndFeesInCurrency: booking.includedTaxesAndFeesInCurrency,
+                stripeSessionId: "1234",
+                User: {
+                    connect: { id: id }
+                }
+            },
         });
         const found  = await prisma.booking.findMany({
             where: {
@@ -45,17 +85,25 @@ describe('Testing Database util functions: Clear Booking Table', ()=>{
     test('Clear Booking Table: Not in Test Env', async ()=>{
         process.env.NODE_ENV = 'live';
         await prisma.booking.create({
-            data:{
-                userId: id,
-                hotelId: "testHotel456",
-                hotelName: "TestHotel2",
-                checkin: new Date('2025-08-01'),
-                checkout: new Date('2025-08-05'),
-                guests: "2",
-                price: 5432,
-                currency: "SGD",
-                stripeSessionId: "stripeSession456"
-            }
+            data: {
+                hotelId: booking.hotelId,
+                hotelName: booking.hotelName,
+                roomKey: booking.roomKey,
+                roomDescription: booking.roomDescription,
+                roomImage: booking.roomImage,
+                request: booking.specialRequest,
+                guestName: booking.guestName,
+                guestNumber: booking.guestNumber,
+                checkin: new Date(booking.checkin),
+                checkout: new Date(booking.checkout),
+                guests: booking.guests.toString(),
+                baseRateInCurrency: booking.baseRateInCurrency,
+                includedTaxesAndFeesInCurrency: booking.includedTaxesAndFeesInCurrency,
+                stripeSessionId: "1234",
+                User: {
+                    connect: { id: id }
+                }
+            },
         });
         const found  = await prisma.booking.findMany({
             where: {
@@ -74,17 +122,25 @@ describe('Testing Database util functions: Clear Booking Table', ()=>{
         const deleteManySpy = jest.spyOn(prisma.booking, 'deleteMany')
         .mockRejectedValue(new Error('Failed to clear booking table'));
         await prisma.booking.create({
-            data:{
-                userId: id,
-                hotelId: "testHotel456",
-                hotelName: "TestHotel2",
-                checkin: new Date('2025-08-01'),
-                checkout: new Date('2025-08-05'),
-                guests: "2",
-                price: 5432,
-                currency: "SGD",
-                stripeSessionId: "stripeSession456"
-            }
+            data: {
+                hotelId: booking.hotelId,
+                hotelName: booking.hotelName,
+                roomKey: booking.roomKey,
+                roomDescription: booking.roomDescription,
+                roomImage: booking.roomImage,
+                request: booking.specialRequest,
+                guestName: booking.guestName,
+                guestNumber: booking.guestNumber,
+                checkin: new Date(booking.checkin),
+                checkout: new Date(booking.checkout),
+                guests: booking.guests.toString(),
+                baseRateInCurrency: booking.baseRateInCurrency,
+                includedTaxesAndFeesInCurrency: booking.includedTaxesAndFeesInCurrency,
+                stripeSessionId: "1234",
+                User: {
+                    connect: { id: id }
+                }
+            },
         });
         const found  = await prisma.booking.findMany({
             where: {
