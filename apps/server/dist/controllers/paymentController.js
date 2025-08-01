@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePaymentSuccess = exports.createCheckoutSession = void 0;
 const stripeClient_1 = __importDefault(require("../utils/stripeClient"));
 const prismaClient_1 = __importDefault(require("../utils/prismaClient"));
+const sendEmail_1 = require("../utils/sendEmail");
 const createCheckoutSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { items, userId } = req.body;
@@ -84,6 +85,12 @@ const handlePaymentSuccess = (req, res) => __awaiter(void 0, void 0, void 0, fun
         if (existingBooking) {
             return res.status(200).json({ message: "Bookings for this session already exist, skipping creation." });
         }
+        const user = yield prismaClient_1.default.user.findUnique({
+            where: { id: userId }
+        });
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
         const bookingsMade = JSON.parse(bookingsJSON);
         const createdBookings = [];
         for (const booking of bookingsMade) {
@@ -109,6 +116,24 @@ const handlePaymentSuccess = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 },
             });
             createdBookings.push(createdBooking);
+        }
+        try {
+            yield (0, sendEmail_1.sendBookingConfirmationEmail)(user.email, user.name || 'Valued Customer', createdBookings.map(booking => ({
+                id: booking.id,
+                hotelName: booking.hotelName,
+                roomDescription: booking.roomDescription,
+                guestName: booking.guestName,
+                checkin: booking.checkin,
+                checkout: booking.checkout,
+                guests: booking.guests,
+                baseRateInCurrency: booking.baseRateInCurrency,
+                includedTaxesAndFeesInCurrency: booking.includedTaxesAndFeesInCurrency,
+                request: booking.request || undefined
+            })));
+            console.log(`Confirmation email sent to ${user.email}`);
+        }
+        catch (emailError) {
+            console.error('Failed to send confirmation email:', emailError);
         }
         res.status(201).json({
             message: "Booking created successfully",
