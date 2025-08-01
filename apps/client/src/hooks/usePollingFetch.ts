@@ -54,7 +54,7 @@ export function usePollingFetch<T>(
               hasValidData = validateData(result.data);
             } else {
               // Default validation for backward compatibility
-              hasValidData = typeof result.data === 'object' && result.data.length > 0;
+              hasValidData = typeof result.data === 'object' && Array.isArray(result.data) && result.data.length > 0;
             }
           }
 

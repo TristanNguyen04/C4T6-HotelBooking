@@ -1,8 +1,7 @@
 import { Router,Request,Response } from "express";
 import stripe from "../utils/stripeClient";
-import { PrismaClient } from '@prisma/client';
-import { createBookingRecord } from '../services/bookingService';
 import prisma from '../utils/prismaClient';
+import { sendBookingConfirmationEmail } from '../utils/sendEmail';
 
 export const createCheckoutSession = async(req:Request, res:Response) => {
     try {
@@ -24,8 +23,8 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
         }));
 
         const session = await stripe.checkout.sessions.create({
-            success_url: 'http://localhost:5173/paymentSuccess?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url: 'http://localhost:5173/payment',
+            success_url: `${process.env.FRONTEND_URL}/paymentSuccess?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.FRONTEND_URL}/payment`,
             mode: "payment",
             line_items,
             metadata: {
@@ -85,6 +84,15 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
             return res.status(200).json({ message: "Bookings for this session already exist, skipping creation." });
         }
 
+        // Get user information for email
+        const user = await prisma.user.findUnique({
+            where: { id: userId }
+        });
+
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
         // create booking using metadata passed with all new fields
         const bookingsMade = JSON.parse(bookingsJSON);
         const createdBookings = [];
@@ -112,6 +120,30 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
                 },
             });
             createdBookings.push(createdBooking);
+        }
+        
+        // Send confirmation email
+        try {
+            await sendBookingConfirmationEmail(
+                user.email, 
+                user.name || 'Valued Customer', 
+                createdBookings.map(booking => ({
+                    id: booking.id,
+                    hotelName: booking.hotelName,
+                    roomDescription: booking.roomDescription,
+                    guestName: booking.guestName,
+                    checkin: booking.checkin,
+                    checkout: booking.checkout,
+                    guests: booking.guests,
+                    baseRateInCurrency: booking.baseRateInCurrency,
+                    includedTaxesAndFeesInCurrency: booking.includedTaxesAndFeesInCurrency,
+                    request: booking.request || undefined
+                }))
+            );
+            console.log(`Confirmation email sent to ${user.email}`);
+        } catch (emailError) {
+            console.error('Failed to send confirmation email:', emailError);
+            // Don't fail the entire request if email fails
         }
         
         res.status(201).json({ 

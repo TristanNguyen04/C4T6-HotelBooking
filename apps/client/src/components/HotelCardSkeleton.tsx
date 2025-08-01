@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function HotelCardSkeleton() {
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 animate-pulse">

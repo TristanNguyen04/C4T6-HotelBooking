@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { createCheckoutSession } from '../api/booking';
@@ -25,7 +25,7 @@ const CheckoutPage: React.FC = () => {
   });
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
-  const [room, setRoom] = useState<Room | null>(null);
+  // const [_, setRoom] = useState<Room | null>(null);
   const [searchContext, setSearchContext] = useState<SearchContext | null>(null);
   const [bookingDetails, setBookingDetails] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -108,7 +108,7 @@ const CheckoutPage: React.FC = () => {
         }
 
         setHotel(hotelData);
-        setRoom(selectedRoom);
+        // setRoom(selectedRoom);
 
         // Calculate booking details
         const nights = calculateNights(checkin, checkout);

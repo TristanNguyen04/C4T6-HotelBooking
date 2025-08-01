@@ -64,9 +64,11 @@ export function parseHotelDescription(text: string): HotelDescription {
     }
 
     // Find business amenities text sections (excluding those with HTML lists)
-    let businessSections: string[] = [];
+    const businessSections: string[] = [];
     for (let i = 2; i < sections.length; i++) {
         const section = sections[i];
+
+        if(!section) continue;
         
         // Stop when we hit the rooms section (usually mentions "air-conditioned rooms" or "Make yourself at home")
         if (section.toLowerCase().includes('make yourself at home') || 
@@ -94,24 +96,21 @@ export function parseHotelDescription(text: string): HotelDescription {
     businessAmenitiesOther = businessSections.join(' ');
 
     // 5. Find rooms section
-    let rooms = '';
     const roomsSection = sections.find(section => 
         section.toLowerCase().includes('make yourself at home') ||
         section.toLowerCase().includes('air-conditioned rooms')
     );
-    rooms = roomsSection || sections[3] || '';
+    const rooms = roomsSection || sections[3] || '';
 
     // 6. Parse distances and locations
     const distanceSection = sections.find(section => 
         section.toLowerCase().includes('distances are displayed')
     );
 
-    let attractions: string[] = [];
-    let nearestAirports: string[] = [];
+    const attractions: string[] = [];
+    const nearestAirports: string[] = [];
 
     if (distanceSection) {
-        const $distance = cheerio.load(distanceSection);
-        
         // Extract all location items from the HTML
         const locationMatches = distanceSection.match(/<br\s*\/>\s*([^<]+?)(?=\s*<br|<\/p>)/g);
         if (locationMatches) {
@@ -133,13 +132,12 @@ export function parseHotelDescription(text: string): HotelDescription {
     const preferredAirport = preferredAirportMatch?.[0]?.replace(/^<p>|<\/p>$/g, '').trim() || '';
 
     // 8. Find location section (usually starts with "With a stay at" or similar)
-    let location = '';
     const locationSection = sections.find(section =>
         section.toLowerCase().includes('with a stay at') ||
         section.toLowerCase().includes('centrally located') ||
         (section.toLowerCase().includes('hotel') && section.includes('mi (') && section.includes('km)'))
     );
-    location = locationSection || sections[sections.length - 2] || '';
+    const location = locationSection || sections[sections.length - 2] || '';
 
     // 9. Headline is usually the last section
     const headline = sections[sections.length - 1] || '';

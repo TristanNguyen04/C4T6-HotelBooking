@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
-import { useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback, useState, useRef } from 'react';
 import Spinner from '../components/Spinner';
 import { searchHotelDetails } from '../api/hotels';
 import SearchBar from '../components/SearchBar';
@@ -23,10 +23,11 @@ export default function HotelDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const [searchParams] = useSearchParams();
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const roomOptionsRef = useRef<HTMLDivElement>(null);
 
-    const childrenAges: number[] = searchParams.get('guests') ? parseChildrenAges(searchParams.get('guests') || '') : [];
-    
     const searchContext: SearchContext | null = useMemo<SearchContext | null>(() => {
+        const childrenAges: number[] = searchParams.get('guests') ? parseChildrenAges(searchParams.get('guests') || '') : [];
+        
         return searchParams.get('destination_id') ? {
             destination_id: searchParams.get('destination_id') || '',
             checkin: searchParams.get('checkin') || '',
@@ -163,6 +164,15 @@ export default function HotelDetailsPage() {
         setShowLoginModal(false);
     };
 
+    const handleBookNowScroll = () => {
+        if (roomOptionsRef.current) {
+            roomOptionsRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
@@ -185,8 +195,8 @@ export default function HotelDetailsPage() {
         <div className="min-h-screen bg-gray-50">
             {/* Search Bar Header */}
             {searchContext && (
-                <header className="bg-[#003580] text-white sticky top-20 z-[1000] shadow-lg">
-                    <div className="max-w-7xl mx-auto px-4 py-4">
+                <header className="bg-[#003580] text-white sticky top-20 z-[1000] shadow-lg w-full">
+                    <div className="max-w-screen-xl mx-auto px-4 pb-3 pt-5 w-full">
                         <SearchBar
                             onSubmit={({ destination, checkin, checkout, guests, rooms, adults, children }) => {
                                 navigate(
@@ -227,7 +237,7 @@ export default function HotelDetailsPage() {
                 </div>
 
                 {/* Hotel Header */}
-                <HotelDetailsHeader hotel={hotel} />
+                <HotelDetailsHeader hotel={hotel} onBookNow={handleBookNowScroll} />
 
                 {/* Hotel Image */}
                 <HotelImage hotel={hotel} />
@@ -246,11 +256,13 @@ export default function HotelDetailsPage() {
                         <HotelAmenities hotel={hotel} />
 
                         {/* Room Options */}
-                        <HotelRoomOptions 
-                            hotel={hotel} 
-                            onBookRoom={handleBookRoom} 
-                            searchContext={searchContext}
-                        />
+                        <div ref={roomOptionsRef}>
+                            <HotelRoomOptions 
+                                hotel={hotel} 
+                                onBookRoom={handleBookRoom} 
+                                searchContext={searchContext}
+                            />
+                        </div>
                     </div>
 
                     {/* Right Column - Additional Info */}
@@ -259,7 +271,7 @@ export default function HotelDetailsPage() {
                         <HotelInformation searchContext={searchContext} />
 
                         {/* Quick Actions */}
-                        <HotelQuickActions />
+                        <HotelQuickActions onBookNow={handleBookNowScroll} />
                     </div>
                 </div>
             </main>

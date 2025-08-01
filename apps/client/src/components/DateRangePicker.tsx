@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export interface DateRange {
     startDate: Date | null;
@@ -23,6 +24,10 @@ export default function DateRangePicker({
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectingEnd, setSelectingEnd] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const location = useLocation();
+    const isSearchPage = location.pathname === '/search';
+    const isHotelPage = location.pathname.includes('/hotel/');
 
     // Get the effective minimum date (use minDate prop or default to today)
     const getMinDate = () => {
@@ -147,8 +152,9 @@ export default function DateRangePicker({
             <div
                 onClick={onToggle}
                 data-cy="stay-period-toggle"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm cursor-pointer bg-white 
-                hover:border-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                className={`w-full rounded-lg border border-gray-300 text-sm cursor-pointer bg-white 
+                    ${isSearchPage || isHotelPage ? 'px-3 py-2' : 'px-4 py-3'}
+                    hover:border-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
             >
                 {formatDateRange()}
             </div>

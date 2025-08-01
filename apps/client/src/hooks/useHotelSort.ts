@@ -29,12 +29,12 @@ export function useHotelSort(hotels: Hotel[], sortOption: SortOption) {
       sortOption === "Star Rating (Low to High)" ||
       sortOption === "Guest Rating (Low to High)";
 
-    const isDescending =
-      sortOption === "Price (High to Low)" ||
-      sortOption === "Distance (Far to Close)" ||
-      sortOption === "Star Rating (High to Low)" ||
-      sortOption === "Guest Rating (High to Low)" ||
-      sortOption === "Relevance (Default)";
+    // const isDescending =
+    //   sortOption === "Price (High to Low)" ||
+    //   sortOption === "Distance (Far to Close)" ||
+    //   sortOption === "Star Rating (High to Low)" ||
+    //   sortOption === "Guest Rating (High to Low)" ||
+    //   sortOption === "Relevance (Default)";
 
     return [...hotels].sort((a, b) => {
       const aVal = getValue(a);

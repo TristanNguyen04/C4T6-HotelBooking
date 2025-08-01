@@ -1,4 +1,3 @@
-import React from 'react';
 import luggageImg from '../../assets/luggage.png';
 
 interface RegistrationSidebarProps {
