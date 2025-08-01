@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import prisma from './prismaClient';
 
 const transporter = nodemailer.createTransport({ 
     host: process.env.SMTP_HOST,
@@ -18,7 +17,7 @@ export const sendVerificationEmail = async (to: string, token: string) => {
 
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #333; text-align: center;">Welcome to Hotel Booking!</h2>
+            <h2 style="color: #333; text-align: center;">Welcome to StayEase!</h2>
             <p>Thank you for registering with us. To complete your registration, please verify your email address by clicking the button below:</p>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -37,15 +36,15 @@ export const sendVerificationEmail = async (to: string, token: string) => {
             
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
             <p style="color: #666; font-size: 12px; text-align: center;">
-                This is an automated email from Hotel Booking. Please do not reply to this email.
+                This is an automated email from StayEase. Please do not reply to this email.
             </p>
         </div>
     `;
 
     await transporter.sendMail({
-        from: `"Hotel Booking" <${process.env.SMTP_USER}>`,
+        from: `"StayEase - Hotel Booking Website" <${process.env.SMTP_USER}>`,
         to,
-        subject: 'Verify Your Email - Hotel Booking',
+        subject: 'Verify Your Email - StayEase',
         html: htmlContent
     });
 }

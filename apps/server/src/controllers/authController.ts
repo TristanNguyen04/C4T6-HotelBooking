@@ -3,9 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { sendVerificationEmail } from '../utils/sendEmail';
-import { PrismaClient } from '@prisma/client'; // ORM
 import { AuthRequest } from '../middleware/auth';
-import prisma from '../utils/prismaClient'; // ORM
+import prisma from '../utils/prismaClient';
 
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
@@ -55,7 +54,42 @@ export const verifyEmail = async (req: Request, res: Response) => {
         data: { isVerified: true, verificationToken: null }
     });
 
-    res.json({ message: 'Email verified successfully. You can now login.' });
+    // Return nice HTML instead of JSON
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const htmlResponse = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Verified - Ascenda Hotels</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="text-center max-w-md mx-auto px-4">
+            <div class="bg-green-100 text-green-600 p-8 rounded-lg mb-6">
+                <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Email Verified Successfully! 🎉</h2>
+                <p>Your account has been verified. You can now sign in and start booking amazing hotels!</p>
+            </div>
+            <div class="space-y-3">
+                <a href="${frontendUrl}/login" class="block w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-decoration-none">
+                    Sign In Now
+                </a>
+                <a href="${frontendUrl}/" class="block w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors text-decoration-none">
+                    Browse Hotels
+                </a>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+    
+    res.send(htmlResponse);
 }
 
 export const login = async (req: Request, res: Response) => {
