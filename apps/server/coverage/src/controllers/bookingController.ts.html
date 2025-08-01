@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/20</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>6/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/16</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -131,12 +131,12 @@
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,10 +154,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,33 +176,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AuthRequest, } from '../middleware/auth';
 import { Response } from 'express';
 import { createBookingRecord, retrieveBookingRecord } from '../services/bookingService';
 import prisma from '../utils/prismaClient';
 &nbsp;
-export const createBooking = <span class="fstat-no" title="function not covered" >async (r</span>eq: AuthRequest, res: Response) =&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span>
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if(!req.userId){</span>
-<span class="cstat-no" title="statement not covered" >        return res.status(401).json({ error: 'Unauthorized' });</span>
+export const createBooking = async (req: AuthRequest, res: Response) =&gt; {
+    if(!req.userId){
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 &nbsp;
     const {
@@ -220,19 +220,19 @@ export const createBooking = <span class="fstat-no" title="function not covered"
         baseRateInCurrency,
         includedTaxesAndFeesInCurrency,
         sessionId,
-    } = <span class="cstat-no" title="statement not covered" >req.body;</span>
+    } = req.body;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const booking = <span class="cstat-no" title="statement not covered" >await prisma.booking.create({</span>
+    try {
+        const booking = await prisma.booking.create({
             data: {
                 hotelId,
                 hotelName,
                 roomKey,
                 roomDescription,
-                roomImage: roomImage || '',
-                request: specialRequest || '',
-                guestName: primaryGuestFullName || '',
-                guestNumber: primaryGuestPhoneNumber || '',
+                roomImage: roomImage || <span class="branch-1 cbranch-no" title="branch not covered" >'',</span>
+                request: specialRequest || <span class="branch-1 cbranch-no" title="branch not covered" >'',</span>
+                guestName: primaryGuestFullName || <span class="branch-1 cbranch-no" title="branch not covered" >'',</span>
+                guestNumber: primaryGuestPhoneNumber || <span class="branch-1 cbranch-no" title="branch not covered" >'',</span>
                 checkin: new Date(checkin),
                 checkout: new Date(checkout),
                 guests,
@@ -245,22 +245,22 @@ export const createBooking = <span class="fstat-no" title="function not covered"
             }
         });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        res.json(booking);</span>
+        res.json(booking);
         
     } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error('Error creating booking:', error);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(500).json({ error: 'Failed to create booking' });</span>
+        console.error('Error creating booking:', error);
+        res.status(500).json({ error: 'Failed to create booking' });
     }
 }
 &nbsp;
-export const getMyBookings = <span class="fstat-no" title="function not covered" >async(r</span>eq: AuthRequest, res: Response) =&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span>
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if(!req.userId){</span>
-<span class="cstat-no" title="statement not covered" >        return res.status(401).json({ error: 'Unauthorized' });</span>
+export const getMyBookings = async(req: AuthRequest, res: Response) =&gt; {
+    if(!req.userId){
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 &nbsp;
-    const bookings = <span class="cstat-no" title="statement not covered" >await retrieveBookingRecord(req.userId);</span>
+    const bookings = await retrieveBookingRecord(req.userId);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    res.json(bookings);</span>
+    res.json(bookings);
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -268,7 +268,7 @@ export const getMyBookings = <span class="fstat-no" title="function not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-01T02:47:14.850Z
+                at 2025-08-01T03:19:21.351Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
