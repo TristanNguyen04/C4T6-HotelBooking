@@ -5,12 +5,6 @@ import { mount } from 'cypress/react';
 import React from 'react';
 
 // Define minimal types (or import from your types file)
-interface Location {
-  uid: string;
-  term: string;
-  type?: string;
-}
-
 describe('SearchBar component', () => {
   let onSubmit: Cypress.Agent<sinon.SinonSpy>;
 
@@ -32,7 +26,7 @@ describe('SearchBar component', () => {
     cy.get('[data-cy=stay-period-toggle]').click();
 
     // select today's date and end of the month
-    cy.window().then(win => {
+    cy.window().then(() => {
       const today = new Date();
 
       const formatMonth = (date: Date) => date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });

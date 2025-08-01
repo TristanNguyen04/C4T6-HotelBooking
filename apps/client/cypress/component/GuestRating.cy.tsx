@@ -1,4 +1,4 @@
-import GuestRatingFilter from "../../src/components/filters/GuestRatingFilter";
+import { GuestRatingFilter } from "../../src/components/filters";
 import { mount } from "cypress/react";
 import { mockHotels } from "../helper/hotelTest";
 
