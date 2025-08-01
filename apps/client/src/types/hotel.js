@@ -1,0 +1,106 @@
+export const INIT_HOTEL = {
+    "id": "diH7",
+    "imageCount": 86,
+    "latitude": 1.28624,
+    "longitude": 103.852889,
+    "name": "The Fullerton Hotel Singapore",
+    "address": "1 Fullerton Square",
+    "address1": "1 Fullerton Square",
+    "rating": 5,
+    "trustyou": {
+        "id": "8e3920e5-46c6-4a1c-b21d-bc67463c2186",
+        "score": {
+            "overall": 95,
+            "kaligo_overall": 4.8,
+            "solo": 95,
+            "couple": 93,
+            "family": 93,
+            "business": 92
+        }
+    },
+    "categories": {
+        "overall": {
+            "name": "Overall",
+            "score": 90,
+            "popularity": 5
+        },
+        "lake_hotel": {
+            "name": "Lake Hotel",
+            "score": 69,
+            "popularity": 1.9934110367893
+        },
+        "business_hotel": {
+            "name": "Business Hotel",
+            "score": 97,
+            "popularity": 2.9867220735786
+        },
+        "city_hotel": {
+            "name": "City Hotel",
+            "score": 88,
+            "popularity": 3.98003311036789
+        }
+    },
+    "amenities_ratings": [
+        {
+            "name": "Location",
+            "score": 96
+        },
+        {
+            "name": "Wellness",
+            "score": 95
+        },
+        {
+            "name": "Service",
+            "score": 91
+        },
+        {
+            "name": "WiFi",
+            "score": 87
+        },
+        {
+            "name": "Vibe",
+            "score": 86
+        },
+        {
+            "name": "Breakfast",
+            "score": 84
+        },
+        {
+            "name": "Amenities",
+            "score": 81
+        },
+        {
+            "name": "Food",
+            "score": 80
+        },
+        {
+            "name": "Room",
+            "score": 77
+        },
+        {
+            "name": "Comfort",
+            "score": 62
+        }
+    ],
+    "description": "something",
+    "amenities": {
+        "airConditioning": true,
+        "businessCenter": true,
+        "clothingIron": true,
+        "dataPorts": true,
+        "dryCleaning": true,
+        "hairDryer": true,
+        "meetingRooms": true,
+        "outdoorPool": true,
+        "parkingGarage": true,
+        "roomService": true,
+        "safe": true,
+        "tVInRoom": true,
+        "voiceMail": true
+    },
+    "image_details": {
+        "suffix": ".jpg",
+        "count": 86,
+        "prefix": "https://d2ey9sqrvkqdfs.cloudfront.net/diH7/"
+    }
+};
