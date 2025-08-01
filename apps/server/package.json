@@ -7,7 +7,9 @@
     "test": "cross-env NODE_ENV=jest DATABASE_URL='postgresql://hotelproject:hotelproject@localhost:5432/db_test' jest --verbose --runInBand",
     "build": "tsc",
     "dev": "ts-node-dev src/index.ts",
-    "start": "ts-node src/index.ts"
+    "start": "node dist/index.js",
+    "start:prod": "npm run build && npm run start",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
