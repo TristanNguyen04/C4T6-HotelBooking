@@ -55,7 +55,40 @@ const verifyEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         where: { id: user.id },
         data: { isVerified: true, verificationToken: null }
     });
-    res.json({ message: 'Email verified successfully. You can now login.' });
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const htmlResponse = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Verified - Ascenda Hotels</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="text-center max-w-md mx-auto px-4">
+            <div class="bg-green-100 text-green-600 p-8 rounded-lg mb-6">
+                <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Email Verified Successfully! 🎉</h2>
+                <p>Your account has been verified. You can now sign in and start booking amazing hotels!</p>
+            </div>
+            <div class="space-y-3">
+                <a href="${frontendUrl}/login" class="block w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-decoration-none">
+                    Sign In Now
+                </a>
+                <a href="${frontendUrl}/" class="block w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors text-decoration-none">
+                    Browse Hotels
+                </a>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+    res.send(htmlResponse);
 });
 exports.verifyEmail = verifyEmail;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -171,31 +204,22 @@ exports.updateProfile = updateProfile;
 const changePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { currentPassword, newPassword } = req.body;
-        console.log(currentPassword);
-        console.log(newPassword);
         if (!currentPassword || !newPassword) {
             return res.status(400).json({ error: 'Current password and new password are required' });
         }
-        console.log(1);
         if (newPassword.length < 6) {
             return res.status(400).json({ error: 'New password must be at least 6 characters long' });
         }
-        console.log(2);
-        console.log('req.userId:', req.userId);
         const user = yield prismaClient_1.default.user.findFirst({
             where: { id: req.userId },
         });
-        console.log(user);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
         const isCurrentPasswordValid = yield bcrypt_1.default.compare(currentPassword, user.password);
-        console.log(isCurrentPasswordValid);
         if (!isCurrentPasswordValid) {
             return res.status(400).json({ error: 'Current password is incorrect' });
         }
-        console.log('user.password hash:', user.password);
-        console.log('currentPassword:', currentPassword);
         const hashedNewPassword = yield bcrypt_1.default.hash(newPassword, 10);
         yield prismaClient_1.default.user.update({
             where: { id: req.userId },
@@ -215,7 +239,7 @@ const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!password) {
             return res.status(400).json({ error: 'Password is required to delete account' });
         }
-        const user = yield prismaClient_1.default.user.findUnique({
+        const user = yield prismaClient_1.default.user.findFirst({
             where: { id: req.userId }
         });
         if (!user) {

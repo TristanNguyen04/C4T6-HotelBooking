@@ -18,6 +18,8 @@ const PORT = parseInt(process.env.PORT || '3000');
 const allowedOrigins = process.env.FRONTEND_URL
     ? [process.env.FRONTEND_URL, "http://localhost:5173"]
     : ["http://localhost:5173"];
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+console.log('Allowed origins:', allowedOrigins);
 app.use((0, cors_1.default)({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
