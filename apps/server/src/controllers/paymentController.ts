@@ -1,7 +1,5 @@
 import { Router,Request,Response } from "express";
 import stripe from "../utils/stripeClient";
-import { PrismaClient } from '@prisma/client';
-import { createBookingRecord } from '../services/bookingService';
 import prisma from '../utils/prismaClient';
 import { sendBookingConfirmationEmail } from '../utils/sendEmail';
 

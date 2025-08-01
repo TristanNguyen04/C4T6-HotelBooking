@@ -62,6 +62,59 @@ interface BookingDetails {
     request?: string;
 }
 
+interface GuestInfo {
+    rooms: number;
+    adults: number;
+    children: number;
+    childrenAges: number[];
+}
+
+const parseGuestInfo = (guestsParam: string): GuestInfo => {
+    const defaultResult: GuestInfo = { rooms: 1, adults: 0, children: 0, childrenAges: [] };
+    
+    if (!guestsParam) return defaultResult;
+    
+    // Handle format like "2|2" (rooms|adults)
+    if (guestsParam.includes('|') && !guestsParam.includes(':')) {
+        const [roomsStr = '', adultsStr = ''] = guestsParam.split('|');
+        return {
+            rooms: parseInt(roomsStr) || 1,
+            adults: parseInt(adultsStr) || 0,
+            children: 0,
+            childrenAges: []
+        };
+    }
+    
+    // Handle format like "2:5,5" (adults:childAge1,childAge2)
+    if (guestsParam.includes(':')) {
+        const [adultsStr = '', agesStr] = guestsParam.split(':');
+        const adults = parseInt(adultsStr) || 0;
+        const childrenAges = agesStr ? 
+            agesStr.split(',').map(age => parseInt(age)).filter(age => !isNaN(age)) : 
+            [];
+        
+        return {
+            rooms: 1,
+            adults,
+            children: childrenAges.length,
+            childrenAges
+        };
+    }
+    
+    // Handle simple number (assume it's adults)
+    const numericValue = parseInt(guestsParam);
+    if (!isNaN(numericValue)) {
+        return {
+            rooms: 1,
+            adults: numericValue,
+            children: 0,
+            childrenAges: []
+        };
+    }
+    
+    return defaultResult;
+};
+
 export const sendBookingConfirmationEmail = async (to: string, userName: string, bookings: BookingDetails[]) => {
     if(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'jest'){
         return;
@@ -78,19 +131,33 @@ export const sendBookingConfirmationEmail = async (to: string, userName: string,
 
     const totalAmount = bookings.reduce((sum, booking) => sum + booking.baseRateInCurrency + booking.includedTaxesAndFeesInCurrency, 0);
 
-    const bookingDetailsHtml = bookings.map(booking => `
-        <div style="border: 1px solid #e1e5e9; border-radius: 8px; padding: 20px; margin: 15px 0; background-color: #f8f9fa;">
-            <h3 style="color: #333; margin-top: 0;">${booking.hotelName}</h3>
-            <p style="color: #666; margin: 5px 0;"><strong>Room:</strong> ${booking.roomDescription}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Guest:</strong> ${booking.guestName}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Check-in:</strong> ${formatDate(booking.checkin)}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Check-out:</strong> ${formatDate(booking.checkout)}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Guests:</strong> ${booking.guests}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Total Cost:</strong> $${(booking.baseRateInCurrency + booking.includedTaxesAndFeesInCurrency).toFixed(2)}</p>
-            ${booking.request ? `<p style="color: #666; margin: 5px 0;"><strong>Special Request:</strong> ${booking.request}</p>` : ''}
-            <p style="color: #28a745; font-weight: bold; margin: 10px 0 0 0;">Booking ID: ${booking.id}</p>
-        </div>
-    `).join('');
+    const bookingDetailsHtml = bookings.map(booking => {
+        const guestInfo = parseGuestInfo(booking.guests);
+        const guestDetails = [
+            `${guestInfo.rooms} room${guestInfo.rooms !== 1 ? 's' : ''}`,
+            `${guestInfo.adults} adult${guestInfo.adults !== 1 ? 's' : ''}`
+        ];
+        
+        if (guestInfo.children > 0) {
+            const childrenText = `${guestInfo.children} child${guestInfo.children !== 1 ? 'ren' : ''}`;
+            const agesText = guestInfo.childrenAges.length > 0 ? ` (ages: ${guestInfo.childrenAges.join(', ')})` : '';
+            guestDetails.push(childrenText + agesText);
+        }
+        
+        return `
+            <div style="border: 1px solid #e1e5e9; border-radius: 8px; padding: 20px; margin: 15px 0; background-color: #f8f9fa;">
+                <h3 style="color: #333; margin-top: 0;">${booking.hotelName}</h3>
+                <p style="color: #666; margin: 5px 0;"><strong>Room:</strong> ${booking.roomDescription}</p>
+                <p style="color: #666; margin: 5px 0;"><strong>Guest:</strong> ${booking.guestName}</p>
+                <p style="color: #666; margin: 5px 0;"><strong>Check-in:</strong> ${formatDate(booking.checkin)}</p>
+                <p style="color: #666; margin: 5px 0;"><strong>Check-out:</strong> ${formatDate(booking.checkout)}</p>
+                <p style="color: #666; margin: 5px 0;"><strong>Accommodation:</strong> ${guestDetails.join(' • ')}</p>
+                <p style="color: #666; margin: 5px 0;"><strong>Total Cost:</strong> $${(booking.baseRateInCurrency + booking.includedTaxesAndFeesInCurrency).toFixed(2)}</p>
+                ${booking.request ? `<p style="color: #666; margin: 5px 0;"><strong>Special Request:</strong> ${booking.request}</p>` : ''}
+                <p style="color: #28a745; font-weight: bold; margin: 10px 0 0 0;">Booking ID: ${booking.id}</p>
+            </div>
+        `;
+    }).join('');
 
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
