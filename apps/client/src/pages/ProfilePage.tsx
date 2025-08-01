@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getProfile, updateProfile, changePassword, deleteAccount } from "../api/auth";
-import Spinner from "../components/Spinner";
 import {
     ProfileHeader,
     ProfileInfoForm,
@@ -71,9 +70,15 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-                <div className="flex justify-center items-center min-h-[400px]">
-                    <Spinner />
+            <div className="min-h-screen bg-gray-50 pt-40 pb-8">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B6B] mx-auto"></div>
+                        <p className="mt-4 text-gray-600">Loading your profile...</p>
+                        <p className="mt-4 text-gray-600">This may take a few seconds...</p>
+                    </div>
                 </div>
+            </div>
         );
     }
 
