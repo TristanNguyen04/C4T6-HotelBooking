@@ -264,11 +264,9 @@ export const getUID = async (req: Request, res: Response)=>{
     const user = await prisma.user.findFirst({
         where: {email : email}
     })
-    console.log(JSON.stringify(user));
-    res.json({token: user?.verificationToken});
 
     if(!user){
         return res.status(400).json({error: 'User not found'});
     }
-    res.json({token: user?.verificationToken});
+    res.json({id: user?.id, token: user?.verificationToken});
 }

@@ -12,3 +12,6 @@ export const createCheckoutSession = (data: { items: PaymentItem[], userId: stri
 
 export const verifyPayment = (sessionId: string) =>
   API.post('/payments/success', { sessionId }); 
+
+export const mockPaymentSuccess = (sessionId: string) =>
+  API.post('/payments/mock-success', { sessionId }); 

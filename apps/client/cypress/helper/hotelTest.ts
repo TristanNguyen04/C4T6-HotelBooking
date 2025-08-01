@@ -72,8 +72,8 @@ export function clickLoadMoreIfPresent() {
 export function navigateToHotelListing(){
   cy.visit('/');
   cy.wait(1000);
-  cy.get('input[type=text]').type('Singapr'); 
-  cy.get('[data-cy=DestinationSuggestions]').eq(2).click(); // use eq() for the second item in the list
+  cy.get('input[type=text]').type('malaysia'); 
+  cy.get('[data-cy=DestinationSuggestions]').eq(1).click(); // use eq() for the second item in the list
 
   // select the date
   const today = new Date();
@@ -82,7 +82,7 @@ export function navigateToHotelListing(){
   const pad = (n) => (n < 10 ? '0' + n : n);
   const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
   const nextMonth = formatMonth(nextMonthDate);
-  const firstDay = 10;
+  const firstDay = 25;
   const lastDayOfNextMonth = new Date(nextMonthDate.getFullYear(), nextMonthDate.getMonth() + 1, 0).getDate();
   const startDateStr = `${pad(firstDay)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;
   const endDateStr = `${pad(lastDayOfNextMonth)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;

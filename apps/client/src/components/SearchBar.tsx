@@ -383,7 +383,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                 )}
             </div>
 
-            <button type="submit" className="CartBtn lg:self-end">
+            <button type="submit" className="CartBtn lg:self-end" data-cy={'submitButton'}>
                 <span className="IconContainer">
                     <svg className="icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
