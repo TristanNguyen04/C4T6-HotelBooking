@@ -15,6 +15,7 @@ export default function DeleteAccountSection({ onDeleteClick }: DeleteAccountSec
                     all your bookings, and remove all associated data. This action cannot be undone.
                 </p>
                 <button
+                    data-cy={'delete-my-acc'}
                     onClick={onDeleteClick}
                     className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
                 >

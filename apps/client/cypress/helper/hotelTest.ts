@@ -3,8 +3,8 @@ export const mockHotels: Hotel[] = [
     {
       id: "1",
       name: "Hotel A",
-      latitude: '1.28624',
-      longitude: '103.852889',
+      latitude: 1.28624,
+      longitude: 103.852889,
       address: 'Hotel A address',
       currency: 'SGD',
       price: 120,
@@ -20,8 +20,8 @@ export const mockHotels: Hotel[] = [
     {
       id: "2",
       name: "Hotel B",
-      latitude: '1.48624',
-      longitude: '103.952889',
+      latitude: 1.48624,
+      longitude: 103.952889,
       address: 'Hotel B address',
       currency: 'SGD',
       price: 220,
@@ -37,8 +37,8 @@ export const mockHotels: Hotel[] = [
     {
       id: "3",
       name: "Hotel C",
-      latitude: '1.68624',
-      longitude: '103.352889',
+      latitude: 1.68624,
+      longitude: 103.352889,
       address: 'Hotel C address',
       currency: 'SGD',
       price: 330,

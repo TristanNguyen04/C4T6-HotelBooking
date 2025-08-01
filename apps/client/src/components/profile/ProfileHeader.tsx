@@ -18,7 +18,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                     {user?.name ? user.name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || 'U'}
                 </div>
                 <div className="text-white">
-                    <h1 className="text-2xl font-bold">{user?.name || 'User'}</h1>
+                    <h1 data-cy={'profile-name'} className="text-2xl font-bold">{user?.name || 'User'}</h1>
                     <p className="text-red-100">{user?.email}</p>
                 </div>
             </div>

@@ -15,10 +15,10 @@ export default defineConfig({
     specPattern: 'cypress/component/**/*.cy.{ts,tsx,js,jsx}',
   },
   e2e: {
-    retries: {
-      runMode: 2,
-      openMode: 2,
-    },
+    // retries: {
+    //   runMode: 2,
+    //   openMode: 2,
+    // },
     baseUrl: 'http://localhost:5173',
   },
 });

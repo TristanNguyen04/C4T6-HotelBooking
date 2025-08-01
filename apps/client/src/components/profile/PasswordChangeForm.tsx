@@ -64,6 +64,7 @@ export default function PasswordChangeForm({ onChangePassword }: PasswordChangeF
                         Current Password
                     </label>
                     <input
+                        data-cy={'key-current-pw'}
                         type="password"
                         id="currentPassword"
                         value={currentPassword}
@@ -79,6 +80,7 @@ export default function PasswordChangeForm({ onChangePassword }: PasswordChangeF
                         New Password
                     </label>
                     <input
+                        data-cy={'key-new-pw'}
                         type="password"
                         id="newPassword"
                         value={newPassword}
@@ -95,6 +97,7 @@ export default function PasswordChangeForm({ onChangePassword }: PasswordChangeF
                         Confirm New Password
                     </label>
                     <input
+                        data-cy={'key-confirm-pw'}
                         type="password"
                         id="confirmPassword"
                         value={confirmPassword}
@@ -118,6 +121,7 @@ export default function PasswordChangeForm({ onChangePassword }: PasswordChangeF
                 )}
 
                 <button
+                    data-cy={'change-pw'}
                     type="submit"
                     disabled={loading}
                     className="bg-[#FF6B6B] text-white px-6 py-2 rounded-lg hover:bg-[#ff5a5a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
