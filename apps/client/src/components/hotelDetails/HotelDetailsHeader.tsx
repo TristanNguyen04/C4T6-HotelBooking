@@ -6,9 +6,10 @@ import { getLowestRoomPrice } from '../../utils/room';
 
 interface HotelDetailsHeaderProps {
     hotel: Hotel;
+    onBookNow?: () => void;
 }
 
-const HotelDetailsHeader: React.FC<HotelDetailsHeaderProps> = ({ hotel }) => {
+const HotelDetailsHeader: React.FC<HotelDetailsHeaderProps> = ({ hotel, onBookNow }) => {
     // Get the lowest price among all rooms, fallback to hotel.price if no rooms
     const lowestPrice = getLowestRoomPrice(hotel.rooms || []) || hotel.price;
 
@@ -67,7 +68,10 @@ const HotelDetailsHeader: React.FC<HotelDetailsHeaderProps> = ({ hotel }) => {
                             <p className="text-3xl font-bold text-blue-900">
                                 {hotel.currency} {lowestPrice ? formatPrice(lowestPrice) : 'Unavailable'}
                             </p>
-                            <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                            <button 
+                                onClick={onBookNow}
+                                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                            >
                                 Book Now
                             </button>
                         </div>
