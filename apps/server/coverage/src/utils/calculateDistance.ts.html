@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">16.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>2/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">10% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>1/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -77,34 +77,34 @@
 <a name='L12'></a><a href='#L12'>12</a>
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
-<a name='L15'></a><a href='#L15'>15</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">74288x</span>
+<a name='L15'></a><a href='#L15'>15</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">297120x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">74280x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: number) =&gt; {
-    if( -90 &gt; lat1  || lat1 &gt; 90 || lng1 &gt; 180 || lng1 &lt; -180 || 
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const calculateDistance = <span class="fstat-no" title="function not covered" >(l</span>at1: number, lng1: number , lat2: number, lng2: number) =&gt; {
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if( -90 &gt; lat1  || lat1 &gt; 90 || lng1 &gt; 180 || lng1 &lt; -180 || </span>
         -90 &gt; lat2 || lat2 &gt; 90 || lng2 &gt; 180 || lng2 &lt; -180
     ){
-        throw new Error('Invalid latitude or longitude values');
+<span class="cstat-no" title="statement not covered" >        throw new Error('Invalid latitude or longitude values');</span>
     }
-    const EARTH_RADIUS_KM = 6371;
-    const toRadian = (degrees:number) =&gt; degrees * Math.PI / 180 ;
-    const dLat = toRadian(lat2 - lat1);
-    const dLng = toRadian(lng2 - lng1);
-    const a = Math.sin(dLat/2) ** 2 + Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) *
+    const EARTH_RADIUS_KM = <span class="cstat-no" title="statement not covered" >6371;</span>
+    const toRadian = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>egrees:number) =&gt; <span class="cstat-no" title="statement not covered" >degrees * Math.PI / 180 </span></span>;
+    const dLat = <span class="cstat-no" title="statement not covered" >toRadian(lat2 - lat1);</span>
+    const dLng = <span class="cstat-no" title="statement not covered" >toRadian(lng2 - lng1);</span>
+    const a = <span class="cstat-no" title="statement not covered" >Math.sin(dLat/2) ** 2 + Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) *</span>
     Math.sin(dLng / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a) , Math.sqrt(1-a));
-    return EARTH_RADIUS_KM * c;
+    const c = <span class="cstat-no" title="statement not covered" >2 * Math.atan2(Math.sqrt(a) , Math.sqrt(1-a));</span>
+<span class="cstat-no" title="statement not covered" >    return EARTH_RADIUS_KM * c;</span>
     };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -112,7 +112,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-31T18:15:07.190Z
+                at 2025-08-01T02:47:14.850Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -202,7 +202,7 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
         }
         console.log(2);
         console.log('req.userId:', req.userId);
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: { id: req.userId },
         });
         console.log(user);

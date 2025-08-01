@@ -307,32 +307,67 @@ describe('Update Profile', ()=>{
   });
 })
 
-// describe('Change Password', ()=>{
-//   let userId: string;
-//   let token: string;
-//   beforeAll(async () => {
-//     const user = await setupTest();
-//     userId = user.userId;
-//     token = user.token;
-//   });
+describe('Change Password', ()=>{
+  let userId: string;
+  let token: string;
+  beforeEach(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
+  });
   
-//   afterAll(async()=>{
-//     await tearDown();
-//   });
+  afterEach(async()=>{
+    await tearDown();
+  });
 
-//   test('Update Password Successfully', async () => {
-//     const res = await request(app)
-//       .patch('/api/auth/change-password')
-//       .set('Authorization', `Bearer ${token}`)
-//       .send({
-//         currentPassword: 'hashedpassword',
-//         newPassword: 'newHashedPassword'
-//       });
+  test('Update Password Successfully', async () => {
+    const res = await request(app)
+      .patch('/api/auth/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'hashedpassword',
+        newPassword: 'newHashedPassword'
+      });
 
-//       expect(res.body).toEqual({ message: 'Password changed successfully' });
-//       expect(res.statusCode).toBe(200);
-//   });
-// })
+      expect(res.body).toEqual({ message: 'Password changed successfully' });
+      expect(res.statusCode).toBe(200);
+  });
+
+  test('Update Password: No password given', async () => {
+    const res = await request(app)
+      .patch('/api/auth/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+
+      expect(res.body.error).toEqual('Current password and new password are required');
+      expect(res.statusCode).toBe(400);
+  });
+
+  test('Update Password: Password length < 6', async () => {
+    const res = await request(app)
+      .patch('/api/auth/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'hashedpassword',
+        newPassword: '123'
+      });
+
+      expect(res.body.error).toEqual('New password must be at least 6 characters long');
+      expect(res.statusCode).toBe(400);
+  });
+
+  test('Update Password: Wrong password', async ()=>{
+    const res = await request(app)
+      .patch('/api/auth/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'wrongPassword',
+        newPassword: 'newHashedPassword'
+      });
+    expect(res.body.error).toBe('Current password is incorrect');
+    expect(res.statusCode).toBe(400);
+  })
+})
 // describe('Test getUID', ()=>{
 //   let userId: string;
 //   let token: string;
