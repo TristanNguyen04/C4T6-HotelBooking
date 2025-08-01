@@ -1,6 +1,7 @@
 # Hotel Booking Application
 
 A full-stack hotel booking application with React client and Express server.
+Database is using PostgreSQL.
 
 ## Quick Start
 

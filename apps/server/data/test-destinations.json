@@ -1,0 +1,15 @@
+[
+  { "term": "Los Angeles", "state": "California" },
+  { "term": "San Francisco", "state": "California" },
+  { "term": "New York", "state": "New York" },
+  { "term": "Chicago", "state": "Illinois" },
+  { "term": "Houston", "state": "Texas" },
+  { "term": "Phoenix", "state": "Arizona" },
+  { "term": "Philadelphia", "state": "Pennsylvania" },
+  { "term": "San Antonio", "state": "Texas" },
+  { "term": "San Diego", "state": "California" },
+  { "term": "Dallas", "state": "Texas" },
+  { "term": "samoa", "state": "samoa" },
+  { "term": "Shang Hai", "state": "Shang Hai" },
+  { "term": "Lang Zhou", "state": "China" }
+]

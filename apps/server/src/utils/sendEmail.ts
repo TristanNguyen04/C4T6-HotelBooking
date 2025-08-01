@@ -1,0 +1,51 @@
+import nodemailer from 'nodemailer';
+import prisma from './prismaClient';
+
+const transporter = nodemailer.createTransport({ 
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+    }
+});
+
+export const sendVerificationEmail = async (to: string, token: string) => {
+    if(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'jest'){
+        return;
+    }
+    const verifyUrl = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
+
+    const htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #333; text-align: center;">Welcome to Hotel Booking!</h2>
+            <p>Thank you for registering with us. To complete your registration, please verify your email address by clicking the button below:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${verifyUrl}" 
+                   style="background-color: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                    Verify Email Address
+                </a>
+            </div>
+            
+            <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+            <p style="word-break: break-all; color: #666;">${verifyUrl}</p>
+            
+            <p>This link will expire in 24 hours for security reasons.</p>
+            
+            <p>If you didn't create an account, you can safely ignore this email.</p>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 12px; text-align: center;">
+                This is an automated email from Hotel Booking. Please do not reply to this email.
+            </p>
+        </div>
+    `;
+
+    await transporter.sendMail({
+        from: `"Hotel Booking" <${process.env.SMTP_USER}>`,
+        to,
+        subject: 'Verify Your Email - Hotel Booking',
+        html: htmlContent
+    });
+}
