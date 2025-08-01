@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, { Application, Request, Response } from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from "cors";
 
 import paymentRoutes from "./routes/paymentRoutes";
@@ -11,13 +11,16 @@ import authRoutes from "./routes/authRoutes";
 import bookingRoutes from "./routes/bookingRoutes";
 import dbUtilRoutes from "./routes/dbUtilRoutes";
 
-const app: Application = express();
+const app = express();
 const PORT: number = parseInt(process.env.PORT || '3000'); // Use environment PORT
 
-// Configure CORS for production
+// Configure CORS for production and development
 const allowedOrigins = process.env.FRONTEND_URL 
   ? [process.env.FRONTEND_URL, "http://localhost:5173"]
   : ["http://localhost:5173"];
+
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+console.log('Allowed origins:', allowedOrigins);
 
 app.use(cors({
   origin: allowedOrigins,
