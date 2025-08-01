@@ -88,9 +88,9 @@ const searchContext: SearchContext | null = useMemo(() => {
     if (lastFetch && calculateDistance(center.lat, center.lng, lastFetch.lat, lastFetch.lng) < radiusKm / 2) {return;}
     fetchNearbyDestination(center.lat, center.lng, radiusKm, searchContext).then(data => {
       if(!data)return;
-      const hotelsData = (data as any).hotelsData;
+      const hotelsData = (data as {hotelsData: Hotel[]}).hotelsData;
       //const destinations = {...data} as Destination;
-      const hotelWithRadius = hotelsData.filter((hotel: any) => {
+      const hotelWithRadius = hotelsData.filter((hotel: Hotel) => {
       const lat = hotel.latitude;
       const lng = hotel.longitude;
       return calculateDistance(center.lat, center.lng, lat, lng) <= radiusKm;

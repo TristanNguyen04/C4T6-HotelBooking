@@ -1,6 +1,6 @@
 import prisma from '../utils/prismaClient';
 import { Request, Response } from 'express';
-
+import bcrypt from 'bcrypt';
 export const clearBookingTable = async (req: Request, res: Response) => {
     if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'jest') {
         return res.status(400).json({ error: 'Access denied. Only allowed in test environment.' });
@@ -35,11 +35,12 @@ export const addVerifiedUser = async (req: Request, res: Response) =>{
         if(!name|| !email || !password){
             throw new Error('Missing Parameters');
         }
+        const hashedPassword = await bcrypt.hash(String(password), 10);
         await prisma.user.create({
             data: {
             name: name as string,
             email: email as string,
-            password: password as string,
+            password: hashedPassword as string,
             verificationToken: "token123",
             isVerified: true,
             },

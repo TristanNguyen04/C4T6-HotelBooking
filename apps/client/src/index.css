@@ -135,8 +135,8 @@
 
 /* Cool Search Button */
 .CartBtn {
-  width: 140px;
-  height: 48px;
+  min-width: 120px;
+  /* min-height: 48px; */
   border-radius: 12px;
   border: none;
   background-color: #FF6B6B;

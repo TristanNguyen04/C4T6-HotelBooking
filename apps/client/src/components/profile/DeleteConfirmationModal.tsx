@@ -66,6 +66,7 @@ export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm }: 
                             Confirm your password to proceed
                         </label>
                         <input
+                            data-cy={'enter-delete-pw'}
                             type="password"
                             id="deletePassword"
                             value={password}
@@ -84,6 +85,7 @@ export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm }: 
 
                     <div className="flex space-x-3 pt-2">
                         <button
+                            data-cy={'cancel-delete'}
                             type="button"
                             onClick={handleClose}
                             disabled={loading}
@@ -92,6 +94,7 @@ export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm }: 
                             Cancel
                         </button>
                         <button
+                            data-cy={'confirm-delete-account'}
                             type="submit"
                             disabled={loading}
                             className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"

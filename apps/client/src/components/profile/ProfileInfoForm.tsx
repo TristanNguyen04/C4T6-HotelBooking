@@ -58,6 +58,7 @@ export default function ProfileInfoForm({ user, onUpdate }: ProfileInfoFormProps
                         Full Name
                     </label>
                     <input
+                        data-cy={'change-name-input'}
                         type="text"
                         id="name"
                         value={name}
@@ -95,6 +96,7 @@ export default function ProfileInfoForm({ user, onUpdate }: ProfileInfoFormProps
                 )}
 
                 <button
+                    data-cy={'update-profile'}
                     type="submit"
                     disabled={loading}
                     className="bg-[#FF6B6B] text-white px-6 py-2 rounded-lg hover:bg-[#ff5a5a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"

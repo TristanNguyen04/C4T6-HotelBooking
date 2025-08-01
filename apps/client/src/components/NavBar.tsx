@@ -143,6 +143,7 @@ const NavBar = () => {
                     // Logged in state - User Avatar with Dropdown
                     <div className="relative" ref={dropdownRef}>
                         <button
+                            data-cy={'click-profile-icon'}
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             className="w-10 h-10 bg-[#FF6B6B] text-white rounded-full flex items-center justify-center font-semibold text-lg hover:bg-[#ff5a5a] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF6B6B] focus:ring-offset-2"
                         >
@@ -162,6 +163,7 @@ const NavBar = () => {
                                 </div>
                                 
                                 <button
+                                    data-cy={'go-to-profile'}
                                     onClick={handleProfileClick}
                                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                                 >
