@@ -1,0 +1,4 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+export default function DeleteAccountSection({ onDeleteClick }) {
+    return (_jsxs("div", { className: "pt-8 border-t border-red-200", children: [_jsx("h2", { className: "text-xl font-semibold text-red-600 mb-4", children: "Danger Zone" }), _jsxs("div", { className: "bg-red-50 border border-red-200 rounded-lg p-4", children: [_jsx("h3", { className: "text-lg font-medium text-red-800 mb-2", children: "Delete Account" }), _jsx("p", { className: "text-red-700 text-sm mb-4", children: "Once you delete your account, there is no going back. This will permanently delete your account, all your bookings, and remove all associated data. This action cannot be undone." }), _jsx("button", { onClick: onDeleteClick, className: "bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium", children: "Delete My Account" })] })] }));
+}

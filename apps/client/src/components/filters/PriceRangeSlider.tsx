@@ -32,8 +32,8 @@ const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         if (!isDragging || !sliderRef.current) return;
 
         const rect = sliderRef.current.getBoundingClientRect();
-        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-        const percent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+        const clientX = 'touches' in e ? e.touches[0]?.clientX : e.clientX;
+        const percent = Math.max(0, Math.min(100, ((clientX ?? 0) - rect.left) / rect.width) * 100);
         const newValue = actualMinPrice + (percent / 100) * priceRange;
 
         if (isDragging === 'min') {

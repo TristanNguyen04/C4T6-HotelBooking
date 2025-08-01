@@ -20,6 +20,15 @@ interface RoomImageModalProps {
   nights?: number;
 }
 
+type ParsedRoomData = {
+  roomDetails: Record<string, string>;
+  additionalInfo: {
+    checkInInstructions: string[];
+    knowBeforeYouGo: string[];
+    feesOptional: { items: string[]; note?: string };
+  };
+};
+
 const RoomImageModal: React.FC<RoomImageModalProps> = ({
   isOpen,
   images,
@@ -36,11 +45,19 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
   nights = 1
 }) => {
   // Parse room data from the first room 
-  const parsedRoomData = useMemo(() => {
+  const parsedRoomData: ParsedRoomData = useMemo(() => {
     if (rooms.length > 0) {
       return parseRoomJson(rooms[0]!);
     }
-    return {}; // Return empty object instead of null
+
+    return {
+      roomDetails: {},
+      additionalInfo: {
+        checkInInstructions: [],
+        knowBeforeYouGo: [],
+        feesOptional: { items: [] }
+      }
+    };
   }, [rooms]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {

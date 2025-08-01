@@ -6,9 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "build:analyze": "npm run build && npx vite-bundle-analyzer dist/stats.html",
     "preview": "vite preview",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest",
+    "test:ci": "jest --ci --coverage --watchAll=false",
     "start:test": "vite --mode test"
   },
   "dependencies": {
