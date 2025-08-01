@@ -12,26 +12,36 @@ import bookingRoutes from "./routes/bookingRoutes";
 import dbUtilRoutes from "./routes/dbUtilRoutes";
 
 const app: Application = express();
-const PORT: number = 3000;
+const PORT: number = parseInt(process.env.PORT || '3000'); // Use environment PORT
+
+// Configure CORS for production
+const allowedOrigins = process.env.FRONTEND_URL 
+  ? [process.env.FRONTEND_URL, "http://localhost:5173"]
+  : ["http://localhost:5173"];
 
 app.use(cors({
-  origin: "http://localhost:5173", // allow Vite frontend
+  origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 }));
 
-app.use(express.json()); // make sure body parsing works
+app.use(express.json());
 
-// mount your router
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, Express with TypeScript!');
+// Health check endpoint
+app.get('/health', (req: Request, res: Response) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hotel Booking API Server');
+});
+
 app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, paymentRoutes, dbUtilRoutes);
 
 // only start server if not in test environment (jest)
 if(process.env.NODE_ENV !== 'jest'){
-  app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => { // Bind to all interfaces
+      console.log(`Server is running on port ${PORT}`);
   });
 }
 
