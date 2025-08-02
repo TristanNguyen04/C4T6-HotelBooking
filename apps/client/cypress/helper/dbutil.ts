@@ -18,7 +18,7 @@ export function register(email:string, password:string, name:string){
     cy.get('.gap-3 > .bg-red-400').click(); // click continue
     cy.get('.gap-3 > .bg-red-400').click().then(()=>{
         cy.wait(2000); // wait for the registration of the user to be logged in the test db
-        cy.request('GET', `http://localhost:3000/api/auth/get-uid?email=${email}`).then((res)=>{
+        cy.request('GET', `http://localhost:3000/api/auth/get-uid?email=${encodeURIComponent(email)}`).then((res)=>{
             const token = res.body.token;
             cy.request('GET',`http://localhost:3000/api/auth/verify-email?token=${token}`).then((verifyRes)=>{
                 cy.log(JSON.stringify(verifyRes));

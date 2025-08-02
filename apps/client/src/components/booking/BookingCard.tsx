@@ -63,7 +63,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking }) => {
               {/* Hotel Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-3 mb-2">
-                  <h3 className="text-xl font-semibold text-gray-900 truncate">
+                  <h3 className="text-xl font-semibold text-gray-900 truncate" data-cy={'booking-hotel-name'}>
                     {booking.hotelName}
                   </h3>
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${color}`}>

@@ -83,6 +83,7 @@ const PrimaryGuestCard: React.FC<PrimaryGuestCardProps> = ({
               First Name *
             </label>
             <input
+              data-cy={'first-name'}
               type="text"
               value={formData.primaryGuestFirstName}
               onChange={(e) => handleChange('primaryGuestFirstName', e.target.value)}
@@ -103,6 +104,7 @@ const PrimaryGuestCard: React.FC<PrimaryGuestCardProps> = ({
               Last Name *
             </label>
             <input
+              data-cy={'last-name'}
               type="text"
               value={formData.primaryGuestLastName}
               onChange={(e) => handleChange('primaryGuestLastName', e.target.value)}
@@ -124,6 +126,7 @@ const PrimaryGuestCard: React.FC<PrimaryGuestCardProps> = ({
             Phone Number *
           </label>
           <input
+            data-cy={'phone-number'}
             type="tel"
             value={formData.primaryGuestPhoneNumber}
             onChange={(e) => handleChange('primaryGuestPhoneNumber', e.target.value)}
@@ -144,6 +147,7 @@ const PrimaryGuestCard: React.FC<PrimaryGuestCardProps> = ({
             Special Requests (Optional)
           </label>
           <textarea
+            data-cy={'special-request'}
             value={formData.specialRequest}
             onChange={(e) => handleChange('specialRequest', e.target.value)}
             rows={4}

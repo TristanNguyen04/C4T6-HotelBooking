@@ -67,6 +67,7 @@ const RoomOptionsList: React.FC<RoomOptionsListProps> = ({
               <div className="text-sm text-gray-500">{priceLabel}</div>
             </div>
             <button
+              data-cy={'click-to-book'}
               onClick={() => onBookRoom(room.key)}
               className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >

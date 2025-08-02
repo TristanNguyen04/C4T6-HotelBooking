@@ -2,6 +2,7 @@ import { Router,Request,Response } from "express";
 import stripe from "../utils/stripeClient";
 import prisma from '../utils/prismaClient';
 import { sendBookingConfirmationEmail } from '../utils/sendEmail';
+import { PrismaRequest } from "../utils/express";
 
 export const createCheckoutSession = async(req:Request, res:Response) => {
     try {
@@ -53,7 +54,8 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
     }
 };
 
-export const handlePaymentSuccess = async (req: Request, res: Response) => {
+export const handlePaymentSuccess = async (req: PrismaRequest, res: Response) => {
+    const prisma = req.prisma;
     const { sessionId } = req.body;
     
     try {
@@ -155,4 +157,53 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
         console.error("Payment verification error:", error);
         res.status(500).json({ error: "Failed to verify payment" });
     }
+};
+
+export const mockPaymentSuccess = async (req: PrismaRequest, res: Response) => {
+    const prisma = req.prisma;
+    if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'jest'){
+        return res.status(400).json({error:'Only used in test environment'})
+    }
+    const { sessionId, userId, bookings } = req.body;
+
+    if (!sessionId || !userId || !bookings) {
+        return res.status(400).json({ error: "Missing required parameters" });
+    }
+
+    // Idempotency check
+    const existingBooking = await prisma.booking.findFirst({
+        where: { userId, stripeSessionId: sessionId }
+    });
+
+    if (existingBooking) {
+        return res.status(200).json({ message: "Booking already exists" });
+    }
+
+    const createdBookings = [];
+    for (const booking of bookings) {
+        const createdBooking = await prisma.booking.create({
+        data: {
+            hotelId: booking.hotelId,
+            hotelName: booking.hotelName,
+            roomKey: booking.roomKey,
+            roomDescription: booking.roomDescription,
+            roomImage: booking.roomImage,
+            request: booking.request,
+            guestName: booking.guestName,
+            guestNumber: booking.guestNumber,
+            checkin: new Date(booking.checkin),
+            checkout: new Date(booking.checkout),
+            guests: booking.guests.toString(),
+            baseRateInCurrency: parseFloat(booking.baseRateInCurrency),
+            includedTaxesAndFeesInCurrency: parseFloat(booking.includedTaxesAndFeesInCurrency),
+            stripeSessionId: sessionId,
+            User: {
+            connect: { id: userId }
+            }
+        }
+        });
+        createdBookings.push(createdBooking);
+    }
+
+    res.status(201).json({ message: "Mock booking created", bookings: createdBookings });
 };

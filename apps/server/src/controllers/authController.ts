@@ -9,6 +9,7 @@ import prisma from '../utils/prismaClient';
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
 export const register = async (req: Request, res: Response) => {
+    const prisma = req.prisma;
     const { email, password, name } = req.body;
     
     const existing = await prisma.user.findUnique({
@@ -40,6 +41,7 @@ export const register = async (req: Request, res: Response) => {
 }
 
 export const verifyEmail = async (req: Request, res: Response) => {
+    const prisma = req.prisma;
     const { token } = req.query;
     if(!token || typeof token !== 'string'){
         return res.status(400).send(createErrorHtml('Missing Token', 'The verification link appears to be incomplete. Please check your email and click the complete link.'));
@@ -64,6 +66,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 }
 
 export const login = async (req: Request, res: Response) => {
+    const prisma = req.prisma;
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({
@@ -96,6 +99,7 @@ export const login = async (req: Request, res: Response) => {
 }
 
 export const resendVerificationEmail = async (req: Request, res: Response) => {
+    const prisma = req.prisma;
     const { email } = req.body;
 
     const user = await prisma.user.findUnique({
@@ -128,6 +132,7 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
 }
 
 export const checkVerificationStatus = async (req: Request, res: Response) => {
+    const prisma = req.prisma;
     const { email } = req.query;
     
     if(!email || typeof email !== 'string'){
@@ -170,6 +175,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 };
 
 export const updateProfile = async (req: AuthRequest, res: Response) => {
+    const prisma = req.prisma;
     try {
         const { name } = req.body;
 
@@ -198,6 +204,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 };
 
 export const changePassword = async (req: AuthRequest, res: Response) => {
+    const prisma = req.prisma;
     try {
         const { currentPassword, newPassword } = req.body;
 
@@ -233,6 +240,7 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
 };
 
 export const deleteAccount = async (req: AuthRequest, res: Response) => {
+    const prisma = req.prisma;
     try {
         const { password } = req.body;
 
@@ -266,6 +274,8 @@ export const deleteAccount = async (req: AuthRequest, res: Response) => {
 };
 
 export const getUID = async (req: Request, res: Response)=>{
+
+    const prisma = req.prisma;
     const { email } = req.query;
     if(!email || typeof email !== 'string'){
         return res.status(400).json({error: 'Invalid Parameter'});
@@ -274,13 +284,10 @@ export const getUID = async (req: Request, res: Response)=>{
     const user = await prisma.user.findFirst({
         where: {email : email}
     })
-    console.log(JSON.stringify(user));
-    res.json({token: user?.verificationToken});
-
     if(!user){
         return res.status(400).json({error: 'User not found'});
     }
-    res.json({token: user?.verificationToken});
+    res.json({id: user?.id, token: user?.verificationToken});
 }
 
 function createSuccessHtml(title: string, message: string): string {
@@ -357,3 +364,5 @@ function createErrorHtml(title: string, message: string): string {
     </html>
     `;
 }
+
+
