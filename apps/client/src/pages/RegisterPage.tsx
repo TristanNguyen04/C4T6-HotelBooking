@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register, resendVerificationEmail } from "../api/auth";
-import Layout from "../layouts/Layout";
 import { 
   Step1Form, 
   Step2Form, 
@@ -151,7 +150,6 @@ export default function RegisterPage() {
   };
 
   return (
-    <Layout showNavBar={false}>
       <div className="bg-gray-50 flex justify-center mt-20">
         {/* Main Content */}
         <main className="flex flex-1 justify-center mt-20 px-4 py-14 mb-20">
@@ -241,6 +239,5 @@ export default function RegisterPage() {
         </div>
       </main>
       </div>
-    </Layout>
   );
 }

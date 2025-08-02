@@ -118,7 +118,7 @@ export default function SearchResultsPage(){
     return (
         <div className="min-h-screen bg-gray-100 w-screen m-0 p-0 box-border">
             <header className="bg-[#003580] text-white sticky top-20 z-[1000] shadow-lg w-full">
-                <div className="max-w-screen-xl mx-auto px-6 py-4 w-full">
+                <div className="max-w-screen-xl mx-auto px-4 pb-3 pt-5 w-full">
                     <SearchBar
                         onSubmit={({ destination, checkin, checkout, guests, rooms, adults, children }) => {
                             navigate(`/search?term=${encodeURIComponent(destination.term)}&destination_id=${destination.uid}&checkin=${checkin}&checkout=${checkout}&guests=${guests}&adults=${adults}&children=${children}&rooms=${rooms}`);

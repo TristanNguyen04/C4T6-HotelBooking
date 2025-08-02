@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Step3FormProps {
   email: string;
   name: string;

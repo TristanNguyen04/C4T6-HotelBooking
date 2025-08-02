@@ -1,12 +1,10 @@
 import "../styles/map.css";
 import {InfoWindow} from "@vis.gl/react-google-maps";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel as RawCarousel, type CarouselProps} from "react-responsive-carousel";
+import { Carousel } from "react-responsive-carousel";
 import type {Hotel} from "../types/hotel";
 import default_hotel_image from "../assets/default_hotel_image.png";
 import { useNavigate ,  useLocation } from "react-router-dom";
-
-const Carousel = RawCarousel as unknown as React.ComponentType<CarouselProps>;
 
 type HotelInfoWindowProps = {
   hotel: Hotel;

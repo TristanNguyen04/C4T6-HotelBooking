@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { searchLocations } from '../api/hotels';
 import { parseDate, convertDateFormat } from '../utils/date';
 import DateRangePicker, { type DateRange } from './DateRangePicker';
@@ -52,6 +53,10 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
     const [childrenAges, setChildrenAges] = useState<number[]>(initialValues?.childrenAges || []);
     
     const occupancyRef = useRef<HTMLDivElement>(null);
+
+    const location = useLocation();
+    const isSearchPage = location.pathname === '/search';
+    const isHotelPage = location.pathname.includes('/hotel/');
 
     useEffect(() => {
         if (term.length < 1) {
@@ -154,11 +159,11 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
         <form
             onSubmit={handleSubmit} 
             autoComplete="off"
-            className='bg-white text-gray-800 shadow-2xl rounded-xl px-4 py-6 md:px-6 md:py-4 
-            flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-4 w-full max-w-none'>
+            className='bg-white text-gray-800 shadow-2xl rounded-xl px-3 py-3 md:px-4 md:py-3 
+            flex flex-col lg:flex-row lg:items-end gap-3 lg:gap-3 w-full max-w-none'>
             
             <div className="flex-1 min-w-0">
-                <div className='flex items-center gap-2 mb-2'>
+                <div className='flex items-center gap-2 mb-1'>
                     <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
@@ -172,8 +177,9 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                         data-cy={"DestinationSearch"}
                         type="text" 
                         autoComplete="off"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm placeholder-gray-500 
-                        focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors" 
+                        className={`w-full rounded-lg border border-gray-300 text-sm placeholder-gray-500 
+                        focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors
+                        ${isSearchPage || isHotelPage ? 'px-3 py-2' : 'px-4 py-3'}`}
                         placeholder="Where are you going?" 
                         value={term}
                         onChange={e => {
@@ -258,7 +264,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
             </div>
 
             <div className="flex-1 min-w-0">
-                <div className='flex items-center gap-2 mb-2'>
+                <div className='flex items-center gap-2 mb-1'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
                     </svg>
@@ -274,15 +280,16 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
             </div>
 
             <div className="relative flex-1 min-w-0">
-                <div className='flex items-center gap-2 mb-2'>
+                <div className='flex items-center gap-2 mb-1'>
                     <svg className="w-4 h-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                     </svg>
                     <label className="text-sm font-medium text-gray-700">Rooms & Guests</label>
                 </div>
                 <div
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm cursor-pointer bg-white 
-                    hover:border-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                    className={`w-full rounded-lg border border-gray-300 text-sm cursor-pointer bg-white 
+                    hover:border-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors
+                    ${isSearchPage || isHotelPage ? 'px-3 py-2' : 'px-4 py-3'}`}
                     data-cy={`room-guest-selector`}
                     onClick={() => setShowOccupancy(prev => !prev)}
                     tabIndex={0}>

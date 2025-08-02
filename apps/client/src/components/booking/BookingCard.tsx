@@ -1,6 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import type { BookingHistory } from '../../types/hotel';
+import { parseGuestInfo } from '../../utils/age';
 
 interface BookingCardProps {
   booking: BookingHistory;
@@ -35,6 +36,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking }) => {
   const { status, color } = getBookingStatus(booking.checkin, booking.checkout);
   const nights = calculateNights(booking.checkin, booking.checkout);
   const totalPrice = booking.baseRateInCurrency + booking.includedTaxesAndFeesInCurrency;
+  const guestInfo = parseGuestInfo(booking.guests);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -86,6 +88,33 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking }) => {
                     <span className="font-medium">Duration:</span>
                     <br />
                     {nights} night{nights !== 1 ? 's' : ''}
+                  </div>
+                </div>
+
+                {/* Guest Information */}
+                <div className="mt-3 text-sm text-gray-600">
+                  <span className="font-medium">Accommodation:</span>
+                  <div className="flex flex-wrap gap-4 mt-1">
+                    <span>
+                      {guestInfo.rooms} room{guestInfo.rooms !== 1 ? 's' : ''}
+                    </span>
+                    <span>•</span>
+                    <span>
+                      {guestInfo.adults} adult{guestInfo.adults !== 1 ? 's' : ''}
+                    </span>
+                    {guestInfo.children > 0 && (
+                      <>
+                        <span>•</span>
+                        <span>
+                          {guestInfo.children} child{guestInfo.children !== 1 ? 'ren' : ''}
+                          {guestInfo.childrenAges.length > 0 && (
+                            <span className="text-gray-500">
+                              {' '}(ages: {guestInfo.childrenAges.join(', ')})
+                            </span>
+                          )}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 

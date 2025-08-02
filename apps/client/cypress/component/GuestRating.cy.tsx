@@ -1,7 +1,5 @@
-import GuestRatingFilter from "../../src/components/filters/GuestRatingFilter";
+import { GuestRatingFilter } from "../../src/components/filters";
 import { mount } from "cypress/react";
-import type { Hotel } from "../../src/types/hotel";
-import React from "react";
 import { mockHotels } from "../helper/hotelTest";
 
 describe("Guest Rating Filter", () => {
@@ -12,7 +10,7 @@ describe("Guest Rating Filter", () => {
     const defaultProps = {
       hotels: mockHotels,
       selectedGuestRatings: [],
-      setSelectedGuestRatings: cy.stub().as("setSelectedGuestRatings"),
+      setSelectedGuestRatings: setSelectedGuestRatings,
     };
     mount(<GuestRatingFilter {...defaultProps} />);
   });

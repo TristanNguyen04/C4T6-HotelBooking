@@ -3,9 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { sendVerificationEmail } from '../utils/sendEmail';
-import { PrismaClient } from '@prisma/client'; // ORM
 import { AuthRequest } from '../middleware/auth';
-import prisma from '../utils/prismaClient'; // ORM
+import prisma from '../utils/prismaClient';
 
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
@@ -19,7 +18,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     if(existing){
-        return res.status(400).json({ error: 'Email already in use' });
+        return res.status(400).send(createErrorHtml('Email Already in Use', 'An account with this email address already exists. Please try logging in or use a different email address.'));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,13 +30,19 @@ export const register = async (req: Request, res: Response) => {
 
     await sendVerificationEmail(email, verificationToken);
     
+    // Check if request expects HTML (from browser) or JSON (from API)
+    if (req.headers['content-type']?.includes('application/x-www-form-urlencoded') || 
+        req.headers['accept']?.includes('text/html')) {
+        return res.send(createSuccessHtml('Registration Successful! 📧', 'Please check your email to verify your account. You\'ll need to click the verification link before you can sign in.'));
+    }
+    
     res.json({ message: 'Registration successful. Please check your email to verify your account.'});
 }
 
 export const verifyEmail = async (req: Request, res: Response) => {
     const { token } = req.query;
     if(!token || typeof token !== 'string'){
-        return res.status(400).json({ error: 'Missing token' });
+        return res.status(400).send(createErrorHtml('Missing Token', 'The verification link appears to be incomplete. Please check your email and click the complete link.'));
     }
 
     const user = await prisma.user.findFirst({
@@ -47,7 +52,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     })
 
     if(!user){
-        return res.status(400).json({ error: 'Invalid or expired token' });
+        return res.status(400).send(createErrorHtml('Invalid or Expired Token', 'This verification link has expired or is invalid. You can request a new verification email from the login page.'));
     }
 
     await prisma.user.update({
@@ -55,7 +60,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
         data: { isVerified: true, verificationToken: null }
     });
 
-    res.json({ message: 'Email verified successfully. You can now login.' });
+    res.send(createSuccessHtml('Email Verified Successfully! 🎉', 'Your account has been verified. You can now sign in and start booking amazing hotels!'));
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -98,11 +103,11 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
     });
 
     if(!user){
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).send(createErrorHtml('User Not Found', 'No account found with this email address. Please check the email or create a new account.'));
     }
 
     if(user.isVerified){
-        return res.status(400).json({ error: 'Email is already verified' });
+        return res.status(400).send(createErrorHtml('Already Verified', 'This email address is already verified. You can sign in normally.'));
     }
 
     const verificationToken = crypto.randomBytes(32).toString('hex');
@@ -113,6 +118,11 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
     });
 
     await sendVerificationEmail(email, verificationToken);
+    
+    // Check if request expects HTML or JSON
+    if (req.headers['accept']?.includes('text/html')) {
+        return res.send(createSuccessHtml('Verification Email Sent 📧', 'A new verification email has been sent. Please check your inbox and click the verification link.'));
+    }
     
     res.json({ message: 'Verification email sent successfully' });
 }
@@ -269,4 +279,79 @@ export const getUID = async (req: Request, res: Response)=>{
         return res.status(400).json({error: 'User not found'});
     }
     res.json({id: user?.id, token: user?.verificationToken});
+}
+
+function createSuccessHtml(title: string, message: string): string {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title} - StayEase</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="text-center max-w-md mx-auto px-4">
+            <div class="bg-green-100 text-green-600 p-8 rounded-lg mb-6">
+                <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">${title}</h2>
+                <p>${message}</p>
+            </div>
+            <div class="space-y-3">
+                <a href="${frontendUrl}/login" class="block w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-decoration-none">
+                    Go to Login
+                </a>
+                <a href="${frontendUrl}/" class="block w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors text-decoration-none">
+                    Browse Hotels
+                </a>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+}
+
+function createErrorHtml(title: string, message: string): string {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title} - StayEase</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="text-center max-w-md mx-auto px-4">
+            <div class="bg-red-100 text-red-600 p-8 rounded-lg mb-6">
+                <div class="w-16 h-16 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">${title}</h2>
+                <p>${message}</p>
+            </div>
+            <div class="space-y-3">
+                <a href="${frontendUrl}/login" class="block w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-decoration-none">
+                    Go to Login
+                </a>
+                <a href="${frontendUrl}/register" class="block w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors text-decoration-none">
+                    Create Account
+                </a>
+                <a href="${frontendUrl}/" class="block w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors text-decoration-none">
+                    Browse Hotels
+                </a>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
 }
