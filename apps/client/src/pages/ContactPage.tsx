@@ -9,6 +9,10 @@ export default function ContactPage() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const [showFAQ, setShowFAQ] = useState(false);
+
+  const [openFAQIndex, setOpenFAQIndex] = useState<number | null>(null);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -73,6 +77,15 @@ export default function ContactPage() {
       answer: "We accept all major credit cards, PayPal, and various local payment methods depending on your location."
     }
   ];
+
+  const toggleFAQ = () => {
+    setShowFAQ(prev => !prev);
+    setOpenFAQIndex(null); // Reset selected question
+  };
+
+  const handleQuestionClick = (index: number) => {
+    setOpenFAQIndex(prev => (prev === index ? null : index));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 mt-20">
@@ -213,11 +226,15 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-600">For urgent booking issues, call us now</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
+                <div
+                  onClick={toggleFAQ}
+                  className="relative group flex items-center space-x-3 p-4 bg-green-50 rounded-lg 
+                            transform transition duration-200 ease-in-out hover:scale-105 cursor-pointer"
+                >
                   <div className="text-2xl">❓</div>
-                  <div>
-                    <h3 className="font-bold text-gray-800">FAQ Section</h3>
-                    <p className="text-sm text-gray-600">Find answers to common questions below</p>
+                  <div className="w-full text-left flex flex-col items-start">
+                    <h3 className="font-bold text-gray-800 text-xl">FAQ Section</h3>
+                    <p className="text-sm text-gray-600">Click to find answers to common questions below</p>
                   </div>
                 </div>
               </div>
@@ -226,18 +243,23 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* FAQ Section */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mt-12">
-          <h2 className="text-2xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* pops up Q&A when FAQ btn pressed */}
+        {showFAQ && (
+          <div className="mt-6 space-y-4">
             {faqItems.map((faq, index) => (
-              <div key={index} className="space-y-3">
-                <h3 className="font-bold text-gray-800">{faq.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <div
+                key={index}
+                className="border-b pb-3 cursor-pointer select-none"
+                onClick={() => handleQuestionClick(index)}
+              >
+                <h4 className="text-blue-700 font-medium">{faq.question}</h4>
+                {openFAQIndex === index && (
+                  <p className="text-gray-600 mt-1 text-sm">{faq.answer}</p>
+                )}
               </div>
             ))}
           </div>
-        </div>
+        )}
 
       </div>
     </div>
