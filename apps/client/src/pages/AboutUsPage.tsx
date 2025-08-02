@@ -57,7 +57,7 @@ export default function AboutUsPage() {
         
         {/* Hero Section */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-12">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-16 text-center text-white">
+          <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF7F50] to-[#FFA07A] px-8 py-16 text-center text-white">
             <h1 className="text-4xl font-bold mb-4">About StayEase</h1>
             <p className="text-xl opacity-90 max-w-3xl mx-auto">
               Comfort wherever you go - making hotel booking simple, secure, and affordable for travelers worldwide.
@@ -144,7 +144,7 @@ export default function AboutUsPage() {
               Start Booking
             </button>
             <button 
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.href = '/contact'}
               className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200"
             >
               Contact Us
