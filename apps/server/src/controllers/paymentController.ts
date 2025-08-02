@@ -2,6 +2,7 @@ import { Router,Request,Response } from "express";
 import stripe from "../utils/stripeClient";
 import prisma from '../utils/prismaClient';
 import { sendBookingConfirmationEmail } from '../utils/sendEmail';
+import { PrismaRequest } from "../utils/express";
 
 export const createCheckoutSession = async(req:Request, res:Response) => {
     try {
@@ -53,7 +54,8 @@ export const createCheckoutSession = async(req:Request, res:Response) => {
     }
 };
 
-export const handlePaymentSuccess = async (req: Request, res: Response) => {
+export const handlePaymentSuccess = async (req: PrismaRequest, res: Response) => {
+    const prisma = req.prisma;
     const { sessionId } = req.body;
     
     try {
@@ -157,7 +159,8 @@ export const handlePaymentSuccess = async (req: Request, res: Response) => {
     }
 };
 
-export const mockPaymentSuccess = async (req: Request, res: Response) => {
+export const mockPaymentSuccess = async (req: PrismaRequest, res: Response) => {
+    const prisma = req.prisma;
     if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'jest'){
         return res.status(400).json({error:'Only used in test environment'})
     }
