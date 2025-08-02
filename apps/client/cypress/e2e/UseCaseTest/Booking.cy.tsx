@@ -15,7 +15,7 @@ describe('UC9, 10, 11, 12, 13, 14 : Booking + Payment', ()=>{
         });
     })
 
-    it('Select Hotel to book', ()=>{
+    it('UC9,10,11,12 : Select Hotel to book', ()=>{
         login(email, password);
         navigateToHotelListing();
         cy.get('[data-cy=HotelListings] > *').first().within(()=>{
@@ -63,8 +63,12 @@ describe('UC9, 10, 11, 12, 13, 14 : Booking + Payment', ()=>{
             }]
         }).then((response) => {
             expect(response.status).to.eq(201);
-        });
+            });
         })
+    });
+
+    it('UC14,15 : Booking Confirmation + View Booking History', ()=>{
+        
     })
     after(()=>{
         cy.request('GET', 'http://localhost:3000/api/dbutil/clear-bookingtable');
