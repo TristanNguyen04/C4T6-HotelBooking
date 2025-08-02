@@ -106,6 +106,7 @@ const CheckoutPage: React.FC = () => {
           setLoading(false);
           return;
         }
+       
 
         setHotel(hotelData);
         setRoom(selectedRoom);

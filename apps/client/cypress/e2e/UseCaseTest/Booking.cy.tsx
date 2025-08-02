@@ -17,6 +17,7 @@ describe('UC9, 10, 11, 12, 13, 14 : Booking + Payment', ()=>{
 
     it('Select Hotel to book', ()=>{
         login(email, password);
+        cy.wait(4000);
         navigateToHotelListing();
         cy.get('[data-cy=HotelListings] > *').first().within(()=>{
             // get the first available hotel room and click book
@@ -27,16 +28,17 @@ describe('UC9, 10, 11, 12, 13, 14 : Booking + Payment', ()=>{
             cy.get('[data-cy=view-details-button]').click();
         });
 
-        cy.get('[data-cy=loading-hotel-details]', { timeout: 10000 }).should('not.exist');
-        cy.get('[data-cy=hotel-details-price]').invoke('text').then((text) => {
-            const actualPrice = parseFloat(text.replace(/[^0-9.]/g, ''));
-            cy.log('actual price', actualPrice)
-            expect(actualPrice).to.be.within(hotelprice - 1, hotelprice + 1);
+        cy.get('[data-cy=loading-hotel-details]', { timeout: 10000 }).should('not.exist').then(()=>{
+            cy.get('[data-cy=hotel-details-price]').invoke('text').then((text) => {
+                const actualPrice = parseFloat(text.replace(/[^0-9.]/g, ''));
+                cy.log('actual price', actualPrice)
+                expect(actualPrice).to.be.within(hotelprice - 1, hotelprice + 1);
+            });
         });
 
         cy.get('[data-cy=click-to-book]').eq(0).should('be.visible').click();
-        cy.get('[data-cy=loading-booking-details]', { timeout: 10000 }).should('not.exist');
-        cy.get('[data-cy=first-name]').type(name);
+        cy.get('[data-cy=loading-booking-details]', { timeout: 10000 }).should('not.exist')
+        cy.get('[data-cy=first-name]', { timeout: 10000 }).should('be.visible').type(name);
         cy.get('[data-cy=last-name]').type(name);
         cy.get('[data-cy=phone-number]').type('12345678');
         cy.get('[data-cy=special-request]').type('Birthday Surprise');
@@ -63,7 +65,19 @@ describe('UC9, 10, 11, 12, 13, 14 : Booking + Payment', ()=>{
             }]
         }).then((response) => {
             expect(response.status).to.eq(201);
+            // go to the booking success page
         });
+        })
+    });
+
+    it('View Hotel Booking', ()=>{
+        login(email, password);
+        cy.wait(4000);
+        cy.get('[data-cy=click-profile-icon]').should('be.visible').click();
+        // see booking history
+        cy.get('[data-cy=go-to-booking]').should('be.visible').click();
+        cy.get('[data-cy=booking-hotel-name]').invoke('text').then((res)=>{
+            expect(res).eq("Test Hotel");
         })
     })
     after(()=>{
