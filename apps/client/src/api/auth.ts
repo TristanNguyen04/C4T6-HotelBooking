@@ -26,3 +26,6 @@ export const changePassword = (data: {
 export const deleteAccount = (data: {
     password: string;
 }) => API.delete('/auth/delete-account', { data });
+export const addVerifiedUser = (data: {
+    email: string; password: string; name?: string
+}) => API.delete('/auth/delete-account', { data });
