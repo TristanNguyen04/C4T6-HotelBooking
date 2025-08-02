@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import { fuzzPrisma } from '../utils/prismaClient';
 
 interface PrismaRequest extends Request {
   prisma: PrismaClient;
@@ -33,11 +34,11 @@ export const clearUserTable = async (req: PrismaRequest , res: Response) =>{
 }
 
 export const addVerifiedUser = async (req: PrismaRequest, res: Response) =>{
-    if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'jest' ){
-        return res.status(400).json({error: 'Access denied. Only allowed in test environment.'});
+    if (req.prisma !== fuzzPrisma) {
+    return res.status(403).json({ error: 'Access denied: only allowed on test DB' });
     }
     try{
-        const {name, email, password} = req.query;
+        const {name, email, password} = req.body;
         if(!name|| !email || !password){
             throw new Error('Missing Parameters');
         }

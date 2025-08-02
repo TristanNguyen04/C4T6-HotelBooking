@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('DATABASE_TEST_URL:', process.env.DATABASE_TEST_URL);
+
 import { PrismaClient } from "@prisma/client";
 
 // use the same prisma connection
