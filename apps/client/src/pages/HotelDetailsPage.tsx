@@ -175,7 +175,7 @@ export default function HotelDetailsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+            <div data-cy={'loading-hotel-details'} className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
                 <Spinner />
                 <p className="mt-4 text-gray-600">Loading hotel details...</p>
             </div>

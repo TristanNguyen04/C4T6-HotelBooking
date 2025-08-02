@@ -65,7 +65,7 @@ const HotelDetailsHeader: React.FC<HotelDetailsHeaderProps> = ({ hotel, onBookNo
                     <div className="lg:text-right">
                         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                             <p className="text-sm text-blue-600 font-medium mb-1">From per night</p>
-                            <p className="text-3xl font-bold text-blue-900">
+                            <p className="text-3xl font-bold text-blue-900" data-cy={'hotel-details-price'}>
                                 {hotel.currency} {lowestPrice ? formatPrice(lowestPrice) : 'Unavailable'}
                             </p>
                             <button 

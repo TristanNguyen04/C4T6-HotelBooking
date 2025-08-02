@@ -4,6 +4,7 @@ import { createBookingRecord, retrieveBookingRecord } from '../services/bookingS
 import prisma from '../utils/prismaClient';
 
 export const createBooking = async (req: AuthRequest, res: Response) => {
+    const prisma = req.prisma;
     if(!req.userId){
         return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -61,7 +62,7 @@ export const getMyBookings = async(req: AuthRequest, res: Response) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const bookings = await retrieveBookingRecord(req.userId);
+    const bookings = await retrieveBookingRecord(prisma,req.userId);
 
     res.json(bookings);
 }

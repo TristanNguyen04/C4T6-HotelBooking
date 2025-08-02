@@ -1,4 +1,4 @@
-import prisma from '../utils/prismaClient';
+import { PrismaClient } from '@prisma/client';
 
 interface BookingInput {
   userId: string;
@@ -18,7 +18,7 @@ interface BookingInput {
   sessionId: string;
 }
 
-export const createBookingRecord = async (booking: BookingInput) => {
+export const createBookingRecord = async (prisma: PrismaClient , booking: BookingInput) => {
   return prisma.booking.create({
     data: {
       userId: booking.userId,
@@ -40,7 +40,7 @@ export const createBookingRecord = async (booking: BookingInput) => {
   });
 };
 
-export const retrieveBookingRecord = async (userId: string) => {
+export const retrieveBookingRecord = async (prisma: PrismaClient , userId: string) => {
   return prisma.booking.findMany({
     where: {
       userId: userId

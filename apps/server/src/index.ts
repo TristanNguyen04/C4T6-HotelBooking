@@ -19,6 +19,7 @@ const allowedOrigins = process.env.FRONTEND_URL
   ? [process.env.FRONTEND_URL, "http://localhost:5173"]
   : ["http://localhost:5173"];
 
+  
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
 console.log('Allowed origins:', allowedOrigins);
 
@@ -28,6 +29,21 @@ app.use(cors({
   credentials: true,
 }));
 
+import prisma , {fuzzPrisma } from './utils/prismaClient';
+
+//_______________________________________________________________________
+// Middleware to dynamically assign prisma client based on path prefix
+// added this to allow any api req with /test/... to add dynamically to
+// the fuzzdb, see utils/prismaClient
+app.use((req, res, next) => {
+  if (req.path.startsWith('/test/')) {
+    req.prisma = fuzzPrisma;
+  } else {
+    req.prisma = prisma;
+  }
+  next();
+});
+//_______________________________________________________________________
 app.use(express.json());
 
 // Health check endpoint
@@ -40,7 +56,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use("/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, paymentRoutes, dbUtilRoutes);
-
+app.use("/test/api", destinationRoutes, hotelRoutes, authRoutes, bookingRoutes, paymentRoutes, dbUtilRoutes);
 // only start server if not in test environment (jest)
 if(process.env.NODE_ENV !== 'jest'){
   app.listen(PORT, '0.0.0.0', () => { // Bind to all interfaces

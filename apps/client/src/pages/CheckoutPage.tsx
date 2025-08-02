@@ -106,6 +106,7 @@ const CheckoutPage: React.FC = () => {
           setLoading(false);
           return;
         }
+       
 
         setHotel(hotelData);
         // setRoom(selectedRoom);
@@ -247,7 +248,7 @@ const CheckoutPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center" data-cy="loading-booking-details">
         <div className="text-center">
           <Spinner />
           <p className="mt-4 text-gray-600">Loading booking information...</p>
@@ -352,6 +353,7 @@ const CheckoutPage: React.FC = () => {
               
               {/* Continue Button */}
               <button
+                data-cy={'continue-to-payment'}
                 onClick={handleBookingConfirm}
                 disabled={!isFormValid || checkoutLoading}
                 className={`w-full mt-6 px-6 py-4 rounded-lg font-medium text-lg transition-colors ${
