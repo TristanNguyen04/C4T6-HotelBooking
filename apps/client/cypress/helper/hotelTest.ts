@@ -72,7 +72,7 @@ export function clickLoadMoreIfPresent() {
 export function navigateToHotelListing(){
   cy.visit('/');
   cy.wait(1000);
-  cy.get('input[type=text]').type('malaysia'); 
+  cy.get('input[type=text]').type('singapore'); 
   cy.get('[data-cy=DestinationSuggestions]').eq(1).click(); // use eq() for the second item in the list
 
   // select the date
@@ -82,10 +82,11 @@ export function navigateToHotelListing(){
   const pad = (n) => (n < 10 ? '0' + n : n);
   const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
   const nextMonth = formatMonth(nextMonthDate);
-  const firstDay = 25;
   const lastDayOfNextMonth = new Date(nextMonthDate.getFullYear(), nextMonthDate.getMonth() + 1, 0).getDate();
+  const firstDay = Math.floor(Math.random() * lastDayOfNextMonth) + 1;
+  const endDay = Math.min(firstDay + 7, lastDayOfNextMonth);
   const startDateStr = `${pad(firstDay)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;
-  const endDateStr = `${pad(lastDayOfNextMonth)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;
+  const endDateStr = `${pad(endDay)}/${pad(nextMonthDate.getMonth() + 1)}/${nextMonthDate.getFullYear()}`;
 
   cy.get('[data-cy=stay-period-toggle]').click();
   cy.get('[data-cy=stay-period-month').should('contain', formatMonth(today));
@@ -94,7 +95,7 @@ export function navigateToHotelListing(){
   cy.get('[data-cy=stay-period-month]').should('contain', nextMonth);
 
   cy.contains('button', `${firstDay}`).click();
-  cy.contains('button', `${lastDayOfNextMonth}`).click();
+  cy.contains('button', `${endDay}`).click();
 
   cy.contains('button', 'Done').click();
   cy.get('[data-cy=stay-period-toggle]').should('contain.text', `${startDateStr} - ${endDateStr}`);
