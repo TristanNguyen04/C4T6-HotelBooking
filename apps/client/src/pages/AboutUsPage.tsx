@@ -139,7 +139,7 @@ export default function AboutUsPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               onClick={() => window.location.href = '/'}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+              className="bg-[#FF6B6B] text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300"
             >
               Start Booking
             </button>
