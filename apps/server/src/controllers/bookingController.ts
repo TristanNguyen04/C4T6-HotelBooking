@@ -1,6 +1,6 @@
 import { AuthRequest, } from '../middleware/auth';
 import { Response } from 'express';
-import { createBookingRecord, retrieveBookingRecord } from '../services/bookingService';
+import { retrieveBookingRecord } from '../services/bookingService';
 import prisma from '../utils/prismaClient';
 
 export const createBooking = async (req: AuthRequest, res: Response) => {

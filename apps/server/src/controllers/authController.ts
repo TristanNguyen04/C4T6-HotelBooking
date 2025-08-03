@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import { AuthRequest } from '../middleware/auth';
 import prisma from '../utils/prismaClient';
-
+const testdb = prisma;
 const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
 
 export const register = async (req: Request, res: Response) => {
@@ -274,19 +274,25 @@ export const deleteAccount = async (req: AuthRequest, res: Response) => {
 };
 
 export const getUID = async (req: Request, res: Response)=>{
-    const prisma = req.prisma;
+    // const prisma = req.prisma;
     const { email } = req.query;
     if(!email || typeof email !== 'string'){
         return res.status(400).json({error: 'Invalid Parameter'});
     }
 
-    const user = await prisma.user.findFirst({
+    console.log(testdb === prisma)
+    const user = await testdb.user.findFirst({
         where: {email : email}
     })
 
+    console.log('user:', user);
+    
     if(!user){
+        console.log('no user')
         return res.status(400).json({error: 'User not found'});
     }
+    console.log('user:', user.id);
+    console.log('user:', user.verificationToken);
     res.json({id: user?.id, token: user?.verificationToken});
 }
 

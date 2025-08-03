@@ -260,3 +260,92 @@ describe("POST /api/payments/success", () => {
     expect(res.body).toEqual({ error: "Failed to verify payment" });
   });
 });
+
+describe("POST /test/api/payments/mock-success", () => {
+  let userId: string;
+  let token: string;
+  let sessionId = "mock-session-123";
+
+  const booking = {
+    hotelId: "hotel123",
+    hotelName: "Hotel Test",
+    roomKey: "RK123",
+    roomDescription: "Test Room Description",
+    roomImage: "https://example.com/image.jpg",
+    request: "High floor",
+    guestName: "Test User",
+    guestNumber: "9998887777",
+    checkin: "2025-08-05T00:00:00.000Z",
+    checkout: "2025-08-10T00:00:00.000Z",
+    guests: "2",
+    baseRateInCurrency: "100.00",
+    includedTaxesAndFeesInCurrency: "120.00",
+  };
+
+  beforeAll(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
+    process.env.NODE_ENV = "test"; // Ensure mock route is enabled
+  });
+
+  afterAll(async () => {
+    await tearDown();
+  });
+
+  // Test 1: Successful booking creation
+  test("Creates bookings successfully", async () => {
+    const res = await request(app)
+      .post("/api/payments/mock-success")
+      .send({
+        sessionId,
+        userId,
+        bookings: [booking],
+      });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.message).toBe("Mock booking created");
+    expect(res.body.bookings.length).toBe(1);
+  });
+
+  // Test 2: Booking already exists
+  test("Skips creation if booking already exists", async () => {
+    const res = await request(app)
+      .post("/api/payments/mock-success")
+      .send({
+        sessionId,
+        userId,
+        bookings: [booking],
+      });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("Booking already exists");
+  });
+
+  // Test 3: Missing parameters
+  test("Returns 400 for missing params", async () => {
+    const res = await request(app)
+      .post("/api/payments/mock-success")
+      .send({ sessionId });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ error: "Missing required parameters" });
+  });
+
+  // Test 4: Non-test environment
+  test("Rejects call in non-test environment", async () => {
+    process.env.NODE_ENV = "production"; // simulate prod
+    const res = await request(app)
+      .post("/api/payments/mock-success")
+      .send({
+        sessionId: "prod-session",
+        userId,
+        bookings: [booking],
+      });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ error: "Only used in test environment" });
+
+    process.env.NODE_ENV = "test"; // restore test
+  });
+});

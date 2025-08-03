@@ -1,5 +1,5 @@
 import prisma from '../../src/utils/prismaClient';
-import { createBookingRecord , retrieveBookingRecord } from '../../src/services/bookingService';
+import { retrieveBookingRecord } from '../../src/services/bookingService';
 import { setupTest , tearDown } from '../helper/setup';
 
 describe('Test Booking Wrapper Functions', ()=>{
@@ -9,46 +9,64 @@ describe('Test Booking Wrapper Functions', ()=>{
         const user = await setupTest();
         userId = user.userId;
         token = user.token;
+        await prisma.booking.createMany({
+      data: [
+        {
+          userId: userId,
+          hotelId: "h1",
+          hotelName: "Hotel One",
+          roomKey: "R1",
+          roomDescription: "Description 1",
+          guestName: "Guest 1",
+          guestNumber: "12345678",
+          checkin: new Date('2025-01-01'),
+          checkout: new Date('2025-01-02'),
+          guests: "1",
+          baseRateInCurrency: 100,
+          includedTaxesAndFeesInCurrency: 120,
+          createdAt: new Date('2025-01-10'),
+          stripeSessionId: '12345',
+        },
+        {
+          userId: userId,
+          hotelId: "h2",
+          hotelName: "Hotel Two",
+          roomKey: "R2",
+          roomDescription: "Description 2",
+          guestName: "Guest 2",
+          guestNumber: "87654321",
+          checkin: new Date('2025-02-01'),
+          checkout: new Date('2025-02-02'),
+          guests: "2",
+          baseRateInCurrency: 200,
+          includedTaxesAndFeesInCurrency: 240,
+          createdAt: new Date('2025-02-10'),
+          stripeSessionId: '12345'
+        },
+      ]
+    });
     });
 
     afterAll(async()=>{
         tearDown();
     })
+    test('should return bookings ordered by createdAt descending', async () => {
+    const bookings = await retrieveBookingRecord(prisma, userId);
 
-    test('Test createBookingRecord', async()=>{
-        const create = await createBookingRecord({
-                userId: userId,
-                hotelId: "Test123",
-                hotelName: "Test Hotel",
-                roomKey: "suite-ocean-view",
-                roomDescription: "Suite with Ocean View and Balcony",
-                roomImage: "suite-image.jpg",
-                request: "Early check-in preferred",
-                guestName: "Alice Johnson",
-                guestNumber: "+1122334455",
-                checkin: new Date('2025-08-01').toISOString(),
-                checkout: new Date('2025-08-05').toISOString(),
-                guests: "3",
-                baseRateInCurrency: 1234,
-                includedTaxesAndFeesInCurrency: 250,
-                sessionId: "session123"
-        });
+    expect(bookings.length).toBe(2);
 
+    // Check order: latest createdAt first
+    expect(new Date(bookings[0].createdAt) > new Date(bookings[1].createdAt)).toBe(true);
 
-        expect(create.userId).toBe(userId);
-        expect(create.hotelId).toBe("Test123");
-        expect(create.hotelName).toBe("Test Hotel");
-        expect(create.roomKey).toBe("suite-ocean-view");
-        expect(create.roomDescription).toBe("Suite with Ocean View and Balcony");
-        expect(create.roomImage).toBe("suite-image.jpg");
-        expect(create.request).toBe("Early check-in preferred");
-        expect(create.guestName).toBe("Alice Johnson");
-        expect(create.guestNumber).toBe("+1122334455");
-        expect(create.checkin).toEqual(new Date('2025-08-01'));
-        expect(create.checkout).toEqual(new Date('2025-08-05'));
-        expect(create.guests).toBe("3");
-        expect(create.baseRateInCurrency).toEqual(1234);
-        expect(create.includedTaxesAndFeesInCurrency).toEqual(250);
-        expect(create.stripeSessionId).toBe("session123");
-    })
-})
+    // Check that the returned bookings belong to the user
+    bookings.forEach(b => {
+      expect(b.userId).toBe(userId);
+    });
+  });
+
+  test('should return empty array if no bookings found', async () => {
+    const bookings = await retrieveBookingRecord(prisma, 'nonexistent-user-id');
+    expect(bookings).toEqual([]);
+  });
+    
+}) 

@@ -219,10 +219,10 @@ describe('Testing Database util functions: Add verified user to database', ()=>{
     test('Add Verified User: In Test Env', async ()=>{
         const res = await request(app)
             .post('/api/dbutil/add-verified-user')
-            .query({name: '999' , email:'999@gmail.com' , password: 123456});
+            .send({name: '999' , email:'999@gmail.com' , password: '123456'});
 
-        expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('TEST: Added verified user');
+        expect(res.statusCode).toBe(200);
         const user = await prisma.user.findUnique({where: {email: '999@gmail.com'}});
         expect(user).toBeDefined();
     });
@@ -252,8 +252,8 @@ describe('Testing Database util functions: Add verified user to database', ()=>{
             .post('/api/dbutil/add-verified-user')
             .query({name: '999' , email:'999@gmail.com' , password: 123456});
 
-        expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBe('Access denied. Only allowed in test environment.');
+        expect(res.body.error).toBe('Access denied: only allowed in fuzzing or test environment');
+        expect(res.statusCode).toBe(403);
         const user = await prisma.user.findUnique({where: {email: '999@gmail.com'}});
         expect(user).toBeNull();
     });
