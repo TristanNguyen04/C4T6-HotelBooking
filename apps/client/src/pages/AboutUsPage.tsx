@@ -42,7 +42,7 @@ export default function AboutUs() {
           transition={{ duration: 1 }}
           className="text-5xl font-extrabold mb-4"
         >
-          Welcome to HotelEase
+          Welcome to StayEase
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
