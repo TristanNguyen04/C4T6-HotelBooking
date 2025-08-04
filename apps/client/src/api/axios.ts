@@ -8,6 +8,7 @@ const API = axios.create({
     ? (import.meta.env.VITE_TEST_API_URL || 'http://localhost:3000/test/api')
     : (import.meta.env.VITE_API_URL || 'http://localhost:3000/api')
 });
+
 API.interceptors.request.use((config) => {
     const token = Cookies.get('auth_token');
     if(token){
