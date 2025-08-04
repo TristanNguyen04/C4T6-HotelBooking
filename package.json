@@ -18,7 +18,7 @@
         "build:server": "cd apps/server && npm run build",
         "install:all": "npm install && cd apps/client && npm install && cd ../server && npm install",
         "start:test": "concurrently \"npm run start:test --prefix apps/server\" \"npm run start:test --prefix apps/client\"",
-        "clean": "find apps -name '*.js' -path '*/src/*' -delete && find apps -name '*.d.ts' -path '*/src/*' -delete && find apps -name '*.js.map' -path '*/src/*' -delete && find apps -name '*.d.ts.map' -path '*/src/*' -delete && find apps -name '*.cy.js' -delete && find apps -name '*.cy.js.map' -delete && find apps -name '*.js' -path '*/cypress/*' -delete && find apps -name '*.js.map' -path '*/cypress/*' -delete && find apps -name '*.tsbuildinfo' -delete && find apps/server/test -name '*.js' -delete && rm -rf apps/client/dist apps/server/dist apps/client/node_modules/.tmp apps/server/node_modules/.tmp"
+        "clean": "find apps -name '*.js' -path '*/src/*' -delete && find apps -name '*.d.ts' -path '*/src/*' ! -path '*/server/src/utils/express.d.ts' ! -path '*/client/src/types/aos.d.ts' -delete && find apps -name '*.js.map' -path '*/src/*' -delete && find apps -name '*.d.ts.map' -path '*/src/*' -delete && find apps -name '*.cy.js' -delete && find apps -name '*.cy.js.map' -delete && find apps -name '*.js' -path '*/cypress/*' -delete && find apps -name '*.js.map' -path '*/cypress/*' -delete && find apps -name '*.tsbuildinfo' -delete && find apps/server/test -name '*.js' -delete && rm -rf apps/client/dist apps/server/dist apps/client/node_modules/.tmp apps/server/node_modules/.tmp"
     },
     "devDependencies": {
         "@types/cors": "^2.8.19",
