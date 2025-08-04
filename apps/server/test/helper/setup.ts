@@ -17,7 +17,6 @@ export async function setupTest(){
     })
     const JWT_SECRET = process.env.JWT_SECRET || '1234567890';
     const userId = testUser.id;
-    console.log('my id', userId)
     const token = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1d' });
 
     return {token, userId: testUser.id}

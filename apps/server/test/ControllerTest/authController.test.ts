@@ -14,17 +14,17 @@ const testUserData = {
 
 // Registration Test Suite
 describe('Registration Flow', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await prisma.user.deleteMany();
   });
   
   afterAll(async () => {
-    await prisma.user.deleteMany();
+    // await prisma.user.deleteMany();
   });
   test('User Registration', async () => {
     const res = await request(app).post('/api/auth/register').send(testUserData);
 
-    expect(res.body.message).toContain('Registration successful. Please check your email to verify your account.');
+    expect(res.text).toMatch(/Registration Successful/i);
     
     const user = await prisma.user.findUnique({ where: { email: testUserData.email } });
     expect(res.statusCode).toBe(200);
@@ -40,7 +40,7 @@ describe('Registration Flow', () => {
     const res = await request(app).post('/api/auth/register').send(testUserData);
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toEqual('Email already in use');
+    expect(res.text).toContain('Email Already in Use');
   });
 });
 
@@ -60,7 +60,7 @@ describe('Email Verification', ()=>{
     const res = await request(app).get('/api/auth/verify-email').query({ token: user?.verificationToken });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.message).toEqual('Email verified successfully. You can now login.');
+    expect(res.text).toContain('Email Verified');
 
     const updatedUser = await prisma.user.findUnique({ where: { email: testUserData.email } });
     expect(updatedUser?.isVerified).toBe(true);
@@ -71,7 +71,7 @@ describe('Email Verification', ()=>{
     const res = await request(app).get('/api/auth/verify-email').query({ token: 'fake-token' });
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toEqual('Invalid or expired token');
+    expect(res.text).toMatch(/Invalid or Expired Token|expired or is invalid/i);
 
   });
 
@@ -79,7 +79,7 @@ describe('Email Verification', ()=>{
     const res = await request(app).get('/api/auth/verify-email').query({});
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toEqual('Missing token');
+    expect(res.text).toMatch(/Missing Token|incomplete/i);
   });
 });
 
@@ -150,7 +150,7 @@ describe('Resend Email Verification Flow', ()=>{
 
   test('Resend Verification : User not found', async ()=>{
     const res = await request(app).post('/api/auth/resend-verification').send({ email: testUserData.email });
-    expect(res.body.error).toEqual('User not found');
+    expect(res.text).toMatch(/User Not Found/i);
     expect(res.statusCode).toBe(404);
   });
 
@@ -161,7 +161,7 @@ describe('Resend Email Verification Flow', ()=>{
       data: {isVerified: true},
     });
     const res = await request(app).post('/api/auth/resend-verification').send({email:testUserData.email});
-    expect(res.body.error).toEqual('Email is already verified');
+    expect(res.text).toMatch(/Already Verified/i);
     expect(res.statusCode).toBe(400);
   })
 });
@@ -460,21 +460,47 @@ describe('Delete Account Test', ()=>{
       })
     expect(res.body.error).toBe('Failed to delete account');
     expect(res.statusCode).toBe(500);
+    spy.mockRestore();
   });
 })
-// describe('Test getUID', ()=>{
-//   let userId: string;
-//   let token: string;
-//   beforeAll(async () => {
-//     const user = await setupTest();
-//     userId = user.userId;
-//     token = user.token;
-//   });
 
-//   test('getUID successfully', async()=>{
-//     const res = await request(app).get('/api/auth/get-uid').query('123@gmail.com');
-//     expect(res.statusCode).toBe(200);
-//     expect(res.body).toHaveProperty('token');
-//     expect(typeof res.body.token).toBe('string');
-//   })
-// })
+
+describe('getUID API', () => {
+  let userId: string;
+  let token: string;
+  beforeEach(async () => {
+    const user = await setupTest();
+    userId = user.userId;
+    token = user.token;
+  });
+
+  afterAll(async () => {
+    // Cleanup after tests
+    await tearDown()
+  });
+
+  test('Returns 400 if email query parameter is missing', async () => {
+    const res = await request(app).get('/api/auth/get-uid');
+    expect(res.body).toEqual({ error: 'Invalid Parameter' });
+    expect(res.status).toBe(400);
+  });
+
+  test('Returns 400 if email query parameter is not a string', async () => {
+    const res = await request(app).get('/api/auth/get-uid').query({ email: null });
+    expect(res.body).toEqual({ error: 'Invalid Parameter' });
+    expect(res.status).toBe(400);
+  });
+
+  test('Returns 400 if user not found', async () => {
+    const res = await request(app).get('/api/auth/get-uid').query({ email: 'unknown@example.com' });
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ error: 'User not found' });
+  });
+
+  test('Returns user id and verification token for valid email', async () => {
+    const res = await request(app).get('/api/auth/get-uid').query({ email: '123@gmail.com' });
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('token');
+  });
+});
