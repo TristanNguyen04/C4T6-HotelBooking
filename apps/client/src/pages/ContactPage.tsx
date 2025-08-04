@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import {motion} from 'framer-motion';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -87,26 +90,47 @@ export default function ContactPage() {
     setOpenFAQIndex(prev => (prev === index ? null : index));
   };
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Hero Section */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-12">
-          <div className="bg-gradient-to-r from-green-600 to-blue-600 px-8 py-16 text-center text-white">
-            <h1 className="text-4xl font-bold mb-4">Contact StayEase</h1>
-            <p className="text-xl opacity-90 max-w-3xl mx-auto">
-              We're here to help make your travel experience seamless. Reach out to us anytime.
-            </p>
+        <motion.div
+          data-aos="fade-up"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="w-full min-h-[80vh] overflow-hidden mb-24"
+        >
+          <div className="w-full h-full">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 w-full min-h-[80vh] flex flex-col items-center justify-center px-8 py-16 text-center text-white">
+              <h1 className="text-5xl font-bold mb-6">Contact StayEase</h1>
+              <p className="text-2xl opacity-90 max-w-3xl">
+                We're here to help make your travel experience seamless. Reach out to us anytime.
+              </p>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          
           {/* Contact Form */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
+          <motion.div
+            data-aos="fade-right"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-xl shadow-lg p-8"
+          >
             <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-            
             {isSubmitted ? (
               <div className="text-center py-8">
                 <div className="text-6xl mb-4">✅</div>
@@ -130,7 +154,6 @@ export default function ContactPage() {
                     placeholder="Enter your full name"
                   />
                 </div>
-
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address *
@@ -146,7 +169,6 @@ export default function ContactPage() {
                     placeholder="Enter your email address"
                   />
                 </div>
-
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
                     Subject *
@@ -168,7 +190,6 @@ export default function ContactPage() {
                     <option value="general">General Inquiry</option>
                   </select>
                 </div>
-
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                     Message *
@@ -184,7 +205,6 @@ export default function ContactPage() {
                     placeholder="Tell us how we can help you..."
                   />
                 </div>
-
                 <button
                   type="submit"
                   className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
@@ -193,7 +213,7 @@ export default function ContactPage() {
                 </button>
               </form>
             )}
-          </div>
+          </motion.div>
 
           {/* Contact Information */}
           <div className="space-y-8">
