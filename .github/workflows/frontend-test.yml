@@ -40,16 +40,37 @@
             rm -rf node_modules package-lock.json
             npm install
 
+        - name: Install PostgreSQL client
+          run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+        - name: Wait for PostgreSQL to be ready
+          run: |
+            until pg_isready -h localhost -p 5432 -U hotelproject; do
+              echo "Waiting for PostgreSQL..."
+              sleep 2
+            done
+
         - name: Generate Prisma
           run: cd apps/server && npx prisma generate
+          env:
+            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+
+        - name: Reset and setup database
+          run: cd apps/server && npx prisma migrate reset --force
+          env:
+            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
         - name: Run DB migrations
           run: cd apps/server && npx prisma migrate deploy
+          env:
+            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
         - name: Start Server
           run: |
             npm run start:test &
             npx wait-on http://localhost:3000 http://localhost:5173
+          env:
+            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
         - name: Run Cypress component tests
           run: cd apps/client && npx cypress run --component
