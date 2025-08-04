@@ -56,7 +56,7 @@ export default function AboutUs() {
 
 
       {/* Meet the Team (Preview) */}
-      <section className="py-24 px-6 bg-white text-center">
+      {/* <section className="py-24 px-6 bg-white text-center">
         <h2 className="text-4xl font-bold mb-12" data-aos="fade-up">
           Meet the Team
         </h2>
@@ -82,7 +82,7 @@ export default function AboutUs() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Mission Section */}
       <section className="py-24 px-6 bg-[#FF6B6B] text-center">
@@ -129,8 +129,6 @@ export default function AboutUs() {
         </div>
       </section>
 
-
-
       {/* Achievements Carousel */}
       <section className="bg-gray-100 py-20 px-6">
         <h3 className="text-3xl font-bold text-center mb-10" data-aos="fade-up">
@@ -145,7 +143,7 @@ export default function AboutUs() {
           ].map((stat, i) => (
             <motion.div
               key={i}
-              className="min-w-[250px] bg-white rounded-2xl shadow-lg p-6 text-center text-[#FF6B6B] font-semibold text-xl"
+              className="mb-5 min-w-[250px] bg-white rounded-2xl shadow-lg p-6 text-center text-[#FF6B6B] font-semibold text-xl"
               whileHover={{ scale: 1.05 }}
               data-aos="fade-up"
               data-aos-delay={i * 100}
