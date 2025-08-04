@@ -43,7 +43,7 @@
           run: cd apps/server && npx prisma generate
 
         - name: Run DB migrations
-          run: cd apps/server && npx prisma migrate reset
+          run: cd apps/server && npx prisma migrate deploy
 
         - name: Start Server
           run: |
@@ -55,6 +55,3 @@
         
         - name: Run Cypress e2e tests
           run: cd apps/client && npx cypress run
-
-
-          
