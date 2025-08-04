@@ -80,7 +80,7 @@ jobs:
           
           # SMTP Configuration
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: 587
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           
@@ -88,4 +88,4 @@ jobs:
           BASE_URL: http://localhost:3000
           
           # Stripe Configuration
-          STRIPE_KEY: ${{ secrets.STRIPE_TEST_KEY }}
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
