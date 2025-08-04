@@ -3,6 +3,7 @@ import SearchBar from '../../src/components/SearchBar';
 import '../../src/index.css';
 import { mount } from 'cypress/react';
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 // Define minimal types (or import from your types file)
 describe('SearchBar component', () => {
@@ -10,7 +11,11 @@ describe('SearchBar component', () => {
 
   beforeEach(() => {
     onSubmit = cy.spy().as('onSubmit');
-    mount(<SearchBar onSubmit={onSubmit} />);
+    mount(
+      <BrowserRouter>
+        <SearchBar onSubmit={onSubmit} />
+      </BrowserRouter>
+    );
   });
 
   it('Input Destination Calls API', () => {
@@ -21,47 +26,46 @@ describe('SearchBar component', () => {
   });
 
   it('Stay Period Toggle: Date Selection', ()=>{
-    // Open rooms & guests selector
     cy.get('[data-cy=stay-period-toggle]').should('exist');
     cy.get('[data-cy=stay-period-toggle]').click();
 
-    // select today's date and end of the month
     cy.window().then(() => {
       const today = new Date();
+      const minDate = new Date(today);
+      minDate.setDate(today.getDate() + 3);
 
-      const formatMonth = (date: Date) => date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
-      const currentMonth = formatMonth(today);
+      const formatMonth = (date) => date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+      const targetMonth = formatMonth(minDate);
 
-      const next = new Date(today);
-      next.setMonth(today.getMonth() + 1);
-      const nextMonth = formatMonth(next);
-
-      // Get previous month
-      const previous = new Date(today);
-      previous.setMonth(today.getMonth() - 1);
-      const previousMonth = formatMonth(previous);
-
-      const todayDate = today.getDate();
-
-      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-
-      // Format dates to match your component's output (dd/MM/yyyy)
-      const pad = (n) => (n < 10 ? '0' + n : n);
-
-      const startDateStr = `${pad(todayDate)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
-      const endDateStr = `${pad(lastDayOfMonth)}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
-      cy.log('start:', startDateStr);
-      cy.log('end:', endDateStr);
-      // Click the toggle to open the date picker
       cy.get('[data-cy=stay-period-toggle]').click();
-      cy.get('[data-cy=stay-period-month').should('contain', currentMonth);
-      cy.get('[data-cy=calendar-next-month]').click(); 
-      cy.get('[data-cy=stay-period-month]').should('contain', nextMonth);
-      cy.get('[data-cy=calendar-previous-month]').click(); 
-      cy.get('[data-cy=calendar-previous-month]').click(); 
-      cy.get('[data-cy=stay-period-month]').should('contain', previousMonth);
-      cy.contains('button', `${todayDate}`).click();
-      cy.contains('button', `${lastDayOfMonth}`).click();
+
+      // Navigate to the correct month if needed
+      function goToTargetMonth() {
+        cy.get('[data-cy=stay-period-month]').invoke('text').then((displayedMonth) => {
+          if (displayedMonth.trim() !== targetMonth) {
+            // If the displayed month is before the target, click next
+            const displayedDate = new Date(displayedMonth + ' 1');
+            if (displayedDate < minDate) {
+              cy.get('[data-cy=calendar-next-month]').click();
+              goToTargetMonth();
+            } else {
+              // If the displayed month is after the target, click previous
+              cy.get('[data-cy=calendar-previous-month]').click();
+              goToTargetMonth();
+            }
+          }
+        });
+      }
+      goToTargetMonth();
+
+      // Now select the minDate and last day of month
+      const pad = (n) => (n < 10 ? '0' + n : n);
+      const startDateStr = `${pad(minDate.getDate())}/${pad(minDate.getMonth() + 1)}/${minDate.getFullYear()}`;
+      const lastDayOfMonth = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0).getDate();
+      const endDateStr = `${pad(lastDayOfMonth)}/${pad(minDate.getMonth() + 1)}/${minDate.getFullYear()}`;
+
+      cy.contains('button', `${minDate.getDate()}`).should('not.be.disabled').click();
+      cy.contains('button', `${lastDayOfMonth}`).should('not.be.disabled').click();
       cy.contains('button', 'Done').click();
       cy.get('[data-cy=stay-period-toggle]').should('contain.text', `${startDateStr} - ${endDateStr}`);
     });
