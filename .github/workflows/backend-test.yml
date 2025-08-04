@@ -64,4 +64,28 @@ jobs:
       - name: Run backend tests
         run: npm test
         env:
+          # Server Configuration
+          PORT: 3000
+          NODE_ENV: test
+          
+          # Frontend URL (for CORS)
+          FRONTEND_URL: http://localhost:5173
+          
+          # JWT Configuration
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          
+          # Database URLs
           DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+          DATABASE_TEST_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+          
+          # SMTP Configuration
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          
+          # Base URL for email verification
+          BASE_URL: http://localhost:3000
+          
+          # Stripe Configuration
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}

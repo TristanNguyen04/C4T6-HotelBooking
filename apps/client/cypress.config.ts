@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress';
-import path from 'path';
+import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   component: {
@@ -11,7 +11,7 @@ export default defineConfig({
       framework: 'react',
       bundler: 'vite',
       viteConfig: {
-        configFile: path.resolve('apps/client/vite.config.ts'),
+        configFile: fileURLToPath(new URL('./vite.config.ts', import.meta.url)),
       },
     },
     specPattern: 'cypress/component/**/*.cy.{ts,tsx,js,jsx}',
