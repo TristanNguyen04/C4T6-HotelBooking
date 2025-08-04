@@ -14,11 +14,11 @@
         postgres:
           image: postgres:15
           ports:
-            - 5432:5432
+            - 18564:18564
           env:
-            POSTGRES_USER: hotelproject
-            POSTGRES_PASSWORD: hotelproject
-            POSTGRES_DB: db_test
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: HRqYmThhkyJFSmcLZTYblYZFXsqSFetA
+            POSTGRES_DB: railway
           options:
             --health-cmd pg_isready
             --health-interval 10s
