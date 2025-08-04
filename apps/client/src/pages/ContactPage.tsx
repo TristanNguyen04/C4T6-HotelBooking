@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import {motion, useMotionValue, useTransform, useScroll} from "framer-motion";
-import PaperPlane from "../components/PaperPlane";
+import {motion, useInView} from "framer-motion";
+//import PaperPlane from "../components/PaperPlane";
 import hero from "../assets/contactHero.jpg";
 import formBG from "../assets/contactFormBG.jpeg";
 import RainOverlay from "../components/Raindrop";
@@ -14,17 +14,19 @@ export default function ContactPage() {
     subject: '',
     message: ''
   });
+
   const [isSubmitted, setIsSubmitted] = useState(false);
-
   const [showFAQ, setShowFAQ] = useState(false);
-
   const [openFAQIndex, setOpenFAQIndex] = useState<number | null>(null);
-
   const [welcomeQuote, setWelcomeQuote] = useState('');
 
-  const { scrollYProgress } = useScroll();
+  //const { scrollYProgress } = useScroll();
+  //const bgX = useTransform(scrollYProgress, [0, 1], ['0%', '80%']);
 
-  const bgX = useTransform(scrollYProgress, [0, 1], ['0%', '80%']);
+  const formRef = useRef(null);
+  const isInView = useInView(formRef, {
+    amount: 0.45, //appear when 45% of the element is in view
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -36,9 +38,9 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just show a success message
+    //show a success message
     setIsSubmitted(true);
-    // Reset form after 3 seconds
+    //reset form after 3 seconds
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -88,7 +90,7 @@ export default function ContactPage() {
     {
       question: "What payment methods do you accept?",
       answer: "We accept all major credit cards, PayPal, and various local payment methods depending on your location."
-    }
+    },
   ];
 
   const welcomeQuotes = [
@@ -120,7 +122,7 @@ export default function ContactPage() {
 
   return (
     <div className="w-full overflow-x-hidden">
-      <PaperPlane />
+      {/* hero section (header) */}
       <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
         {/* background header image with blur */}
         <div
@@ -156,6 +158,7 @@ export default function ContactPage() {
         </div>
       </section>
 
+      {/* avenues for contact */}
       <section className="py-14 px-6 bg-gray-50">
         <h2 className="text-4xl font-bold text-center mb-12" data-aos="fade-up">
           Get in Touch
@@ -177,31 +180,35 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="min-h-screen bg-gray-20 flex items-center justify-center px-6 py-12 bg-[#FF6B6B]">
-          <div
-            className="relative w-full max-w-6xl flex rounded-lg overflow-hidden shadow-lg bg-cover bg-center animate-pan"
-            style={{
-              backgroundImage: `url(${formBG})`,
-              backgroundPosition: '70% 50%', // Pan left
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat'
-            }}
-          >
-          <motion.div
-            data-aos="fade-right"
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-xl shadow-lg p-8 w-full max-w-xl"
-          >
-          <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+    {/* contact form */}
+    <section ref={formRef} className="min-h-[900px] bg-gray-20 flex items-center justify-center px-6 py-12 bg-[#FF6B6B]">
+        <div
+          className="relative w-full max-w-6xl flex rounded-lg overflow-hidden shadow-lg bg-cover bg-center animate-pan"
+          style={{
+            backgroundImage: `url(${formBG})`,
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+        <motion.div
+          initial={{ opacity: 0, x: -6 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.75 }}
+          className="bg-white rounded-xl shadow-lg p-8 w-full max-w-xl"
+        >
+        <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+        <div className="relative min-h-[560px] transition-all duration-300">
           {isSubmitted ? (
-            <div className="text-center py-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+            >
               <div className="text-6xl mb-4">✅</div>
               <h3 className="text-xl font-bold text-green-600 mb-2">Message Sent!</h3>
               <p className="text-gray-600">We'll get back to you within 24 hours.</p>
-            </div>
+            </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -278,9 +285,80 @@ export default function ContactPage() {
               </button>
             </form>
           )}
-          </motion.div>
         </div>
-      </section>
+      </motion.div>
+    </div>
+  </section>
+
+  {/* Quick Help section */}
+  <section className="py-12">
+    <div className="max-w-xl mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-6">Need Quick Help?</h2>
+      <div className="space-y-4">
+        <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg transform transition duration-200 ease-in-out hover:scale-105 focus:outline-none">
+          <div className="text-2xl">🚨</div>
+          <div>
+            <h3 className="font-bold text-gray-800">Emergency Support</h3>
+            <p className="text-sm text-gray-600">For urgent booking issues, call us now</p>
+          </div>
+        </div>
+
+        <button
+          onClick={toggleFAQ}
+          className="w-full text-left relative group flex items-center space-x-3 p-4 bg-green-50 rounded-lg 
+                    transform transition duration-200 ease-in-out hover:scale-105 focus:outline-none cursor-pointer"
+        >
+          <div className="text-2xl">❓</div>
+          <div className="flex flex-col items-start">
+            <h3 className="font-bold text-gray-800 text-xl">FAQ Section</h3>
+            <p className="text-sm text-gray-600">Click here find answers to common questions below</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+      {/* pops up Q&A when the FAQ btn pressed */}
+      {showFAQ && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-xl mx-auto px-4 pb-12"
+        >
+          <div className="bg-white rounded-xl shadow-lg p-6 border">
+            {faqItems.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className={`py-4 cursor-pointer select-none border-gray-200 ${
+                  index !== faqItems.length - 1 ? 'border-b' : ''}`}
+                onClick={() => handleQuestionClick(index)}
+                >
+                <div className="flex justify-between items-center">
+                  <h4 className="text-blue-700 font-medium text-lg">{faq.question}</h4>
+                  <motion.div
+                    animate={{ rotate: openFAQIndex === index ? 180 : 0 }}
+                    className="text-blue-500"
+                  >
+                    ▼
+                  </motion.div>
+                </div>
+                {openFAQIndex === index && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="text-gray-600 mt-3 text-sm leading-relaxed"
+                  >
+                    {faq.answer}
+                  </motion.p>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

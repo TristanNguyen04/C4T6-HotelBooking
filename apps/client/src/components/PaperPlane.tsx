@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import planeImg from '../assets/paperplane.png';
 
 const path = [
-  { x: 0, y: 500 },
   { x: 20, y: 500 },
   { x: 40, y: 500 },
   { x: 50, y: 500 },
