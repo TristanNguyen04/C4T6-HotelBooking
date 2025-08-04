@@ -20,6 +20,8 @@ export default function ContactPage() {
   const [openFAQIndex, setOpenFAQIndex] = useState<number | null>(null);
   const [welcomeQuote, setWelcomeQuote] = useState('');
 
+  const [hasAnimated, setHasAnimated] = useState(false);
+
   //const { scrollYProgress } = useScroll();
   //const bgX = useTransform(scrollYProgress, [0, 1], ['0%', '80%']);
 
@@ -120,6 +122,12 @@ export default function ContactPage() {
     setWelcomeQuote(welcomeQuotes[randomIndex]);
   }, []);
 
+  useEffect(() => {
+    if (isInView && !hasAnimated) {
+      setHasAnimated(true);
+    }
+  }, [isInView, hasAnimated]);
+
   return (
     <div className="w-full overflow-x-hidden">
       {/* hero section (header) */}
@@ -183,11 +191,12 @@ export default function ContactPage() {
     {/* contact form */}
     <section ref={formRef} className="min-h-[900px] bg-gray-20 flex items-center justify-center px-6 py-12 bg-[#FF6B6B]">
         <div
-          className="relative w-full max-w-6xl flex rounded-lg overflow-hidden shadow-lg bg-cover bg-center animate-pan"
+          className={`relative w-full max-w-6xl flex rounded-lg overflow-hidden shadow-lg bg-cover bg-center transition-all duration-700 ease-in-out ${hasAnimated ? 'animate-pan' : ''}`}
           style={{
             backgroundImage: `url(${formBG})`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
+            backgroundPosition: "left center",
           }}
         >
         <motion.div
