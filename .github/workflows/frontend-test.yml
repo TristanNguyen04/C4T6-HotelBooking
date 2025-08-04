@@ -1,113 +1,113 @@
-  name: Run Frontend Tests
+name: Run Frontend Tests
 
-  on:
-    pull_request:
-      branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
-    push:
-      branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
+on:
+  pull_request:
+    branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
+  push:
+    branches: [ main, backend, frontend, develop, merged-backend-frontend, backend|merge-features ]
 
-  jobs:
-    test-frontend:
-      name: Test Frontend
-      runs-on: ubuntu-latest
+jobs:
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
 
-      services: 
-        postgres:
-          image: postgres:15
-          ports:
-            - 18564:18564
-          env:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: HRqYmThhkyJFSmcLZTYblYZFXsqSFetA
-            POSTGRES_DB: railway
-          options:
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+    services: 
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: hotelproject
+          POSTGRES_PASSWORD: hotelproject
+          POSTGRES_DB: db_test
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Use Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: 20
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-        - name: Clean and install fresh dependencies in root
-          run: |
-            rm -rf node_modules package-lock.json
-            npm install
+      - name: Clean and install fresh dependencies in root
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
-        - name: Install PostgreSQL client
-          run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
-        - name: Wait for PostgreSQL to be ready
-          run: |
-            until pg_isready -h localhost -p 5432 -U hotelproject; do
-              echo "Waiting for PostgreSQL..."
-              sleep 2
-            done
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U hotelproject; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
 
-        - name: Generate Prisma
-          run: cd apps/server && npx prisma generate
-          env:
-            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+      - name: Generate Prisma
+        run: cd apps/server && npx prisma generate
+        env:
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
-        - name: Reset and setup database
-          run: cd apps/server && npx prisma migrate reset --force
-          env:
-            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+      - name: Reset and setup database
+        run: cd apps/server && npx prisma migrate reset --force
+        env:
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
-        - name: Run DB migrations
-          run: cd apps/server && npx prisma migrate deploy
-          env:
-            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+      - name: Run DB migrations
+        run: cd apps/server && npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
-        - name: Start Server
-          run: |
-            npm run start:test &
-            npx wait-on http://localhost:3000 http://localhost:5173
-          env:
-            # Server Configuration
-            PORT: 3000
-            NODE_ENV: test
-            
-            # Frontend URL (for CORS)
-            FRONTEND_URL: http://localhost:5173
-            
-            # JWT Configuration
-            JWT_SECRET: ${{ secrets.JWT_SECRET }}
-            
-            # Database URLs
-            DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
-            DATABASE_TEST_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
-            
-            # SMTP Configuration
-            SMTP_HOST: ${{ secrets.SMTP_HOST }}
-            SMTP_PORT: ${{ secrets.SMTP_PORT }}
-            SMTP_USER: ${{ secrets.SMTP_USER }}
-            SMTP_PASS: ${{ secrets.SMTP_PASS }}
-            
-            # Base URL for email verification
-            BASE_URL: http://localhost:3000
-            
-            # Stripe Configuration
-            STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+      - name: Start Server
+        run: |
+          npm run start:test &
+          npx wait-on http://localhost:3000 http://localhost:5173
+        env:
+          # Server Configuration
+          PORT: 3000
+          NODE_ENV: test
+          
+          # Frontend URL (for CORS)
+          FRONTEND_URL: http://localhost:5173
+          
+          # JWT Configuration
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          
+          # Database URLs
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+          DATABASE_TEST_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
+          
+          # SMTP Configuration
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          
+          # Base URL for email verification
+          BASE_URL: http://localhost:3000
+          
+          # Stripe Configuration
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
 
-        - name: Run Cypress component tests
-          run: cd apps/client && npx cypress run --component
-          env:
-            VITE_API_URL: http://localhost:3000/api
-            VITE_TEST_API_URL: http://localhost:3000/test/api
-            VITE_GOOGLE_MAP_KEY: ${{ secrets.VITE_GOOGLE_MAP_KEY }}
-            VITE_MAP_ID: ${{ secrets.VITE_MAP_ID }}
-        
-        - name: Run Cypress e2e tests
-          run: cd apps/client && npx cypress run
-          env:
-            VITE_API_URL: http://localhost:3000/api
-            VITE_TEST_API_URL: http://localhost:3000/test/api
-            VITE_GOOGLE_MAP_KEY: ${{ secrets.VITE_GOOGLE_MAP_KEY }}
-            VITE_MAP_ID: ${{ secrets.VITE_MAP_ID }}
+      - name: Run Cypress component tests
+        run: cd apps/client && npx cypress run --component
+        env:
+          VITE_API_URL: http://localhost:3000/api
+          VITE_TEST_API_URL: http://localhost:3000/test/api
+          VITE_GOOGLE_MAP_KEY: ${{ secrets.VITE_GOOGLE_MAP_KEY }}
+          VITE_MAP_ID: ${{ secrets.VITE_MAP_ID }}
+      
+      - name: Run Cypress e2e tests
+        run: cd apps/client && npx cypress run
+        env:
+          VITE_API_URL: http://localhost:3000/api
+          VITE_TEST_API_URL: http://localhost:3000/test/api
+          VITE_GOOGLE_MAP_KEY: ${{ secrets.VITE_GOOGLE_MAP_KEY }}
+          VITE_MAP_ID: ${{ secrets.VITE_MAP_ID }}
