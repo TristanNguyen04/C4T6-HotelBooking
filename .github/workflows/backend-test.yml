@@ -57,7 +57,7 @@ jobs:
         run: npx prisma generate
       
       - name: Run Prisma Generate
-        run: npx prisma migrate deploy
+        run: npx prisma db push
         env:
           DATABASE_URL: postgresql://postgres:HRqYmThhkyJFSmcLZTYblYZFXsqSFetA@mainline.proxy.rlwy.net:18564/fuzzdb
 
