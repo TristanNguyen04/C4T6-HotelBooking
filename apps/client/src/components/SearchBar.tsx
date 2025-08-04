@@ -200,6 +200,7 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                             if (term.length >= 1) {
                                 searchLocations(term)
                                     .then(res => {
+                                        console.log(res.data);
                                         // Ensure res.data is an array before setting it
                                         if (Array.isArray(res.data)) {
                                             setSuggestions(res.data);
