@@ -18,7 +18,7 @@
           env:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: HRqYmThhkyJFSmcLZTYblYZFXsqSFetA
-            POSTGRES_DB: railway
+            POSTGRES_DB: fuzzdb
           options:
             --health-cmd pg_isready
             --health-interval 10s
@@ -48,7 +48,7 @@
         - name: Start Server
           run: |
             npm run start:test &
-            npx wait-on http://localhost:3000 http://localhost:5173
+            npx wait-on https://c4t6-hotelbooking-production.up.railway.app https://stayease-sutd.vercel.app
 
         - name: Run Cypress component tests
           run: cd apps/client && npx cypress run --component
