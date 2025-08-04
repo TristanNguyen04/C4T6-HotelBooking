@@ -67,9 +67,18 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
         const delay = setTimeout(() => {
             searchLocations(term)
                 .then(res => {
-                    setSuggestions(res.data);
+                    // Ensure res.data is an array before setting it
+                    if (Array.isArray(res.data)) {
+                        setSuggestions(res.data);
+                    } else {
+                        console.warn('API returned non-array data:', res.data);
+                        setSuggestions([]);
+                    }
                 })
-                .catch(() => setSuggestions([]));
+                .catch((error) => {
+                    console.error('Error fetching suggestions:', error);
+                    setSuggestions([]);
+                });
         }, 300);
 
         return () => clearTimeout(delay);
@@ -191,9 +200,18 @@ export default function SearchBar({ onSubmit, initialValues }: SearchBarProps) {
                             if (term.length >= 1) {
                                 searchLocations(term)
                                     .then(res => {
-                                        setSuggestions(res.data);
+                                        // Ensure res.data is an array before setting it
+                                        if (Array.isArray(res.data)) {
+                                            setSuggestions(res.data);
+                                        } else {
+                                            console.warn('API returned non-array data:', res.data);
+                                            setSuggestions([]);
+                                        }
                                     })
-                                    .catch(() => setSuggestions([]));
+                                    .catch((error) => {
+                                        console.error('Error fetching suggestions:', error);
+                                        setSuggestions([]);
+                                    });
                             }
                         }}
                         onBlur={() => setTimeout(() => setSuggestions([]), 100)}
