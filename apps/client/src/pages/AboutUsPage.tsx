@@ -34,7 +34,7 @@ export default function AboutUs() {
       <section className="h-screen flex flex-col items-center justify-center text-center text-white px-6 bg-cover bg-center"
         style={{
           backgroundImage: `url(${hero})`,
-        }}  
+        }}
         >
         <motion.h1
           initial={{ opacity: 0, y: -50 }}

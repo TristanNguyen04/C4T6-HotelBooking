@@ -1,7 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import {motion} from 'framer-motion';
+import React, {useState, useEffect} from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import {motion, useMotionValue, useTransform, useScroll} from "framer-motion";
+import PaperPlane from "../components/PaperPlane";
+import hero from "../assets/contactHero.jpg";
+import formBG from "../assets/contactFormBG.jpeg";
+import RainOverlay from "../components/Raindrop";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +19,12 @@ export default function ContactPage() {
   const [showFAQ, setShowFAQ] = useState(false);
 
   const [openFAQIndex, setOpenFAQIndex] = useState<number | null>(null);
+
+  const [welcomeQuote, setWelcomeQuote] = useState('');
+
+  const { scrollYProgress } = useScroll();
+
+  const bgX = useTransform(scrollYProgress, [0, 1], ['0%', '80%']);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -81,9 +91,17 @@ export default function ContactPage() {
     }
   ];
 
+  const welcomeQuotes = [
+    "Adventure awaits! Let us help you find the perfect stay.",
+    "Your next getaway is just a booking away, we are here to make it easy.",
+    "Discover new places and experiences with StayEase. Hit us up for any questions!",
+    "Travel is the only thing you buy that makes you richer. Let us help you invest in experiences.",
+    "From city escapes to beach retreats, we have the perfect accommodations for you."
+  ];
+
   const toggleFAQ = () => {
     setShowFAQ(prev => !prev);
-    setOpenFAQIndex(null); // Reset selected question
+    setOpenFAQIndex(null); // reset selected question
   };
 
   const handleQuestionClick = (index: number) => {
@@ -95,193 +113,174 @@ export default function ContactPage() {
       duration: 800,
       once: true
     });
+
+    const randomIndex = Math.floor(Math.random() * welcomeQuotes.length);
+    setWelcomeQuote(welcomeQuotes[randomIndex]);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 mt-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Hero Section */}
-        <motion.div
-          data-aos="fade-up"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="w-full min-h-[80vh] overflow-hidden mb-24"
-        >
-          <div className="w-full h-full">
-            <div className="bg-gradient-to-r from-green-600 to-blue-600 w-full min-h-[80vh] flex flex-col items-center justify-center px-8 py-16 text-center text-white">
-              <h1 className="text-5xl font-bold mb-6">Contact StayEase</h1>
-              <p className="text-2xl opacity-90 max-w-3xl">
-                We're here to help make your travel experience seamless. Reach out to us anytime.
-              </p>
-            </div>
-          </div>
-        </motion.div>
+    <div className="w-full overflow-x-hidden">
+      <PaperPlane />
+      <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
+        {/* background header image with blur */}
+        <div
+          className="absolute inset-0 bg-cover bg-center blur-[1px] scale-110"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 85%, rgba(0,0,0,0.7) 90%, rgba(0,0,0,1) 100%), url(${hero})`,
+          }}
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
+        {/* dark overlay for readability */}
+        <div className="absolute inset-0 bg-black/30" />
+
+        <RainOverlay />
+
+        {/* foreground content */}
+        <div className="relative z-10 px-6 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="text-5xl font-extrabold mb-4"
+          >
+            Contact Us!
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="text-xl whitespace-nowrap overflow-hidden text-ellipsis text-center mx-auto"
+          >
+            {welcomeQuote}
+          </motion.p>
+        </div>
+      </section>
+
+      <section className="py-14 px-6 bg-gray-50">
+        <h2 className="text-4xl font-bold text-center mb-12" data-aos="fade-up">
+          Get in Touch
+        </h2>
+        <div className="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          {contactMethods.map((method, index) => (
+            <div
+              key={index}
+              className="bg-white p-8 rounded-2xl shadow-md text-center transform transition duration-500 ease-out hover:shadow-xl hover:-translate-y-2 hover:translate-x-1.2"
+              data-aos="fade-up"
+              data-aos-delay={index * 150}
+            >
+              <div className="text-5xl mb-4">{method.icon}</div>
+              <h3 className="font-bold text-lg text-gray-800 mb-2">{method.title}</h3>
+              <p className="text-blue-600 font-medium mb-2">{method.detail}</p>
+              <p className="text-gray-600 text-sm">{method.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="min-h-screen bg-gray-20 flex items-center justify-center px-6 py-12 bg-[#FF6B6B]">
+          <div
+            className="relative w-full max-w-6xl flex rounded-lg overflow-hidden shadow-lg bg-cover bg-center animate-pan"
+            style={{
+              backgroundImage: `url(${formBG})`,
+              backgroundPosition: '70% 50%', // Pan left
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
           <motion.div
             data-aos="fade-right"
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -10 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="bg-white rounded-xl shadow-lg p-8"
+            className="bg-white rounded-xl shadow-lg p-8 w-full max-w-xl"
           >
-            <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-            {isSubmitted ? (
-              <div className="text-center py-8">
-                <div className="text-6xl mb-4">✅</div>
-                <h3 className="text-xl font-bold text-green-600 mb-2">Message Sent!</h3>
-                <p className="text-gray-600">We'll get back to you within 24 hours.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your email address"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    required
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="booking-help">Booking Assistance</option>
-                    <option value="cancellation">Cancellation Request</option>
-                    <option value="modification">Modify Reservation</option>
-                    <option value="payment">Payment Issues</option>
-                    <option value="complaint">Complaint</option>
-                    <option value="general">General Inquiry</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    placeholder="Tell us how we can help you..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
-                >
-                  Send Message
-                </button>
-              </form>
-            )}
-          </motion.div>
-
-          {/* Contact Information */}
-          <div className="space-y-8">
-            
-            {/* Contact Methods */}
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
-              <div className="space-y-6">
-                {contactMethods.map((method, index) => (
-                  <div key={index} className="flex items-start space-x-4">
-                    <div className="text-3xl">{method.icon}</div>
-                    <div>
-                      <h3 className="font-bold text-gray-800">{method.title}</h3>
-                      <p className="text-blue-600 font-medium">{method.detail}</p>
-                      <p className="text-gray-600 text-sm">{method.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+          {isSubmitted ? (
+            <div className="text-center py-8">
+              <div className="text-6xl mb-4">✅</div>
+              <h3 className="text-xl font-bold text-green-600 mb-2">Message Sent!</h3>
+              <p className="text-gray-600">We'll get back to you within 24 hours.</p>
             </div>
-
-            {/* Quick Help */}
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6">Need Quick Help?</h2>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl">🚨</div>
-                  <div>
-                    <h3 className="font-bold text-gray-800">Emergency Support</h3>
-                    <p className="text-sm text-gray-600">For urgent booking issues, call us now</p>
-                  </div>
-                </div>
-                <div
-                  onClick={toggleFAQ}
-                  className="relative group flex items-center space-x-3 p-4 bg-green-50 rounded-lg 
-                            transform transition duration-200 ease-in-out hover:scale-105 cursor-pointer"
-                >
-                  <div className="text-2xl">❓</div>
-                  <div className="w-full text-left flex flex-col items-start">
-                    <h3 className="font-bold text-gray-800 text-xl">FAQ Section</h3>
-                    <p className="text-sm text-gray-600">Click to find answers to common questions below</p>
-                  </div>
-                </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your full name"
+                />
               </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* pops up Q&A when FAQ btn pressed */}
-        {showFAQ && (
-          <div className="mt-6 space-y-4">
-            {faqItems.map((faq, index) => (
-              <div
-                key={index}
-                className="border-b pb-3 cursor-pointer select-none"
-                onClick={() => handleQuestionClick(index)}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your email address"
+                />
+              </div>
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                  Subject *
+                </label>
+                <select
+                  id="subject"
+                  name="subject"
+                  required
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select a subject</option>
+                  <option value="booking-help">Booking Assistance</option>
+                  <option value="cancellation">Cancellation Request</option>
+                  <option value="modification">Modify Reservation</option>
+                  <option value="payment">Payment Issues</option>
+                  <option value="complaint">Complaint</option>
+                  <option value="general">General Inquiry</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Message *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={5}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  placeholder="Tell us how we can help you..."
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
               >
-                <h4 className="text-blue-700 font-medium">{faq.question}</h4>
-                {openFAQIndex === index && (
-                  <p className="text-gray-600 mt-1 text-sm">{faq.answer}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-      </div>
+                Send Message
+              </button>
+            </form>
+          )}
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
