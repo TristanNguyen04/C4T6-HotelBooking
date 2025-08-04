@@ -2,9 +2,9 @@ name: Run Backend Tests
 
 on:
     pull_request:
-        branches: [ main , backend, frontend, develop, merged-backend-frontend]
+        branches: [ main , backend, frontend, develop, merged-backend-frontend, backend|merge-features]
     push:
-        branches: [ main , backend, frontend, develop, merged-backend-frontend]
+        branches: [ main , backend, frontend, develop, merged-backend-frontend, backend|merge-features]
 
 jobs:
   test-server:
@@ -15,11 +15,11 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: hotelproject
-          POSTGRES_PASSWORD: hotelproject
-          POSTGRES_DB: db_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: HRqYmThhkyJFSmcLZTYblYZFXsqSFetA
+          POSTGRES_DB: railway
         ports:
-          - 5432:5432
+          - 18564:18564
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s
