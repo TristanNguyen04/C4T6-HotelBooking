@@ -2,9 +2,9 @@ name: Run Backend Tests
 
 on:
     pull_request:
-        branches: [ main , backend, frontend, develop, merged-backend-frontend, backend|merge-features]
+        branches: [ main , backend, frontend, develop, merged-backend-frontend]
     push:
-        branches: [ main , backend, frontend, develop, merged-backend-frontend, backend|merge-features]
+        branches: [ main , backend, frontend, develop, merged-backend-frontend]
 
 jobs:
   test-server:
@@ -15,11 +15,11 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: HRqYmThhkyJFSmcLZTYblYZFXsqSFetA
-          POSTGRES_DB: fuzzdb
+          POSTGRES_USER: hotelproject
+          POSTGRES_PASSWORD: hotelproject
+          POSTGRES_DB: db_test
         ports:
-          - 18564:18564
+          - 5432:5432
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s
@@ -49,7 +49,7 @@ jobs:
 
       - name: Wait for PostgresSQL to be ready
         run: |
-          until pg_isready -h mainline.proxy.rlwy.net -p 18564 -U postgres; do
+          until pg_isready -h localhost -p 5432 -U hotelproject; do
             echo "Waiting for PostgresSQL..."
             sleep 2
           done
@@ -57,11 +57,11 @@ jobs:
         run: npx prisma generate
       
       - name: Run Prisma Generate
-        run: npx prisma db push
+        run: npx prisma migrate deploy
         env:
-          DATABASE_URL: postgresql://postgres:HRqYmThhkyJFSmcLZTYblYZFXsqSFetA@mainline.proxy.rlwy.net:18564/fuzzdb
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test
 
       - name: Run backend tests
         run: npm test
         env:
-          DATABASE_URL: postgresql://postgres:HRqYmThhkyJFSmcLZTYblYZFXsqSFetA@mainline.proxy.rlwy.net:18564/fuzzdb
+          DATABASE_URL: postgresql://hotelproject:hotelproject@localhost:5432/db_test

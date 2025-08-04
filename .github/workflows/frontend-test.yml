@@ -14,11 +14,11 @@
         postgres:
           image: postgres:15
           ports:
-            - 18564:18564
+            - 5432:5432
           env:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: HRqYmThhkyJFSmcLZTYblYZFXsqSFetA
-            POSTGRES_DB: fuzzdb
+            POSTGRES_USER: hotelproject
+            POSTGRES_PASSWORD: hotelproject
+            POSTGRES_DB: db_test
           options:
             --health-cmd pg_isready
             --health-interval 10s
@@ -43,12 +43,12 @@
           run: cd apps/server && npx prisma generate
 
         - name: Run DB migrations
-          run: cd apps/server && npx prisma db push
+          run: cd apps/server && npx prisma migrate deploy
 
         - name: Start Server
           run: |
             npm run start:test &
-            npx wait-on https://c4t6-hotelbooking-production.up.railway.app https://stayease-sutd.vercel.app
+            npx wait-on http://localhost:3000 http://localhost:5173
 
         - name: Run Cypress component tests
           run: cd apps/client && npx cypress run --component
