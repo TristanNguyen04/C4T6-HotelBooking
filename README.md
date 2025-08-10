@@ -13,18 +13,10 @@
     <img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white" alt="Jest" />
     <img src="https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white" alt="Cypress" />
   </div>
-  <p align="center">Self-hosted backend server for <a href=https://github.com/ItsMeOX/SmartHealth>Smart Health</a></p>
+  <p align="center">Live Web Application <a href=https://stayease-sutd.vercel.app/>StayEase</a></p>
 </div>
 
 A full‑stack hotel booking platform with a React + Vite frontend and an Express + Prisma backend on PostgreSQL. Includes user registration with email verification, JWT-based auth (token kept in cookies on the client), hotel search and details, Stripe Checkout payments, and booking history.
-
-## Live Demo
-
-The web application is hosted and live. You can try out:
-
-[https://stayease-sutd.vercel.app/](https://stayease-sutd.vercel.app/)
-
----
 
 ## Tech Stack
 - Frontend: React 19, Vite, TypeScript, Tailwind, Axios, React Router
