@@ -1,4 +1,4 @@
-# Stay-Ease - Hotel Booking Application
+# StayEase - Hotel Booking Application
 
 <div align="center">
   <div>
