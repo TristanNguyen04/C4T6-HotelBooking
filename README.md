@@ -12,6 +12,7 @@
     <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="SMTP Gmail" />
     <img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white" alt="Jest" />
     <img src="https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white" alt="Cypress" />
+    <img src="https://img.shields.io/badge/JMeter-17202C?style=for-the-badge&logo=apachejmeter&logoColor=white" alt="Jmeter" />
   </div>
   <p align="center">Live Web Application <a href=https://stayease-sutd.vercel.app/>StayEase</a></p>
 </div>
@@ -26,7 +27,7 @@ A full‑stack hotel booking platform with a React + Vite frontend and an Expres
 - Email: SMTP via Nodemailer
 - E2E/Component Tests: Cypress
 - Unit/Integration Tests (backend): Jest + Supertest
-
+- Fuzzy Testing : Jmeter
 ---
 
 ## Project Structure
@@ -66,7 +67,7 @@ C4T6-HotelBooking/
 - Hotel search with prices, details with per‑night conversion
 - Stripe Checkout integration and booking persistence post‑payment
 - Email booking confirmation
-
+- View hotels on Google Map Window
 ---
 
 ## Environment Variables
@@ -196,6 +197,11 @@ npm run build:server
 ### CORS
 - Allowed origins include `FRONTEND_URL` and `http://localhost:5173`.
 
+### Google Map Card
+- Hotel Cards includes View on Map button.
+- Hotel Cards will pass the latitude and longitude of the hotel to initialize the Google Map
+- Hotel Markers will be initialized based on the radius of the search from the center of the Google Map.
+- Radius search will be based on the zoom level of the Map, more zoomed in will query for hotels in a smaller radius, and more zoomed out will query hotels for a bigger radius and capped at 3km.
 ---
 
 ## API Reference
@@ -348,10 +354,97 @@ npm run preview        # Vite preview
 ```
 
 ---
+## Backend Testing (Jest)
 
-## Testing
+The backend includes a fully automated testing framework powered by Jest  
+It covers both unit and integration scenarios to ensure stability, security, and correctness.
 
-...
+### Key Features
+- **Unit Testing**
+  - Validates backend logic such as Google Maps proximity radius using Haversine Formula. 
+  - Verifies proper test database initialization for isolated runs.
+
+- **Integration Testing**
+  - Ensures Ascenda API returns accurate hotel details and pricing.
+  - Covers all backend controllers, including those dedicated to the test environment
+
+- **Isolated Test Environment**
+  - Special controllers manage test setup and teardown
+  - Environment checks ensure test routes are only active in test or Jest modes.
+  - Protects production by preventing accidental writes to live databases.
+
+This testing architecture guarantees that core logic and external integrations are consistently reliable while maintaining safe separation from production systems.
+
+**Coverage Report**
+
+![Coverage Report](./apps/server/coverage/C4T6%20-%20StayEase%20-%20Final%20Presentation.png)
+
+---
+
+## Frontend Testing (Cypress)
+
+The frontend testing framework is powered by Cypress, chosen for its interactive GUI and seamless developer experience.  
+Testing is implemented across unit, integration, and end-to-end (E2E) levels to ensure both functionality and business logic remain consistent.
+
+### Component and Integration Testing
+- Unit tests validate individual components using mock data to confirm they render correctly and follow design specifications.
+- Integration tests run against the live server, verifying multi-component workflows, such as:
+  - Search Bar – ensures destination suggestions populate accurately.
+  - Date Picker – blocks past date selection.
+  - Room/Adults/Children Selectors – enforces booking constraints:
+    - Maximum of 4 rooms and 4 adults.
+    - Children’s ages: 0–17 years.
+    - If multiple rooms are selected, no children can be added (business logic adapted from OCBC’s booking system).
+
+### Reusable Test Modules
+Core flows (login, registration, search) are modularized with reusable functions for better maintainability.  
+This reduces code duplication and simplifies debugging, enabling rapid scaling of test coverage.
+
+---
+
+### End-to-End (E2E) Testing
+- Covers the full user journey: registration → login → hotel search → booking → payment.
+- Stripe payment handling is simulated via custom backend test APIs, bypassing email verification and payment confirmation to allow automation.
+- Ensures that E2E flows remain stable even when dependent on external APIs.
+
+### Testing Strategy
+- Bottom-up approach:
+  1. Validate core flows (registration, login).
+  2. Modularize them for reuse across booking and payment tests.
+- This approach isolates bugs early, speeds up development iterations, and strengthens overall reliability.
+
+With this layered testing architecture, the frontend delivers a consistent, bug-resistant user experience, even under complex booking scenarios.
+
+---
+
+## Fuzz Testing with Apache JMeter
+
+To ensure robustness and resilience against malformed or malicious input, we implemented fuzz testing for critical user-facing endpoints, including user registration and login.
+
+
+### Testing Infrastructure
+
+- **Dedicated Sandbox Database**  
+  All fuzz tests are executed against a dedicated `fuzzdb` database instead of production `railway`.  
+  This prevents unintended corruption of real data.
+
+### Dynamic Database Routing Middleware
+
+This middleware dynamically assigns the Prisma client based on the request path.  
+Requests starting with `/test/` are routed to the fuzz testing database (`fuzzdb`), while others use the production database.
+
+```javascript
+// Middleware to dynamically assign Prisma client based on path prefix
+// Any API request with /test/... uses fuzzdb (see utils/prismaClient)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/test/')) {
+    req.prisma = fuzzPrisma;
+  } else {
+    req.prisma = prisma;
+  }
+  next();
+});
+```
 
 ---
 
