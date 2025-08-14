@@ -1,15 +1,31 @@
-## Hotel Booking Application
+# Hotel Booking Application
+
+<div align="center">
+  <div>
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
+    <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+    <img src="https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+    <img src="https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express 5" />
+    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="SMTP Gmail" />
+    <img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white" alt="Jest" />
+    <img src="https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white" alt="Cypress" />
+  </div>
+  <p align="center">Live Web Application <a href=https://stayease-sutd.vercel.app/>StayEase</a></p>
+</div>
 
 A full‑stack hotel booking platform with a React + Vite frontend and an Express + Prisma backend on PostgreSQL. Includes user registration with email verification, JWT-based auth (token kept in cookies on the client), hotel search and details, Stripe Checkout payments, and booking history.
 
-### Tech Stack
+## Tech Stack
 - Frontend: React 19, Vite, TypeScript, Tailwind, Axios, React Router
 - Backend: Node.js, Express 5, TypeScript, Prisma ORM
 - Database: PostgreSQL (Railway)
 - Payments: Stripe Checkout
 - Email: SMTP via Nodemailer
-- E2E/Component Tests: Cypress (section left empty per request)
-- Unit/Integration Tests (backend): Jest + Supertest (section left empty)
+- E2E/Component Tests: Cypress
+- Unit/Integration Tests (backend): Jest + Supertest
 
 ---
 
