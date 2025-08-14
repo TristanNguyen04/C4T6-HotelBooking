@@ -2,8 +2,8 @@ import axios from "axios";
 import { fetchHotelDetails, fetchHotelPrices , fetchHotelRoomPrices , fetchHotels} from "../../src/services/hotelService";
 const baseParams = {
             destination_id: 'RsBU',
-            checkin: '2025-09-12',
-            checkout: '2025-09-14',
+            checkin: '2025-09-10',
+            checkout: '2025-09-25',
             guests: '2',
             currency: 'SGD',
             lang: 'en_US',
