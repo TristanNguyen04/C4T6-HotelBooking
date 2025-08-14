@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/utils/calculateDistance.ts</title>
+    <title>Code coverage report for routes/hotelRoutes.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/utils</a> calculateDistance.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">routes</a> hotelRoutes.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
@@ -74,62 +74,45 @@
 <a name='L9'></a><a href='#L9'>9</a>
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
-<a name='L12'></a><a href='#L12'>12</a>
-<a name='L13'></a><a href='#L13'>13</a>
-<a name='L14'></a><a href='#L14'>14</a>
-<a name='L15'></a><a href='#L15'>15</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">74288x</span>
+<a name='L12'></a><a href='#L12'>12</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">297120x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-yes">74280x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const calculateDistance = (lat1: number, lng1: number , lat2: number, lng2: number) =&gt; {
-    if( -90 &gt; lat1  || lat1 &gt; 90 || lng1 &gt; 180 || lng1 &lt; -180 || 
-        -90 &gt; lat2 || lat2 &gt; 90 || lng2 &gt; 180 || lng2 &lt; -180
-    ){
-        throw new Error('Invalid latitude or longitude values');
-    }
-    const EARTH_RADIUS_KM = 6371;
-    const toRadian = (degrees:number) =&gt; degrees * Math.PI / 180 ;
-    const dLat = toRadian(lat2 - lat1);
-    const dLng = toRadian(lng2 - lng1);
-    const a = Math.sin(dLat/2) ** 2 + Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) *
-    Math.sin(dLng / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a) , Math.sqrt(1-a));
-    return EARTH_RADIUS_KM * c;
-    };</pre></td></tr></table></pre>
+<span class="cline-any cline-yes">7x</span></td><td class="text"><pre class="prettyprint lang-js">import { Router } from 'express';
+import { searchHotels, getHotelDetails } from '../controllers/hotelController';
+import {searchLocationRadius} from '../controllers/destinationController';
+// import { searchHotelUsingDest } from '../controllers/hotelController';
+const router = Router();
+&nbsp;
+router.get('/hotels/search', searchHotels);
+router.get('/hotels/:id/details', getHotelDetails);
+router.get('/hotels/00Qh/details/nearby' , searchLocationRadius);
+// router.get('/hotels/:id/basic-details', searchHotelUsingDest);
+&nbsp;
+export default router;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                at 2025-08-14T03:12:46.940Z
-=======
-                at 2025-08-14T03:18:25.337Z
->>>>>>> b8ed2f5056a9303e960ac8cc4a7bc7de01212dae
-=======
-                at 2025-08-14T03:12:46.940Z
->>>>>>> 397910f4ccf8219b8f747c2fe8bcf7937bfa68f9
+                at 2025-08-14T03:23:52.070Z
             </div>
-        <script src="../../prettify.js"></script>
+        <script src="../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../sorter.js"></script>
-        <script src="../../block-navigation.js"></script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
     </body>
 </html>
     
